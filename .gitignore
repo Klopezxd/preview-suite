@@ -1,0 +1,9 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos de respaldo temporal
+*.bak
+*.tmp
+*~
