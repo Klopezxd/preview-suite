@@ -3,7 +3,7 @@
  * Arquitectura blindada contra excepciones, fallos de red, restricciones de almacenamiento
  * y desbordamientos de memoria.
  * @module app
- * @version 3.0.0
+ * @version 3.1.0
  */
 (() => {
   'use strict';
@@ -35,12 +35,17 @@
     currentMode: 'moodle', // 'moodle' | 'markdown'
     isHubVisible: true,
     fontSize: CONFIG.DEFAULT_FONT_SIZE,
+    previewZoom: CONFIG.DEFAULT_PREVIEW_ZOOM || 100,
+    zoomPulseTimer: null,
+    previewZoomPulseTimer: null,
     isDarkMode: false,
     debounceTimer: null,
     toastTimer: null,
     currentError: null,
     isResizing: false,
     isInitialized: false,
+    lastLineCount: null,
+    lastErrorLine: null,
 
     // Buffers de memoria independientes por modo
     buffers: {
@@ -62,15 +67,18 @@
     DOM = {
       // Pantalla Hub
       hubScreen: document.getElementById('hub-screen'),
+      hubBrandIcon: document.querySelector('.hub-brand-icon'),
       cardModeMoodle: document.getElementById('card-mode-moodle'),
       cardModeMarkdown: document.getElementById('card-mode-markdown'),
 
       // Espacio de trabajo y barra superior
       appWorkspace: document.getElementById('app'),
-      btnBackHub: document.getElementById('btn-back-hub'),
-      modeBadge: document.getElementById('mode-badge'),
+      brandTitle: document.getElementById('brand-title'),
+      brandIcon: document.getElementById('brand-icon'),
+      brandIconSvg: document.getElementById('brand-icon-svg'),
       btnSwitchMode: document.getElementById('btn-switch-mode'),
-      btnCopyMoodleHtml: document.getElementById('btn-copy-moodle-html'),
+      switchModeLabel: document.getElementById('switch-mode-label'),
+      switchModeIcon: document.getElementById('switch-mode-icon'),
 
       // Editor y Lienzo
       editor: document.getElementById('editor'),
@@ -94,11 +102,28 @@
       leftPanel: document.getElementById('left-panel'),
       rightPanel: document.getElementById('right-panel'),
       resizer: document.getElementById('resizer'),
+      mobileViewNav: document.getElementById('mobile-view-nav'),
+      btnViewSplit: document.getElementById('btn-view-split'),
+      btnViewEditor: document.getElementById('btn-view-editor'),
+      btnViewPreview: document.getElementById('btn-view-preview'),
 
       // Retroalimentación y modales
       toast: document.getElementById('toast'),
       toastMsg: document.getElementById('toast-msg'),
       shortcutsModal: document.getElementById('shortcuts-modal'),
+      modeSwitchModal: document.getElementById('mode-switch-modal'),
+      modeSwitchTitle: document.getElementById('mode-switch-title'),
+      btnOptTransform: document.getElementById('btn-opt-transform'),
+      optTransformTitle: document.getElementById('opt-transform-title'),
+      optTransformDesc: document.getElementById('opt-transform-desc'),
+      btnOptClean: document.getElementById('btn-opt-clean'),
+      btnCloseModeModal: document.getElementById('btn-close-mode-modal'),
+      btnCancelModeModal: document.getElementById('btn-cancel-mode-modal'),
+      rickrollModal: document.getElementById('rickroll-modal'),
+      btnCloseRickroll: document.getElementById('btn-close-rickroll'),
+      btnRickrollOk: document.getElementById('btn-rickroll-ok'),
+      versionBadge: document.getElementById('version-badge'),
+      antigravityBadge: document.getElementById('antigravity-badge'),
       fileInput: document.getElementById('file-input'),
       dropOverlay: document.getElementById('drop-overlay'),
 
@@ -113,12 +138,28 @@
       btnUndo: document.getElementById('btn-undo'),
       btnShowShortcuts: document.getElementById('btn-show-shortcuts'),
       btnCloseModal: document.getElementById('btn-close-modal'),
-      btnFontDec: document.getElementById('btn-font-dec'),
-      btnFontInc: document.getElementById('btn-font-inc')
+
+      // Pseudobotones y popovers táctiles de escala tipográfica y zoom estilo Overleaf
+      btnFontReset: document.getElementById('btn-font-reset'),
+      labelFontSize: document.getElementById('label-font-size'),
+      editorZoomPopover: document.getElementById('editor-zoom-popover'),
+      btnFontPopoverDec: document.getElementById('btn-font-popover-dec'),
+      valFontPopover: document.getElementById('val-font-popover'),
+      btnFontPopoverInc: document.getElementById('btn-font-popover-inc'),
+      btnFontPopoverReset: document.getElementById('btn-font-popover-reset'),
+
+      btnPreviewZoomReset: document.getElementById('btn-preview-zoom-reset'),
+      labelPreviewZoom: document.getElementById('label-preview-zoom'),
+      previewZoomPopover: document.getElementById('preview-zoom-popover'),
+      btnPreviewPopoverDec: document.getElementById('btn-preview-popover-dec'),
+      valPreviewPopover: document.getElementById('val-preview-popover'),
+      btnPreviewPopoverInc: document.getElementById('btn-preview-popover-inc'),
+      btnPreviewPopoverReset: document.getElementById('btn-preview-popover-reset'),
+      previewCard: document.getElementById('preview-card')
     };
   }
 
-  // --- 4. Gestión del Hub y Conmutación de Modos ---
+  // --- 4. Gestión del Hub y Conmutación Inteligente de Modos ---
 
   function showHub() {
     state.isHubVisible = true;
@@ -131,11 +172,14 @@
   function selectMode(mode) {
     if (mode !== 'moodle' && mode !== 'markdown') mode = 'moodle';
 
-    // Limpiar temporizadores pendientes para evitar condiciones de carrera entre modos
+    // Limpiar temporizadores pendientes para evitar condiciones de carrera
     clearTimeout(state.debounceTimer);
 
     state.currentMode = mode;
     state.isHubVisible = false;
+    state.lastLineCount = null;
+    state.lastErrorLine = null;
+    closeAllZoomPopovers();
     if (DOM.hubScreen) DOM.hubScreen.classList.add('hidden');
 
     updateModeUI();
@@ -152,33 +196,118 @@
     }
   }
 
-  function toggleCurrentMode() {
-    if (DOM.editor) {
-      state.buffers[state.currentMode] = DOM.editor.value;
+  function openModeSwitchModal() {
+    if (DOM.modeSwitchModal) DOM.modeSwitchModal.classList.add('open');
+  }
+
+  function closeModeSwitchModal() {
+    if (DOM.modeSwitchModal) DOM.modeSwitchModal.classList.remove('open');
+  }
+
+  /**
+   * Conmutador inteligente de modo:
+   * Si el editor no tiene contenido o tiene la plantilla sin tocar, cambia inmediatamente.
+   * Si el usuario escribió contenido real, pregunta con 2 opciones limpias: transformar o empezar en blanco.
+   */
+  function handleSmartModeSwitch() {
+    const isMoodle = state.currentMode === 'moodle';
+    const targetMode = isMoodle ? 'markdown' : 'moodle';
+    const targetName = isMoodle ? 'Markdown' : 'Moodle (HTML)';
+    const currentCode = DOM.editor ? DOM.editor.value.trim() : '';
+    const defaultTemplate = (isMoodle ? DEFAULT_MOODLE_TEMPLATE : DEFAULT_MARKDOWN_TEMPLATE).trim();
+
+    // 1. Si no hay cambios que proteger, cambiar directamente sin interrupciones
+    if (!currentCode || currentCode === defaultTemplate) {
+      const cleanTpl = targetMode === 'moodle' ? DEFAULT_MOODLE_TEMPLATE : DEFAULT_MARKDOWN_TEMPLATE;
+      state.buffers[targetMode] = cleanTpl;
+      state.history[targetMode] = { stack: [cleanTpl], index: 0, recordTimer: null, isUndoing: false };
+      selectMode(targetMode);
+      showToast(`Modo cambiado a ${targetName}`);
+      return;
     }
-    const nextMode = state.currentMode === 'moodle' ? 'markdown' : 'moodle';
-    selectMode(nextMode);
-    showToast(`Cambiado a Modo ${nextMode === 'moodle' ? 'Moodle (HTML)' : 'Markdown'}`);
+
+    // 2. Si hay trabajo real en el editor, abrir el modal inteligente
+    if (DOM.modeSwitchTitle) {
+      DOM.modeSwitchTitle.textContent = `Cambiar a Modo ${targetName}`;
+    }
+    if (DOM.optTransformTitle) {
+      DOM.optTransformTitle.textContent = `✨ Transformar a ${targetName}`;
+    }
+    if (DOM.optTransformDesc) {
+      DOM.optTransformDesc.textContent = isMoodle
+        ? 'Convierte tu código HTML y fórmulas a Markdown para seguir editando.'
+        : 'Compila tu Markdown y fórmulas a código HTML continuo para Moodle.';
+    }
+
+    openModeSwitchModal();
+  }
+
+  /**
+   * Ejecutar la transformación de contenido y cambiar de modo.
+   */
+  function executeTransform() {
+    closeModeSwitchModal();
+    const isMoodle = state.currentMode === 'moodle';
+    const currentCode = DOM.editor ? DOM.editor.value : '';
+
+    if (isMoodle) {
+      const converted = (window.MarkdownEngine && typeof window.MarkdownEngine.htmlToMarkdown === 'function')
+        ? window.MarkdownEngine.htmlToMarkdown(currentCode)
+        : currentCode;
+      state.buffers.markdown = converted;
+      state.history.markdown = { stack: [converted], index: 0, recordTimer: null, isUndoing: false };
+      selectMode('markdown');
+      showToast('Contenido transformado a Markdown');
+    } else {
+      const compiled = (window.MarkdownEngine && typeof window.MarkdownEngine.compileToMoodleHtml === 'function')
+        ? window.MarkdownEngine.compileToMoodleHtml(currentCode)
+        : currentCode;
+      state.buffers.moodle = compiled;
+      state.history.moodle = { stack: [compiled], index: 0, recordTimer: null, isUndoing: false };
+      selectMode('moodle');
+      showToast('Contenido transformado a Moodle HTML');
+    }
+  }
+
+  /**
+   * Ejecutar el cambio con plantilla limpia descartando el contenido actual.
+   */
+  function executeCleanSwitch() {
+    closeModeSwitchModal();
+    const isMoodle = state.currentMode === 'moodle';
+    const targetMode = isMoodle ? 'markdown' : 'moodle';
+    const targetName = isMoodle ? 'Markdown' : 'Moodle (HTML)';
+    const cleanTpl = targetMode === 'moodle' ? DEFAULT_MOODLE_TEMPLATE : DEFAULT_MARKDOWN_TEMPLATE;
+
+    state.buffers[targetMode] = cleanTpl;
+    state.history[targetMode] = { stack: [cleanTpl], index: 0, recordTimer: null, isUndoing: false };
+    selectMode(targetMode);
+    showToast(`Modo cambiado a ${targetName} (lienzo limpio)`);
   }
 
   function updateModeUI() {
     const isMoodle = state.currentMode === 'moodle';
 
-    if (DOM.modeBadge) {
-      DOM.modeBadge.className = `mode-badge ${isMoodle ? 'mode-moodle' : 'mode-markdown'}`;
-      DOM.modeBadge.textContent = isMoodle ? 'Modo Moodle (HTML)' : 'Modo Markdown';
+    if (DOM.brandTitle) {
+      DOM.brandTitle.textContent = isMoodle ? 'Previsualizador Moodle' : 'Previsualizador Markdown';
+    }
+
+    if (DOM.brandIconSvg) {
+      DOM.brandIconSvg.innerHTML = `<use href="${isMoodle ? '#icon-school' : '#icon-markdown'}"></use>`;
     }
 
     if (DOM.btnSwitchMode) {
-      DOM.btnSwitchMode.title = isMoodle ? 'Cambiar a Modo Markdown' : 'Cambiar a Modo Moodle (HTML)';
-      const label = DOM.btnSwitchMode.querySelector('.btn-label');
-      if (label) {
-        label.textContent = isMoodle ? 'A Markdown' : 'A Moodle';
-      }
+      DOM.btnSwitchMode.title = isMoodle ? 'Cambiar a Modo Markdown' : 'Cambiar a Modo Moodle';
+      DOM.btnSwitchMode.classList.toggle('switch-to-markdown', isMoodle);
+      DOM.btnSwitchMode.classList.toggle('switch-to-moodle', !isMoodle);
     }
 
-    if (DOM.btnCopyMoodleHtml) {
-      DOM.btnCopyMoodleHtml.style.display = isMoodle ? 'none' : 'inline-flex';
+    if (DOM.switchModeLabel) {
+      DOM.switchModeLabel.textContent = isMoodle ? 'Modo Markdown' : 'Modo Moodle';
+    }
+
+    if (DOM.switchModeIcon) {
+      DOM.switchModeIcon.innerHTML = `<use href="${isMoodle ? '#icon-markdown' : '#icon-school'}"></use>`;
     }
 
     if (DOM.btnSaveFile) {
@@ -190,6 +319,8 @@
         ? 'Escribe o pega aquí tu código HTML con fórmulas LaTeX (\\( ... \\), \\[ ... \\])...'
         : 'Escribe aquí en formato Markdown con fórmulas LaTeX ($$ ... $$, \\( ... \\))...';
     }
+
+    document.title = `${isMoodle ? 'Previsualizador Moodle' : 'Previsualizador Markdown'} | Suite`;
   }
 
   // --- 5. Sistema de Historial (Undo / Redo) ---
@@ -371,12 +502,25 @@
   function updateLineNumbers(errorLine = null) {
     if (!DOM.editor || !DOM.lineNumbers) return;
 
-    const totalLines = DOM.editor.value.split('\n').length;
-    const fragments = [];
-    for (let i = 1; i <= totalLines; i++) {
-      fragments.push(`<div class="${errorLine === i ? 'line-err' : ''}">${i}</div>`);
+    const text = DOM.editor.value;
+    let totalLines = 1;
+    for (let i = 0; i < text.length; i++) {
+      if (text.charCodeAt(i) === 10) totalLines++;
     }
-    DOM.lineNumbers.innerHTML = fragments.join('');
+
+    // Memoización: evitar reconstrucción innecesaria del DOM si nada cambió
+    if (totalLines === state.lastLineCount && errorLine === state.lastErrorLine) {
+      return;
+    }
+
+    state.lastLineCount = totalLines;
+    state.lastErrorLine = errorLine;
+
+    let html = '';
+    for (let i = 1; i <= totalLines; i++) {
+      html += errorLine === i ? `<div class="line-err">${i}</div>` : `<div>${i}</div>`;
+    }
+    DOM.lineNumbers.innerHTML = html;
   }
 
   function updateContentStatistics() {
@@ -384,8 +528,12 @@
 
     const text = DOM.editor.value || '';
     const totalChars = text.length;
-    const totalWords = text.trim() ? text.trim().split(/\s+/).length : 0;
-    const totalLines = text.split('\n').length;
+    const trimmed = text.trim();
+    const totalWords = trimmed ? trimmed.split(/\s+/).length : 0;
+    let totalLines = 1;
+    for (let i = 0; i < text.length; i++) {
+      if (text.charCodeAt(i) === 10) totalLines++;
+    }
 
     DOM.charCount.textContent = 
       `${totalWords.toLocaleString()} palabras · ${totalChars.toLocaleString()} caracteres · ${totalLines.toLocaleString()} líneas`;
@@ -441,14 +589,99 @@
     }, CONFIG.TOAST_DURATION_MS);
   }
 
-  // --- 7. Operaciones de Edición, Exportación y Archivos ---
+  // --- 7. Operaciones de Edición, Zoom, Exportación y Archivos ---
 
   function changeFontSize(delta) {
     state.fontSize = Math.min(Math.max(state.fontSize + delta, CONFIG.FONT_SIZE_MIN), CONFIG.FONT_SIZE_MAX);
     if (DOM.editor) DOM.editor.style.fontSize = `${state.fontSize}px`;
     if (DOM.lineNumbers) DOM.lineNumbers.style.fontSize = `${state.fontSize}px`;
-    if (DOM.labelFontSize) DOM.labelFontSize.textContent = state.fontSize;
+    if (DOM.labelFontSize) DOM.labelFontSize.textContent = `${state.fontSize}px`;
+    if (DOM.valFontPopover) DOM.valFontPopover.textContent = `${state.fontSize}px`;
+
+    if (DOM.btnFontReset) {
+      DOM.btnFontReset.title = `Tamaño de fuente: ${state.fontSize}px (Ctrl + Rueda para ajustar, clic para abrir controles)`;
+      DOM.btnFontReset.classList.remove('zoom-active');
+      void DOM.btnFontReset.offsetWidth;
+      DOM.btnFontReset.classList.add('zoom-active');
+      clearTimeout(state.zoomPulseTimer);
+      state.zoomPulseTimer = setTimeout(() => {
+        if (DOM.btnFontReset) DOM.btnFontReset.classList.remove('zoom-active');
+      }, 350);
+    }
     updateLineNumbers();
+  }
+
+  function changePreviewZoom(delta) {
+    const min = CONFIG.PREVIEW_ZOOM_MIN || 50;
+    const max = CONFIG.PREVIEW_ZOOM_MAX || 200;
+    const step = CONFIG.PREVIEW_ZOOM_STEP || 10;
+    state.previewZoom = Math.min(Math.max(state.previewZoom + (delta * step), min), max);
+
+    if (DOM.previewCard) {
+      DOM.previewCard.style.zoom = `${state.previewZoom}%`;
+    }
+    if (DOM.labelPreviewZoom) {
+      DOM.labelPreviewZoom.textContent = `${state.previewZoom}%`;
+    }
+    if (DOM.valPreviewPopover) {
+      DOM.valPreviewPopover.textContent = `${state.previewZoom}%`;
+    }
+
+    if (DOM.btnPreviewZoomReset) {
+      DOM.btnPreviewZoomReset.title = `Zoom: ${state.previewZoom}% (Ctrl + Rueda para ajustar, clic para abrir controles)`;
+      DOM.btnPreviewZoomReset.classList.remove('zoom-active');
+      void DOM.btnPreviewZoomReset.offsetWidth;
+      DOM.btnPreviewZoomReset.classList.add('zoom-active');
+      clearTimeout(state.previewZoomPulseTimer);
+      state.previewZoomPulseTimer = setTimeout(() => {
+        if (DOM.btnPreviewZoomReset) DOM.btnPreviewZoomReset.classList.remove('zoom-active');
+      }, 350);
+    }
+  }
+
+  function resetEditorFont() {
+    state.fontSize = CONFIG.DEFAULT_FONT_SIZE;
+    if (DOM.editor) DOM.editor.style.fontSize = `${state.fontSize}px`;
+    if (DOM.lineNumbers) DOM.lineNumbers.style.fontSize = `${state.fontSize}px`;
+    if (DOM.labelFontSize) DOM.labelFontSize.textContent = `${state.fontSize}px`;
+    if (DOM.valFontPopover) DOM.valFontPopover.textContent = `${state.fontSize}px`;
+    if (DOM.btnFontReset) {
+      DOM.btnFontReset.title = `Tamaño de fuente: ${state.fontSize}px (Ctrl + Rueda para ajustar, clic para abrir controles)`;
+      DOM.btnFontReset.classList.remove('zoom-active');
+      void DOM.btnFontReset.offsetWidth;
+      DOM.btnFontReset.classList.add('zoom-active');
+      setTimeout(() => {
+        if (DOM.btnFontReset) DOM.btnFontReset.classList.remove('zoom-active');
+      }, 350);
+    }
+    updateLineNumbers();
+  }
+
+  function resetPreviewZoom() {
+    state.previewZoom = CONFIG.DEFAULT_PREVIEW_ZOOM || 100;
+    if (DOM.previewCard) {
+      DOM.previewCard.style.zoom = '100%';
+    }
+    if (DOM.labelPreviewZoom) {
+      DOM.labelPreviewZoom.textContent = '100%';
+    }
+    if (DOM.valPreviewPopover) {
+      DOM.valPreviewPopover.textContent = '100%';
+    }
+    if (DOM.btnPreviewZoomReset) {
+      DOM.btnPreviewZoomReset.title = 'Zoom: 100% (Ctrl + Rueda para ajustar, clic para abrir controles)';
+      DOM.btnPreviewZoomReset.classList.remove('zoom-active');
+      void DOM.btnPreviewZoomReset.offsetWidth;
+      DOM.btnPreviewZoomReset.classList.add('zoom-active');
+      setTimeout(() => {
+        if (DOM.btnPreviewZoomReset) DOM.btnPreviewZoomReset.classList.remove('zoom-active');
+      }, 350);
+    }
+  }
+
+  function resetZoom() {
+    resetEditorFont();
+    resetPreviewZoom();
   }
 
   function applyTheme(isDark) {
@@ -508,19 +741,6 @@
       DOM.btnCopyCode.innerHTML = '<svg class="icon"><use href="#icon-check"></use></svg> <span class="btn-label">¡Copiado!</span>';
       setTimeout(() => { if (DOM.btnCopyCode) DOM.btnCopyCode.innerHTML = originalHtml; }, 1800);
     }
-  }
-
-  async function copyMoodleHtmlFromMarkdown() {
-    if (!DOM.editor || !DOM.editor.value.trim()) {
-      showToast('El editor está vacío');
-      return;
-    }
-
-    const moodleHtml = window.MarkdownEngine
-      ? window.MarkdownEngine.compileToMoodleHtml(DOM.editor.value)
-      : DOM.editor.value;
-
-    await copyTextSafely(moodleHtml, '⭐ ¡HTML para Moodle copiado con éxito!');
   }
 
   function restoreDefaultTemplate() {
@@ -619,7 +839,7 @@
     reader.readAsText(file);
   }
 
-  // --- 8. Modales ---
+  // --- 8. Modales y Easter Egg ---
   function openShortcutsModal() {
     if (DOM.shortcutsModal) DOM.shortcutsModal.classList.add('open');
   }
@@ -628,11 +848,101 @@
     if (DOM.shortcutsModal) DOM.shortcutsModal.classList.remove('open');
   }
 
+  function closeRickrollModal() {
+    if (DOM.rickrollModal) {
+      DOM.rickrollModal.classList.remove('open');
+    }
+  }
+
+  function closeAllZoomPopovers() {
+    if (DOM.editorZoomPopover) DOM.editorZoomPopover.classList.remove('open');
+    if (DOM.previewZoomPopover) DOM.previewZoomPopover.classList.remove('open');
+    if (DOM.btnFontReset) DOM.btnFontReset.setAttribute('aria-expanded', 'false');
+    if (DOM.btnPreviewZoomReset) DOM.btnPreviewZoomReset.setAttribute('aria-expanded', 'false');
+  }
+
+  function setupRickrollEasterEgg() {
+    let waitingForReturn = false;
+
+    const triggerRickroll = () => {
+      waitingForReturn = true;
+
+      // 1. Abrir enlace directo de YouTube en una pestaña nueva
+      window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank', 'noopener,noreferrer');
+
+      // 2. Preparar el detector para cuando el usuario regrese a esta pestaña
+      const onUserReturn = () => {
+        if (!waitingForReturn) return;
+        waitingForReturn = false;
+
+        window.removeEventListener('focus', onUserReturn);
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+
+        // Desplegar la ventana flotante de bienvenida sorpresa
+        if (DOM.rickrollModal) {
+          DOM.rickrollModal.classList.add('open');
+        }
+        showToast('🎵 ¡Has sido Rickrolleado! 🕺');
+      };
+
+      const onVisibilityChange = () => {
+        if (document.visibilityState === 'visible') {
+          onUserReturn();
+        }
+      };
+
+      window.addEventListener('focus', onUserReturn);
+      document.addEventListener('visibilitychange', onVisibilityChange);
+    };
+
+    // Vincular al badge de versión del Workspace y al badge de Antigravity
+    if (DOM.versionBadge) {
+      DOM.versionBadge.addEventListener('click', triggerRickroll);
+    }
+    if (DOM.antigravityBadge) {
+      DOM.antigravityBadge.addEventListener('click', triggerRickroll);
+    }
+
+    // Eventos de cierre del modal de retorno
+    if (DOM.btnCloseRickroll) {
+      DOM.btnCloseRickroll.addEventListener('click', closeRickrollModal);
+    }
+    if (DOM.btnRickrollOk) {
+      DOM.btnRickrollOk.addEventListener('click', closeRickrollModal);
+    }
+    if (DOM.rickrollModal) {
+      DOM.rickrollModal.addEventListener('click', (e) => {
+        if (e.target === DOM.rickrollModal) closeRickrollModal();
+      });
+    }
+
+    // Atajo global: Cerrar cualquier modal o popover activo con Escape
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeRickrollModal();
+        closeShortcutsModal();
+        closeModeSwitchModal();
+        closeAllZoomPopovers();
+      }
+    });
+  }
+
   // --- 9. Registro Seguro de Eventos ---
 
   function setupHubEvents() {
-    if (DOM.cardModeMoodle) DOM.cardModeMoodle.addEventListener('click', () => selectMode('moodle'));
-    if (DOM.cardModeMarkdown) DOM.cardModeMarkdown.addEventListener('click', () => selectMode('markdown'));
+    const handleCardClick = (e, mode) => {
+      // Si el usuario simplemente está seleccionando texto, no activar la tarjeta
+      const sel = window.getSelection ? window.getSelection().toString() : '';
+      if (sel && sel.trim().length > 0) return;
+      selectMode(mode);
+    };
+
+    if (DOM.cardModeMoodle) {
+      DOM.cardModeMoodle.addEventListener('click', (e) => handleCardClick(e, 'moodle'));
+    }
+    if (DOM.cardModeMarkdown) {
+      DOM.cardModeMarkdown.addEventListener('click', (e) => handleCardClick(e, 'markdown'));
+    }
 
     const handleCardKey = (e, mode) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -643,9 +953,23 @@
     if (DOM.cardModeMoodle) DOM.cardModeMoodle.addEventListener('keydown', (e) => handleCardKey(e, 'moodle'));
     if (DOM.cardModeMarkdown) DOM.cardModeMarkdown.addEventListener('keydown', (e) => handleCardKey(e, 'markdown'));
 
-    if (DOM.btnBackHub) DOM.btnBackHub.addEventListener('click', showHub);
-    if (DOM.btnSwitchMode) DOM.btnSwitchMode.addEventListener('click', toggleCurrentMode);
-    if (DOM.btnCopyMoodleHtml) DOM.btnCopyMoodleHtml.addEventListener('click', copyMoodleHtmlFromMarkdown);
+    // Clic en el logo o título para volver a la pantalla de bienvenida (Hub)
+    if (DOM.brandIcon) DOM.brandIcon.addEventListener('click', showHub);
+    if (DOM.brandTitle) DOM.brandTitle.addEventListener('click', showHub);
+
+    // Botón único conmutador de modo
+    if (DOM.btnSwitchMode) DOM.btnSwitchMode.addEventListener('click', handleSmartModeSwitch);
+
+    // Eventos del modal inteligente de cambio de modo
+    if (DOM.btnOptTransform) DOM.btnOptTransform.addEventListener('click', executeTransform);
+    if (DOM.btnOptClean) DOM.btnOptClean.addEventListener('click', executeCleanSwitch);
+    if (DOM.btnCloseModeModal) DOM.btnCloseModeModal.addEventListener('click', closeModeSwitchModal);
+    if (DOM.btnCancelModeModal) DOM.btnCancelModeModal.addEventListener('click', closeModeSwitchModal);
+    if (DOM.modeSwitchModal) {
+      DOM.modeSwitchModal.addEventListener('click', (e) => {
+        if (e.target === DOM.modeSwitchModal) closeModeSwitchModal();
+      });
+    }
   }
 
   function setupToolbarEvents() {
@@ -659,8 +983,43 @@
     if (DOM.btnShowShortcuts) DOM.btnShowShortcuts.addEventListener('click', openShortcutsModal);
     if (DOM.btnCloseModal) DOM.btnCloseModal.addEventListener('click', closeShortcutsModal);
 
-    if (DOM.btnFontDec) DOM.btnFontDec.addEventListener('click', () => changeFontSize(-1));
-    if (DOM.btnFontInc) DOM.btnFontInc.addEventListener('click', () => changeFontSize(1));
+    if (DOM.btnFontReset) {
+      DOM.btnFontReset.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const wasOpen = DOM.editorZoomPopover && DOM.editorZoomPopover.classList.contains('open');
+        closeAllZoomPopovers();
+        if (!wasOpen && DOM.editorZoomPopover) {
+          DOM.editorZoomPopover.classList.add('open');
+          DOM.btnFontReset.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+
+    if (DOM.btnPreviewZoomReset) {
+      DOM.btnPreviewZoomReset.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const wasOpen = DOM.previewZoomPopover && DOM.previewZoomPopover.classList.contains('open');
+        closeAllZoomPopovers();
+        if (!wasOpen && DOM.previewZoomPopover) {
+          DOM.previewZoomPopover.classList.add('open');
+          DOM.btnPreviewZoomReset.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+
+    if (DOM.btnFontPopoverDec) DOM.btnFontPopoverDec.addEventListener('click', (e) => { e.stopPropagation(); changeFontSize(-1); });
+    if (DOM.btnFontPopoverInc) DOM.btnFontPopoverInc.addEventListener('click', (e) => { e.stopPropagation(); changeFontSize(1); });
+    if (DOM.btnFontPopoverReset) DOM.btnFontPopoverReset.addEventListener('click', (e) => { e.stopPropagation(); resetEditorFont(); closeAllZoomPopovers(); });
+
+    if (DOM.btnPreviewPopoverDec) DOM.btnPreviewPopoverDec.addEventListener('click', (e) => { e.stopPropagation(); changePreviewZoom(-1); });
+    if (DOM.btnPreviewPopoverInc) DOM.btnPreviewPopoverInc.addEventListener('click', (e) => { e.stopPropagation(); changePreviewZoom(1); });
+    if (DOM.btnPreviewPopoverReset) DOM.btnPreviewPopoverReset.addEventListener('click', (e) => { e.stopPropagation(); resetPreviewZoom(); closeAllZoomPopovers(); });
+
+    document.addEventListener('pointerdown', (e) => {
+      if (!e.target.closest('.zoom-ctrl-wrapper')) {
+        closeAllZoomPopovers();
+      }
+    });
 
     if (DOM.btnOpenFile && DOM.fileInput) {
       DOM.btnOpenFile.addEventListener('click', () => {
@@ -686,6 +1045,31 @@
       DOM.statusPill.addEventListener('click', () => {
         if (state.currentError) jumpToLine(state.currentError.line);
       });
+    }
+
+    // Navegación de vistas para pantallas móviles y tablets verticales (<= 768px)
+    if (DOM.btnViewSplit) DOM.btnViewSplit.addEventListener('click', () => setMobileView('split'));
+    if (DOM.btnViewEditor) DOM.btnViewEditor.addEventListener('click', () => setMobileView('editor'));
+    if (DOM.btnViewPreview) DOM.btnViewPreview.addEventListener('click', () => setMobileView('preview'));
+  }
+
+  function setMobileView(view) {
+    if (!DOM.panels) return;
+    DOM.panels.classList.remove('view-mode-split', 'view-mode-editor', 'view-mode-preview');
+
+    if (DOM.btnViewSplit) DOM.btnViewSplit.classList.toggle('active', view === 'split');
+    if (DOM.btnViewEditor) DOM.btnViewEditor.classList.toggle('active', view === 'editor');
+    if (DOM.btnViewPreview) DOM.btnViewPreview.classList.toggle('active', view === 'preview');
+
+    if (view === 'editor') {
+      DOM.panels.classList.add('view-mode-editor');
+      if (DOM.editor) DOM.editor.focus();
+    } else if (view === 'preview') {
+      DOM.panels.classList.add('view-mode-preview');
+      renderPreview();
+    } else {
+      DOM.panels.classList.add('view-mode-split');
+      updateLineNumbers();
     }
   }
 
@@ -738,11 +1122,6 @@
       if (e.ctrlKey && e.key === 'Enter') {
         e.preventDefault();
         renderPreview();
-      }
-
-      // Escape para modales
-      if (e.key === 'Escape') {
-        closeShortcutsModal();
       }
 
       // Auto-cierre y envoltura inteligente de delimitadores
@@ -849,13 +1228,147 @@
     DOM.resizer.addEventListener('touchstart', (e) => {
       if (e.touches && e.touches.length > 0) startResize();
     }, { passive: true });
+
     document.addEventListener('touchmove', (e) => {
       if (!state.isResizing) return;
       if (e.touches && e.touches.length > 0) {
+        if (e.cancelable) e.preventDefault();
         doResize(e.touches[0].clientX, e.touches[0].clientY);
       }
-    }, { passive: true });
+    }, { passive: false });
+
     document.addEventListener('touchend', stopResize);
+
+    // Si el usuario cambia de orientación o expande la pantalla a escritorio (> 768px), restablecer vista dividida
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (window.innerWidth > 768 && DOM.panels) {
+          DOM.panels.classList.remove('view-mode-editor', 'view-mode-preview');
+          DOM.panels.classList.add('view-mode-split');
+          if (DOM.btnViewSplit) DOM.btnViewSplit.classList.add('active');
+          if (DOM.btnViewEditor) DOM.btnViewEditor.classList.remove('active');
+          if (DOM.btnViewPreview) DOM.btnViewPreview.classList.remove('active');
+        }
+      }, 100);
+    });
+  }
+
+  // --- 9. Control Ergonómico de Zoom y Escala (Rueda y Atajos) ---
+  function setupZoomEvents() {
+    let wheelAccumulator = 0;
+    let wheelResetTimer = null;
+    const WHEEL_THRESHOLD = 36;
+
+    // Interceptar Ctrl + Rueda del mouse (ajuste exclusivo por mouse sin alterar zoom del navegador)
+    window.addEventListener('wheel', (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        wheelAccumulator += e.deltaY;
+        clearTimeout(wheelResetTimer);
+        wheelResetTimer = setTimeout(() => { wheelAccumulator = 0; }, 180);
+
+        if (Math.abs(wheelAccumulator) >= WHEEL_THRESHOLD) {
+          const delta = wheelAccumulator < 0 ? 1 : -1;
+          wheelAccumulator = 0;
+
+          if (DOM.rightPanel && DOM.rightPanel.contains(e.target)) {
+            changePreviewZoom(delta);
+          } else if (DOM.leftPanel && DOM.leftPanel.contains(e.target)) {
+            changeFontSize(delta);
+          } else {
+            if (e.clientX > window.innerWidth / 2) {
+              changePreviewZoom(delta);
+            } else {
+              changeFontSize(delta);
+            }
+          }
+        }
+      }
+    }, { passive: false });
+
+    // 2. Gesto Táctil de Pellizco (Pinch-to-Zoom con 2 dedos en Móviles y Tablets)
+    let pinchStartDist = null;
+    let pinchDeltaAccumulator = 0;
+    const PINCH_THRESHOLD = 20;
+
+    const calcTouchDistance = (touches) => {
+      return Math.hypot(
+        touches[0].clientX - touches[1].clientX,
+        touches[0].clientY - touches[1].clientY
+      );
+    };
+
+    const handlePinchStart = (e) => {
+      if (e.touches && e.touches.length === 2) {
+        pinchStartDist = calcTouchDistance(e.touches);
+        pinchDeltaAccumulator = 0;
+      }
+    };
+
+    const handlePinchMove = (e, isPreview) => {
+      if (e.touches && e.touches.length === 2 && pinchStartDist !== null) {
+        if (e.cancelable) e.preventDefault();
+        const currentDist = calcTouchDistance(e.touches);
+        const diff = currentDist - pinchStartDist;
+        pinchDeltaAccumulator += diff;
+        pinchStartDist = currentDist;
+
+        if (Math.abs(pinchDeltaAccumulator) >= PINCH_THRESHOLD) {
+          const delta = pinchDeltaAccumulator > 0 ? 1 : -1;
+          pinchDeltaAccumulator = 0;
+          if (isPreview) {
+            changePreviewZoom(delta);
+          } else {
+            changeFontSize(delta);
+          }
+        }
+      }
+    };
+
+    const handlePinchEnd = () => {
+      pinchStartDist = null;
+      pinchDeltaAccumulator = 0;
+    };
+
+    if (DOM.leftPanel) {
+      DOM.leftPanel.addEventListener('touchstart', handlePinchStart, { passive: true });
+      DOM.leftPanel.addEventListener('touchmove', (e) => handlePinchMove(e, false), { passive: false });
+      DOM.leftPanel.addEventListener('touchend', handlePinchEnd, { passive: true });
+      DOM.leftPanel.addEventListener('touchcancel', handlePinchEnd, { passive: true });
+    }
+
+    if (DOM.rightPanel) {
+      DOM.rightPanel.addEventListener('touchstart', handlePinchStart, { passive: true });
+      DOM.rightPanel.addEventListener('touchmove', (e) => handlePinchMove(e, true), { passive: false });
+      DOM.rightPanel.addEventListener('touchend', handlePinchEnd, { passive: true });
+      DOM.rightPanel.addEventListener('touchcancel', handlePinchEnd, { passive: true });
+    }
+
+    // 3. Atajos de teclado para Zoom: Ctrl + '+' / Ctrl + '-' / Ctrl + '0'
+    window.addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === '+' || e.key === '=' || e.code === 'NumpadAdd') {
+          e.preventDefault();
+          if (document.activeElement && (document.activeElement === DOM.editor || (DOM.leftPanel && DOM.leftPanel.contains(document.activeElement)))) {
+            changeFontSize(1);
+          } else {
+            changePreviewZoom(1);
+          }
+        } else if (e.key === '-' || e.key === '_' || e.code === 'NumpadSubtract') {
+          e.preventDefault();
+          if (document.activeElement && (document.activeElement === DOM.editor || (DOM.leftPanel && DOM.leftPanel.contains(document.activeElement)))) {
+            changeFontSize(-1);
+          } else {
+            changePreviewZoom(-1);
+          }
+        } else if (e.key === '0' || e.code === 'Numpad0') {
+          e.preventDefault();
+          resetZoom();
+        }
+      }
+    });
   }
 
   // --- 10. Inicialización y Ciclo de Vida ---
@@ -869,6 +1382,8 @@
     setupEditorEvents();
     setupDragAndDropEvents();
     setupResizerEvents();
+    setupZoomEvents();
+    setupRickrollEasterEgg();
 
     // Cargar preferencia de tema visual protegida
     const savedTheme = SafeStorage.get('suite_preview_theme');
@@ -876,8 +1391,12 @@
       applyTheme(true);
     }
 
-    // Configuración inicial de contenido
+    // Configuración inicial de contenido, escala tipográfica y zoom
     if (DOM.editor) DOM.editor.value = state.buffers[state.currentMode] || '';
+    if (DOM.editor) DOM.editor.style.fontSize = `${state.fontSize}px`;
+    if (DOM.previewCard) DOM.previewCard.style.zoom = `${state.previewZoom}%`;
+    if (DOM.labelFontSize) DOM.labelFontSize.textContent = `${state.fontSize}px`;
+    if (DOM.labelPreviewZoom) DOM.labelPreviewZoom.textContent = `${state.previewZoom}%`;
     updateLineNumbers();
     updateContentStatistics();
     updateUndoButtonState();

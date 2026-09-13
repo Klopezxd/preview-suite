@@ -2,26 +2,30 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Academic Preview Suite v3.0 | Previsualizador Moodle & Markdown</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Previsualizador Moodle & Markdown | Entorno de Redacción y Validación</title>
   
-  <!-- Favicon SVG -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23f97316%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M22 10v6M2 10l10-5 10 5-10 5z%22/><path d=%22M6 12v5c3 3 9 3 12 0v-5%22/></svg>">
+  <!-- Favicon SVG (Aurora Boreal Nórdica) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2300FF87%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M22 10v6M2 10l10-5 10 5-10 5z%22/><path d=%22M6 12v5c3 3 9 3 12 0v-5%22/></svg>">
 
   <!-- Metadatos SEO, Open Graph y Color de Tema Móvil -->
-  <meta name="description" content="Entorno reactivo en tiempo real para desarrollo, validación y renderizado académico con KaTeX y Prism.js para Moodle y Markdown.">
-  <meta name="theme-color" content="#090d16">
-  <meta property="og:title" content="Academic Preview Suite v3.0 | Previsualizador Moodle & Markdown">
-  <meta property="og:description" content="Entorno reactivo en tiempo real para desarrollo, validación y renderizado académico con KaTeX y Prism.js.">
+  <meta name="description" content="Entorno integral para redactar, previsualizar y validar documentos técnicos y académicos en tiempo real. Soporte para fórmulas matemáticas LaTeX, código y tablas.">
+  <meta name="theme-color" content="#050B1A">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Previsualizador">
+  <meta property="og:title" content="Previsualizador Moodle & Markdown">
+  <meta property="og:description" content="Entorno integral para redactar, previsualizar y validar documentos con fórmulas matemáticas LaTeX, código y tablas.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://klopezxd.github.io/previsualizador-moodle/">
 
-  <!-- Tipografías: Inter & JetBrains Mono (Subset Latino Optimizado) -->
+  <!-- Tipografías: Montserrat & JetBrains Mono (Aurora Boreal Nórdica) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap&subset=latin" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap&subset=latin" rel="stylesheet">
 
   <!-- Resaltado de sintaxis (Prism Tomorrow) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
@@ -29,6 +33,7 @@
   <!-- Preload de scripts críticos de KaTeX -->
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" as="script">
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" as="script">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" as="style">
 
   <!-- Motor Matemático KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
@@ -41,9 +46,9 @@
   <!-- Motor Markdown Ultraligero (Marked.js) -->
   <script defer src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 
-  <!-- Hojas de Estilos Modulares -->
-  <link rel="stylesheet" href="css/styles.css">
+  <!-- Hojas de estilo del sistema -->
   <link rel="stylesheet" href="css/hub.css">
+  <link rel="stylesheet" href="css/styles.css">
 
   <!-- Scripts de la Aplicación -->
   <script defer src="js/config.js"></script>
@@ -54,15 +59,27 @@
 <body>
 
 <!-- ==========================================================================
-     DICCIONARIO VECTORIAL SVG SPRITE (0 Dependencias Externas)
+     DEFINICIONES DE ICONOS SVG EN LÍNEA
      ========================================================================== -->
-<svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
-  <symbol id="icon-school" viewBox="0 0 24 24"><path d="M22 9l-10 -4l-10 4l10 4l10 -4v6"/><path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4"/></symbol>
-  <symbol id="icon-file-text" viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><line x1="9" y1="9" x2="10" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></symbol>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="icon-school" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 9.5L12 4.5l10 5l-10 5z"/>
+    <path d="M6 11.5v5.5c0 1.8 2.7 3.5 6 3.5s6 -1.7 6 -3.5v-5.5"/>
+    <path d="M22 10.5v5.5"/>
+    <circle cx="22" cy="16.5" r="1" fill="currentColor"/>
+  </symbol>
+  <symbol id="icon-markdown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="4" width="20" height="16" rx="3.5" ry="3.5"/>
+    <path d="M6 15v-6l3 3.5l3 -3.5v6"/>
+    <path d="M15 12h3"/>
+    <path d="M16.5 9.5l1.5 2.5l1.5 -2.5"/>
+    <path d="M18 12v3"/>
+  </symbol>
   <symbol id="icon-trash" viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></symbol>
-  <symbol id="icon-folder-open" viewBox="0 0 24 24"><path d="M5 19l2.757 -7.351a1 1 0 0 1 .936 -.649h12.307a1 1 0 0 1 .986 1.164l-.996 5.211a2 2 0 0 1 -1.964 1.625h-14.026z"/><path d="M5 19v-14a2 2 0 0 1 2 -2h3.5a2 2 0 0 1 1.414 .586l2.172 2.172a2 2 0 0 0 1.414 .586h3.5a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="icon-folder-open" viewBox="0 0 24 24"><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/><line x1="3" y1="13" x2="21" y2="13"/></symbol>
   <symbol id="icon-download" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><polyline points="7 11 12 16 17 11"/><line x1="12" y1="4" x2="12" y2="16"/></symbol>
-  <symbol id="icon-printer" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2"/><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4"/><rect x="7" y="13" width="10" height="8" rx="2"/></symbol>
+  <symbol id="icon-printer" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1 -2 -2v-5a2 2 0 0 1 2 -2h16a2 2 0 0 1 2 2v5a2 2 0 0 1 -2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
+  <symbol id="icon-file-text" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0 -2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></symbol>
   <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/></symbol>
   <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/></symbol>
   <symbol id="icon-keyboard" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="10"/><line x1="10" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="14" y2="10"/><line x1="18" y1="10" x2="18" y2="10"/><line x1="7" y1="14" x2="17" y2="14"/></symbol>
@@ -78,8 +95,8 @@
   <symbol id="icon-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2l4 -4"/></symbol>
   <symbol id="icon-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
   <symbol id="icon-layout-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
-  <symbol id="icon-markdown" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15v-6l2.5 3l2.5 -3v6"/><path d="M14 12l2 3l2 -3"/><line x1="16" y1="9" x2="16" y2="15"/></symbol>
   <symbol id="icon-arrow-right" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></symbol>
+  <symbol id="icon-zoom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></symbol>
 </svg>
 
 <!-- ==========================================================================
@@ -94,9 +111,9 @@
       </div>
       <div class="hub-brand-title">Academic Preview Suite</div>
     </div>
-    <h1 class="hub-title">Entorno de Redacción y Validación en Tiempo Real</h1>
+    <h1 class="hub-title">Previsualizador Moodle & Markdown</h1>
     <p class="hub-subtitle">
-      Plataforma síncrona optimizada para desarrollo académico, fórmulas matemáticas con KaTeX y resaltado léxico con Prism.js.
+      Entorno integral para redactar, previsualizar y validar documentos técnicos y académicos en tiempo real. Soporte nativo para fórmulas matemáticas en LaTeX, bloques de código con resaltado y tablas.
     </p>
   </header>
 
@@ -105,25 +122,18 @@
     <!-- Tarjeta 1: Modo Moodle -->
     <article class="hub-card hub-card-moodle" id="card-mode-moodle" role="button" tabindex="0">
       <div class="hub-card-top">
-        <div class="hub-card-badge">HTML Semántico + LaTeX</div>
         <div class="hub-card-title-row">
           <div class="hub-card-icon">
             <svg><use href="#icon-school"></use></svg>
           </div>
-          <h2 class="hub-card-title">Previsualizador Moodle</h2>
+          <h2 class="hub-card-title">Modo Moodle</h2>
         </div>
         <p class="hub-card-desc">
-          Entorno de renderizado idéntico al aula virtual Moodle con telemetría de palabras libre y linter heurístico de sintaxis.
+          Código HTML, tablas y fórmulas KaTeX para el aula virtual.
         </p>
-        <ul class="hub-card-features">
-          <li><svg><use href="#icon-check"></use></svg> Detección de residuos de IA (```html)</li>
-          <li><svg><use href="#icon-check"></use></svg> Alerta de tablas y bloques &lt;pre&gt; sin cerrar</li>
-          <li><svg><use href="#icon-check"></use></svg> Fórmulas LaTeX en línea \( ... \) y bloque \[ ... \]</li>
-          <li><svg><use href="#icon-check"></use></svg> Telemetría libre sin límites de palabras</li>
-        </ul>
       </div>
       <div class="hub-card-action">
-        <span>Abrir Modo Moodle</span>
+        <span>Entrar a Moodle</span>
         <svg class="icon"><use href="#icon-arrow-right"></use></svg>
       </div>
     </article>
@@ -131,25 +141,18 @@
     <!-- Tarjeta 2: Modo Markdown -->
     <article class="hub-card hub-card-markdown" id="card-mode-markdown" role="button" tabindex="0">
       <div class="hub-card-top">
-        <div class="hub-card-badge">GFM + Exportador a Moodle</div>
         <div class="hub-card-title-row">
           <div class="hub-card-icon">
             <svg><use href="#icon-markdown"></use></svg>
           </div>
-          <h2 class="hub-card-title">Previsualizador Markdown</h2>
+          <h2 class="hub-card-title">Modo Markdown</h2>
         </div>
         <p class="hub-card-desc">
-          Redacción ágil en formato Markdown estándar con fórmulas matemáticas, listas de tareas y botón de exportación para Moodle.
+          Documentos Markdown con fórmulas matemáticas LaTeX, código y tablas.
         </p>
-        <ul class="hub-card-features">
-          <li><svg><use href="#icon-check"></use></svg> GitHub Flavored Markdown (tablas, tareas, código)</li>
-          <li><svg><use href="#icon-check"></use></svg> Soporte LaTeX matemático con KaTeX ($$ y \( \))</li>
-          <li><svg><use href="#icon-check"></use></svg> Resaltado sintáctico con Prism.js</li>
-          <li><svg><use href="#icon-check"></use></svg> <strong>⭐ Copiar directo como HTML para Moodle</strong></li>
-        </ul>
       </div>
       <div class="hub-card-action">
-        <span>Abrir Modo Markdown</span>
+        <span>Entrar a Markdown</span>
         <svg class="icon"><use href="#icon-arrow-right"></use></svg>
       </div>
     </article>
@@ -157,9 +160,7 @@
   </main>
 
   <footer class="hub-footer">
-    <p>
-      Desarrollado por <strong>Klever López</strong> · Vanilla JS · Cero Dependencias Locales · Licencia MIT
-    </p>
+    <p>Previsualizador Moodle & Markdown · Klever López</p>
   </footer>
 
 </div>
@@ -171,35 +172,23 @@
 
   <!-- Barra superior (Topbar) -->
   <header class="topbar">
-    <div class="brand" style="gap: 8px;">
-      <button class="btn btn-hub" id="btn-back-hub" title="Regresar a la pantalla de selección inicial">
-        <svg class="icon"><use href="#icon-layout-grid"></use></svg> <span class="btn-label">Menú</span>
-      </button>
-
-      <div class="brand-icon">
-        <svg class="icon"><use href="#icon-school"></use></svg>
+    <div class="brand" style="gap: 10px;">
+      <div class="brand-icon" id="brand-icon" role="button" tabindex="0" title="Previsualizador Suite">
+        <svg class="icon" id="brand-icon-svg"><use href="#icon-school"></use></svg>
       </div>
-      <div class="brand-title">Academic Suite</div>
+      <div class="brand-title" id="brand-title">Previsualizador Moodle</div>
 
-      <!-- Indicador de modo actual -->
-      <span class="mode-badge mode-moodle" id="mode-badge">Modo Moodle (HTML)</span>
-
-      <!-- Botón para alternar modo rápidamente -->
-      <button class="btn btn-outline" id="btn-switch-mode" title="Cambiar de modo">
-        <svg class="icon"><use href="#icon-file-text"></use></svg> <span class="btn-label">A Markdown</span>
-      </button>
-
-      <!-- Botón para copiar HTML para Moodle (exclusivo modo Markdown) -->
-      <button class="btn btn-copy-moodle" id="btn-copy-moodle-html" style="display:none;" title="Compilar y copiar como HTML para Moodle">
-        <svg class="icon"><use href="#icon-copy"></use></svg> <span class="btn-label">⭐ Copiar para Moodle</span>
+      <!-- Botón único e intuitivo para alternar modo -->
+      <button class="btn btn-outline switch-to-markdown" id="btn-switch-mode" title="Cambiar a Modo Markdown">
+        <svg class="icon" id="switch-mode-icon"><use href="#icon-markdown"></use></svg> <span class="btn-label" id="switch-mode-label">Modo Markdown</span>
       </button>
     </div>
 
     <div class="toolbar">
       <!-- Grupo 1: Edición y Plantilla -->
       <div class="btn-group">
-        <button class="btn" id="btn-reset-template" title="Restablecer plantilla inicial del modo activo">
-          <svg class="icon"><use href="#icon-file-text"></use></svg> <span class="btn-label">Plantilla</span>
+        <button class="btn" id="btn-reset-template" title="Restablecer la plantilla inicial con ejemplos y fórmulas">
+          <svg class="icon"><use href="#icon-arrow-back-up"></use></svg> <span class="btn-label">Restablecer Plantilla</span>
         </button>
         <button class="btn btn-danger" id="btn-clear-editor" title="Limpiar todo el texto del editor">
           <svg class="icon"><use href="#icon-trash"></use></svg> <span class="btn-label">Limpiar</span>
@@ -228,12 +217,25 @@
         <button class="btn" id="btn-toggle-theme" title="Alternar entre modo claro y oscuro">
           <svg class="icon" id="theme-icon"><use href="#icon-sun"></use></svg> <span id="theme-text">Claro</span>
         </button>
-        <button class="btn" id="btn-show-shortcuts" title="Atajos de teclado">
+        <button class="btn" id="btn-show-shortcuts" title="Atajos de teclado" aria-label="Atajos de teclado">
           <svg class="icon"><use href="#icon-keyboard"></use></svg>
         </button>
       </div>
     </div>
   </header>
+
+  <!-- Selector de vista para pantallas móviles y tablets verticales (≤ 768px) -->
+  <nav class="mobile-view-nav" id="mobile-view-nav" aria-label="Cambiar vista de paneles">
+    <button class="mobile-view-btn active" id="btn-view-split" type="button" title="Vista dividida (ambos paneles)">
+      <svg class="icon"><use href="#icon-layout-grid"></use></svg> <span>Dividido</span>
+    </button>
+    <button class="mobile-view-btn" id="btn-view-editor" type="button" title="Solo editor de código">
+      <svg class="icon"><use href="#icon-code"></use></svg> <span>Editor</span>
+    </button>
+    <button class="mobile-view-btn" id="btn-view-preview" type="button" title="Solo vista previa">
+      <svg class="icon"><use href="#icon-eye"></use></svg> <span>Vista previa</span>
+    </button>
+  </nav>
 
   <!-- Paneles de trabajo (Split View) -->
   <main class="panels" id="panels">
@@ -245,17 +247,26 @@
           <svg class="icon"><use href="#icon-code"></use></svg> Editor de contenido
         </div>
         <div class="panel-header-right">
-          <button class="btn btn-outline" id="btn-undo" title="Deshacer último cambio (Ctrl + Z)">
-            <svg class="icon"><use href="#icon-arrow-back-up"></use></svg> <span class="btn-label">Deshacer</span>
-          </button>
-          <div class="font-ctrl">
-            <button id="btn-font-dec" title="Reducir fuente">A-</button>
-            <span id="label-font-size">13</span>
-            <button id="btn-font-inc" title="Aumentar fuente">A+</button>
-          </div>
           <button class="btn btn-primary" id="btn-copy-code" title="Copiar código al portapapeles">
             <svg class="icon"><use href="#icon-copy"></use></svg> <span class="btn-label">Copiar</span>
           </button>
+          <button class="btn btn-outline" id="btn-undo" title="Deshacer último cambio (Ctrl + Z)">
+            <svg class="icon"><use href="#icon-arrow-back-up"></use></svg> <span class="btn-label">Deshacer</span>
+          </button>
+          <div class="zoom-ctrl-wrapper" id="editor-zoom-wrapper">
+            <button class="zoom-pill" id="btn-font-reset" type="button" title="Tamaño de fuente: 14px (Ctrl + Rueda o tocar)" aria-label="Tamaño de fuente del editor" aria-haspopup="dialog" aria-expanded="false">
+              <svg class="icon"><use href="#icon-zoom"></use></svg>
+              <span id="label-font-size">14px</span>
+            </button>
+            <div class="zoom-popover" id="editor-zoom-popover" role="dialog" aria-label="Ajustar fuente del editor">
+              <div class="zoom-popover-controls">
+                <button class="zoom-popover-btn" id="btn-font-popover-dec" type="button" aria-label="Reducir fuente">−</button>
+                <span class="zoom-popover-val" id="val-font-popover">14px</span>
+                <button class="zoom-popover-btn" id="btn-font-popover-inc" type="button" aria-label="Aumentar fuente">+</button>
+              </div>
+              <button class="zoom-popover-reset" id="btn-font-popover-reset" type="button">Restablecer (14px)</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -281,9 +292,23 @@
           <svg class="icon"><use href="#icon-eye"></use></svg> Vista previa en vivo
         </div>
         <div class="panel-header-right">
-          <div class="status-pill ok" id="status-pill">
+          <div class="status-pill ok" id="status-pill" role="status" aria-live="polite">
             <div class="status-dot"></div>
             <span id="status-txt">Listo</span>
+          </div>
+          <div class="zoom-ctrl-wrapper" id="preview-zoom-wrapper">
+            <button class="zoom-pill" id="btn-preview-zoom-reset" type="button" title="Zoom: 100% (Ctrl + Rueda o tocar)" aria-label="Zoom de la vista previa" aria-haspopup="dialog" aria-expanded="false">
+              <svg class="icon"><use href="#icon-zoom"></use></svg>
+              <span id="label-preview-zoom">100%</span>
+            </button>
+            <div class="zoom-popover" id="preview-zoom-popover" role="dialog" aria-label="Ajustar zoom de la vista previa">
+              <div class="zoom-popover-controls">
+                <button class="zoom-popover-btn" id="btn-preview-popover-dec" type="button" aria-label="Reducir zoom">−</button>
+                <span class="zoom-popover-val" id="val-preview-popover">100%</span>
+                <button class="zoom-popover-btn" id="btn-preview-popover-inc" type="button" aria-label="Aumentar zoom">+</button>
+              </div>
+              <button class="zoom-popover-reset" id="btn-preview-popover-reset" type="button">Restablecer (100%)</button>
+            </div>
           </div>
           <span id="last-update" style="font-size:10px;color:var(--app-text-muted);font-family:var(--font-mono)">—</span>
         </div>
@@ -316,12 +341,14 @@
       <span class="author-badge">
         <svg class="icon"><use href="#icon-terminal-2"></use></svg> Autor: Klever López
       </span>
-      <span class="antigravity-badge">
+      <span class="antigravity-badge" id="antigravity-badge" title="Made by Antigravity" role="button" tabindex="0">
         <svg class="icon"><use href="#icon-sparkles"></use></svg> Made by Antigravity
       </span>
-      <span class="version-badge">v3.0</span>
+      <span class="version-badge" id="version-badge" title="v3.1" role="button" tabindex="0">v3.1</span>
     </div>
   </footer>
+
+</div>
 
   <!-- Modales y notificaciones toast -->
   <div class="toast" id="toast">
@@ -329,16 +356,18 @@
     <span id="toast-msg">Listo</span>
   </div>
 
-  <div class="modal-overlay" id="shortcuts-modal">
+
+  <div class="modal-overlay" id="shortcuts-modal" role="dialog" aria-modal="true" aria-labelledby="shortcuts-modal-title">
     <div class="modal-box">
       <div class="modal-header">
-        <h3><svg class="icon"><use href="#icon-keyboard"></use></svg> Atajos de Teclado</h3>
-        <button class="modal-close" id="btn-close-modal"><svg class="icon"><use href="#icon-x"></use></svg></button>
+        <h3 id="shortcuts-modal-title"><svg class="icon"><use href="#icon-keyboard"></use></svg> Atajos de Teclado</h3>
+        <button class="modal-close" id="btn-close-modal" aria-label="Cerrar atajos de teclado"><svg class="icon"><use href="#icon-x"></use></svg></button>
       </div>
       <div class="modal-body">
         <div class="shortcut-row"><span>Indentar texto (2 espacios)</span><span class="kbd">Tab</span></div>
         <div class="shortcut-row"><span>Deshacer cambio</span><div><span class="kbd">Ctrl</span> + <span class="kbd">Z</span></div></div>
         <div class="shortcut-row"><span>Rehacer cambio</span><div><span class="kbd">Ctrl</span> + <span class="kbd">Y</span> / <span class="kbd">Ctrl</span> + <span class="kbd">Shift</span> + <span class="kbd">Z</span></div></div>
+        <div class="shortcut-row"><span>Zoom (Editor o Vista Previa)</span><div><span class="kbd">Ctrl</span> + <span class="kbd">Rueda</span> / <span class="kbd">Ctrl</span> + <span class="kbd">0</span></div></div>
         <div class="shortcut-row"><span>Copiar contenido completo</span><div><span class="kbd">Ctrl</span> + <span class="kbd">Shift</span> + <span class="kbd">C</span></div></div>
         <div class="shortcut-row"><span>Forzar actualización del render</span><div><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></div></div>
         <div class="shortcut-row"><span>Imprimir / Exportar a PDF</span><div><span class="kbd">Ctrl</span> + <span class="kbd">P</span></div></div>
@@ -346,15 +375,66 @@
       </div>
       <div class="modal-footer">
         <span class="modal-footer-author"><svg class="icon"><use href="#icon-terminal-2"></use></svg> Autor: Klever López</span>
-        <span class="modal-footer-version">v3.0</span>
+        <span class="modal-footer-version">v3.1</span>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal Inteligente para Cambiar de Modo -->
+  <div class="modal-overlay" id="mode-switch-modal" role="dialog" aria-modal="true" aria-labelledby="mode-switch-title">
+    <div class="modal-box" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 id="mode-switch-title">Cambiar de Modo</h3>
+        <button class="modal-close" id="btn-close-mode-modal" aria-label="Cerrar selector de modo"><svg class="icon"><use href="#icon-x"></use></svg></button>
+      </div>
+      <div class="modal-body" style="padding: 22px 24px;">
+        <p id="mode-switch-desc" style="line-height: 1.5; color: #cbd5e1; font-size: 14px; margin-bottom: 18px;">
+          Tienes trabajo en el editor. ¿Qué deseas hacer con tu contenido actual?
+        </p>
+        <div class="mode-options-list">
+          <button class="mode-option-btn" id="btn-opt-transform" type="button">
+            <div class="mode-option-icon transform-icon">
+              <svg class="icon"><use href="#icon-sparkles"></use></svg>
+            </div>
+            <div class="mode-option-info">
+              <strong id="opt-transform-title">✨ Transformar contenido</strong>
+              <span id="opt-transform-desc">Convierte tu código actual al nuevo formato sin perder tu trabajo.</span>
+            </div>
+          </button>
+
+          <button class="mode-option-btn" id="btn-opt-clean" type="button">
+            <div class="mode-option-icon clean-icon">
+              <svg class="icon"><use href="#icon-file-text"></use></svg>
+            </div>
+            <div class="mode-option-info">
+              <strong>📄 Empezar en blanco</strong>
+              <span>Descartar el contenido actual e iniciar con una plantilla limpia.</span>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; padding: 12px 24px;">
+        <button class="btn btn-outline" id="btn-cancel-mode-modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Secreto de Easter Egg (Rickroll - Mensaje de Regreso) -->
+  <div class="modal-overlay" id="rickroll-modal" role="dialog" aria-modal="true" aria-labelledby="rickroll-title">
+    <div class="modal-box" style="max-width: 400px; text-align: center; border-color: var(--neon-cyan); box-shadow: 0 16px 45px rgba(0, 212, 255, 0.3); position: relative; padding: 36px 24px 28px;">
+      <button class="modal-close" id="btn-close-rickroll" aria-label="Cerrar ventana de Rickroll" style="position: absolute; top: 12px; right: 12px;"><svg class="icon"><use href="#icon-x"></use></svg></button>
+      <div style="font-size: 64px; line-height: 1; margin-bottom: 8px;">🕺</div>
+      <h2 id="rickroll-title" style="font-size: 23px; font-weight: 800; color: #00FF87; margin: 14px 0 22px; text-shadow: 0 0 24px rgba(0, 255, 135, 0.45); letter-spacing: -0.02em;">
+        🎵 ¡Has sido Rickrolleado!
+      </h2>
+      <button class="btn btn-primary" id="btn-rickroll-ok" style="min-width: 160px; font-weight: 700; font-size: 14px; margin: 0 auto; display: inline-flex;">
+        Me atrapaste 😂
+      </button>
     </div>
   </div>
 
   <!-- Selector nativo de archivos (oculto) -->
   <input type="file" id="file-input" accept=".html,.htm,.md,.markdown,.txt">
-
-</div>
 
 </body>
 </html>

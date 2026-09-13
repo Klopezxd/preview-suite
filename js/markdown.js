@@ -2,7 +2,7 @@
  * Motor de compilación Markdown y exportación limpia para Moodle.
  * Blindado contra fallos de CDN, errores de sintaxis y colisiones LaTeX.
  * @module markdown
- * @version 3.0.0
+ * @version 3.1.0
  */
 (() => {
   'use strict';
@@ -144,10 +144,162 @@
     if (!markdownText || !markdownText.trim()) return '';
     try {
       const compiled = parseMarkdown(markdownText);
-      return `<!-- Generado con Suite Previsualizador Académico v3.0 (Modo Markdown -> Moodle) -->\n${compiled.trim()}`;
+      return `<!-- Generado con Suite Previsualizador Académico v3.1 (Modo Markdown -> Moodle) -->\n${compiled.trim()}`;
     } catch (err) {
       console.error('[MarkdownEngine] Error al exportar para Moodle:', err);
       return markdownText;
+    }
+  }
+
+  /**
+   * Convierte una cadena de código HTML a formato Markdown estándar (GFM),
+   * preservando fórmulas matemáticas LaTeX, tablas, listas y bloques de código.
+   * 
+   * @param {string} htmlText - Código HTML de entrada.
+   * @returns {string} Texto formateado en Markdown.
+   */
+  function htmlToMarkdown(htmlText) {
+    if (!htmlText || typeof htmlText !== 'string') return '';
+
+    try {
+      // Usar DOMParser nativo del navegador para estructurar el árbol de nodos
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, 'text/html');
+      const body = doc.body;
+
+      function nodeToMd(node) {
+        if (!node) return '';
+
+        // Nodo de texto plano
+        if (node.nodeType === Node.TEXT_NODE) {
+          return node.nodeValue;
+        }
+
+        // Ignorar comentarios o nodos no elementales
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+          return '';
+        }
+
+        const tag = node.tagName.toLowerCase();
+        const childContent = () => Array.from(node.childNodes).map(nodeToMd).join('');
+
+        switch (tag) {
+          case 'h1': return `\n# ${childContent().trim()}\n\n`;
+          case 'h2': return `\n## ${childContent().trim()}\n\n`;
+          case 'h3': return `\n### ${childContent().trim()}\n\n`;
+          case 'h4': return `\n#### ${childContent().trim()}\n\n`;
+          case 'h5': return `\n##### ${childContent().trim()}\n\n`;
+          case 'h6': return `\n###### ${childContent().trim()}\n\n`;
+
+          case 'p': {
+            const inner = childContent().trim();
+            return inner ? `\n${inner}\n\n` : '\n';
+          }
+
+          case 'strong':
+          case 'b': {
+            const inner = childContent();
+            return inner.trim() ? `**${inner}**` : '';
+          }
+
+          case 'em':
+          case 'i': {
+            const inner = childContent();
+            return inner.trim() ? `*${inner}*` : '';
+          }
+
+          case 'u': {
+            const inner = childContent();
+            return `<u>${inner}</u>`;
+          }
+
+          case 'br':
+            return '\n';
+
+          case 'hr':
+            return '\n---\n\n';
+
+          case 'pre': {
+            const codeEl = node.querySelector('code');
+            const codeText = codeEl ? codeEl.textContent : node.textContent;
+            let lang = '';
+            if (codeEl) {
+              const match = (codeEl.className || '').match(/language-([a-z0-9_-]+)/i);
+              if (match) lang = match[1];
+            }
+            return `\n\`\`\`${lang}\n${codeText.replace(/^\n+|\n+$/g, '')}\n\`\`\`\n\n`;
+          }
+
+          case 'code': {
+            if (node.parentElement && node.parentElement.tagName.toLowerCase() === 'pre') {
+              return node.textContent;
+            }
+            return `\`${node.textContent}\``;
+          }
+
+          case 'a': {
+            const href = node.getAttribute('href') || '#';
+            const text = childContent().trim() || href;
+            return `[${text}](${href})`;
+          }
+
+          case 'blockquote': {
+            const inner = childContent().trim();
+            const lines = inner.split('\n').map(l => `> ${l}`).join('\n');
+            return `\n${lines}\n\n`;
+          }
+
+          case 'ul': {
+            const items = Array.from(node.children)
+              .filter(el => el.tagName.toLowerCase() === 'li')
+              .map(li => `- ${Array.from(li.childNodes).map(nodeToMd).join('').trim()}`)
+              .join('\n');
+            return `\n${items}\n\n`;
+          }
+
+          case 'ol': {
+            let idx = 1;
+            const items = Array.from(node.children)
+              .filter(el => el.tagName.toLowerCase() === 'li')
+              .map(li => `${idx++}. ${Array.from(li.childNodes).map(nodeToMd).join('').trim()}`)
+              .join('\n');
+            return `\n${items}\n\n`;
+          }
+
+          case 'table': {
+            const rows = Array.from(node.querySelectorAll('tr'));
+            if (rows.length === 0) return '';
+
+            const formatCell = (cell) => {
+              const content = Array.from(cell.childNodes).map(nodeToMd).join('').trim();
+              return content.replace(/\r?\n+/g, ' ').replace(/\|/g, '\\|');
+            };
+
+            let mdTable = '\n';
+            const headerRow = rows[0];
+            const headerCols = Array.from(headerRow.querySelectorAll('th, td')).map(formatCell);
+            
+            mdTable += `| ${headerCols.join(' | ')} |\n`;
+            mdTable += `| ${headerCols.map(() => '---').join(' | ')} |\n`;
+
+            for (let i = 1; i < rows.length; i++) {
+              const cols = Array.from(rows[i].querySelectorAll('td, th')).map(formatCell);
+              mdTable += `| ${cols.join(' | ')} |\n`;
+            }
+            return mdTable + '\n';
+          }
+
+          default:
+            return childContent();
+        }
+      }
+
+      const result = Array.from(body.childNodes).map(nodeToMd).join('');
+      // Normalizar saltos de línea consecutivos
+      return result.replace(/\n{3,}/g, '\n\n').trim();
+    } catch (e) {
+      console.error('[MarkdownEngine] Error al convertir HTML a Markdown:', e);
+      return htmlText;
     }
   }
 
@@ -157,6 +309,7 @@
   window.MarkdownEngine = {
     parseMarkdown,
     compileToMoodleHtml,
+    htmlToMarkdown,
     protectMathDelimiters,
     fallbackNativeParse
   };

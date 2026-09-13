@@ -2,7 +2,7 @@
  * Inspector heurístico de sintaxis crítica para entregas Moodle.
  * Blindado contra entradas nulas, excepciones DOM y textos masivos.
  * @module linter
- * @version 3.0.0
+ * @version 3.1.0
  */
 (() => {
   'use strict';
@@ -25,26 +25,26 @@
       const lines = code.split('\n');
       const maxScanLines = Math.min(lines.length, 10000); // Límite de seguridad contra bloqueos por archivos gigantes
 
-      // 1. Residuos de bloques Markdown de IA (``` o ```html)
+      const openTables = [];
+      const openPres = [];
+      const openDisplayMath = [];
+      const openInlineMath = [];
+      let aiResidual = null;
+
       for (let i = 0; i < maxScanLines; i++) {
-        const trimmed = lines[i].trim();
-        if (/^```(?:html|latex|markdown|text|[a-z0-9_-]+)?$/i.test(trimmed)) {
-          return {
+        const line = lines[i];
+        const trimmed = line.trim();
+
+        // 1. Residuos de bloques Markdown de IA (prioridad sintáctica)
+        if (!aiResidual && /^```(?:html|latex|markdown|text|[a-z0-9_-]+)?$/i.test(trimmed)) {
+          aiResidual = {
             line: i + 1,
             type: 'Residuo IA',
             message: 'Bloque Markdown (```) no interpretado por Moodle'
           };
         }
-      }
 
-      // 2. Estructura HTML crítica desbalanceada (table, pre)
-      const openTables = [];
-      const openPres = [];
-
-      for (let i = 0; i < maxScanLines; i++) {
-        const line = lines[i];
-
-        // Tablas
+        // 2. Estructura HTML crítica desbalanceada (table, pre)
         const tableOpens = (line.match(/<table\b[^>]*>/gi) || []).length;
         const tableCloses = (line.match(/<\/table>/gi) || []).length;
         for (let t = 0; t < tableOpens; t++) openTables.push(i + 1);
@@ -52,14 +52,30 @@
           if (openTables.length > 0) openTables.pop();
         }
 
-        // Bloques de código <pre>
         const preOpens = (line.match(/<pre\b[^>]*>/gi) || []).length;
         const preCloses = (line.match(/<\/pre>/gi) || []).length;
         for (let p = 0; p < preOpens; p++) openPres.push(i + 1);
         for (let p = 0; p < preCloses; p++) {
           if (openPres.length > 0) openPres.pop();
         }
+
+        // 3. Delimitadores matemáticos sin pareja: \[ ... \] o \( ... \)
+        const dispOpens = (line.match(/\\\[/g) || []).length;
+        const dispCloses = (line.match(/\\\]/g) || []).length;
+        for (let d = 0; d < dispOpens; d++) openDisplayMath.push(i + 1);
+        for (let d = 0; d < dispCloses; d++) {
+          if (openDisplayMath.length > 0) openDisplayMath.pop();
+        }
+
+        const inOpens = (line.match(/\\\(/g) || []).length;
+        const inCloses = (line.match(/\\\)/g) || []).length;
+        for (let m = 0; m < inOpens; m++) openInlineMath.push(i + 1);
+        for (let m = 0; m < inCloses; m++) {
+          if (openInlineMath.length > 0) openInlineMath.pop();
+        }
       }
+
+      if (aiResidual) return aiResidual;
 
       if (openTables.length > 0) {
         return {
@@ -75,30 +91,6 @@
           type: 'HTML',
           message: 'Etiqueta <pre> sin cerrar (contagia formato de código)'
         };
-      }
-
-      // 3. Delimitadores matemáticos sin pareja: \[ ... \] o \( ... \)
-      const openDisplayMath = [];
-      const openInlineMath = [];
-
-      for (let i = 0; i < maxScanLines; i++) {
-        const line = lines[i];
-
-        // Bloque \[ ... \]
-        const dispOpens = (line.match(/\\\[/g) || []).length;
-        const dispCloses = (line.match(/\\\]/g) || []).length;
-        for (let d = 0; d < dispOpens; d++) openDisplayMath.push(i + 1);
-        for (let d = 0; d < dispCloses; d++) {
-          if (openDisplayMath.length > 0) openDisplayMath.pop();
-        }
-
-        // En línea \( ... \)
-        const inOpens = (line.match(/\\\(/g) || []).length;
-        const inCloses = (line.match(/\\\)/g) || []).length;
-        for (let m = 0; m < inOpens; m++) openInlineMath.push(i + 1);
-        for (let m = 0; m < inCloses; m++) {
-          if (openInlineMath.length > 0) openInlineMath.pop();
-        }
       }
 
       if (openDisplayMath.length > 0) {

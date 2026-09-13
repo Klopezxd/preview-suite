@@ -1,16 +1,20 @@
 /**
  * Configuración global del sistema y plantillas académicas iniciales.
  * @module config
- * @version 3.0.0
+ * @version 3.1.0
  */
 (() => {
   'use strict';
 
   const CONFIG = {
-    VERSION: '3.0.0',
+    VERSION: '3.1.0',
     FONT_SIZE_MIN: 10,
-    FONT_SIZE_MAX: 22,
-    DEFAULT_FONT_SIZE: 13,
+    FONT_SIZE_MAX: 26,
+    DEFAULT_FONT_SIZE: 14,
+    PREVIEW_ZOOM_MIN: 50,
+    PREVIEW_ZOOM_MAX: 200,
+    DEFAULT_PREVIEW_ZOOM: 100,
+    PREVIEW_ZOOM_STEP: 10,
     DEBOUNCE_DELAY_MS: 300,
     TOAST_DURATION_MS: 2400,
     MAX_FILE_SIZE_BYTES: 5 * 1024 * 1024, // 5 MB máximo de seguridad

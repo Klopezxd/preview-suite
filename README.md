@@ -1,14 +1,14 @@
-# Academic Preview Suite v3.0
+# Previsualizador Moodle & Markdown
 
-[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.0.0-0284c7?style=for-the-badge)](https://github.com/Klopezxd/previsualizador-moodle)
+[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.1.0-0284c7?style=for-the-badge)](https://github.com/Klopezxd/previsualizador-moodle)
 [![Licencia](https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge)](LICENSE)
 [![Despliegue](https://img.shields.io/badge/GitHub%20Pages-Activo-22c55e?style=for-the-badge&logo=github)](https://klopezxd.github.io/previsualizador-moodle/)
 [![KaTeX](https://img.shields.io/badge/KaTeX-0.16.11-00d084?style=for-the-badge&logo=latex&logoColor=white)](https://katex.org/)
 [![Prism.js](https://img.shields.io/badge/Prism.js-1.29.0-blueviolet?style=for-the-badge)](https://prismjs.com/)
 [![Marked.js](https://img.shields.io/badge/Marked.js-12.0.2-ef4444?style=for-the-badge&logo=markdown&logoColor=white)](https://marked.js.org/)
-[![Arquitectura](https://img.shields.io/badge/Arquitectura-Modular%20SPA%20v3.0-f97316?style=for-the-badge)](https://developer.mozilla.org/es/docs/Web/JavaScript)
+[![Arquitectura](https://img.shields.io/badge/Arquitectura-Modular%20SPA%20v3.1-f97316?style=for-the-badge)](https://developer.mozilla.org/es/docs/Web/JavaScript)
 
-> **Entorno interactivo y reactivo de alta fidelidad para redacción, validación heurística y renderizado en tiempo real de contenidos académicos destinados a Moodle y Markdown.**
+> **Entorno interactivo y reactivo para redacción, visualización y validación en tiempo real de documentos técnicos y académicos con soporte para KaTeX, Prism.js y Markdown (GFM).**
 
 ---
 
@@ -25,29 +25,37 @@ La aplicación se encuentra disponible de forma pública y sin costo de infraest
 
 ## 📋 Descripción del Proyecto
 
-En el contexto de la educación técnica superior y la formación virtual, la redacción de informes, foros y guías de laboratorio suele requerir un flujo continuo entre formatos:
-- Estudiantes que redactan borradores en Markdown o generan esquemas con asistentes de IA, pero necesitan entregas limpias en HTML para el aula virtual (Moodle).
-- Etiquetas desbalanceadas (`<table>`, `<pre>`) o residuos de sintaxis (```` ```html ````) que rompen el diseño del LMS.
-- Necesidad de renderizado matemático riguroso en LaTeX (`\( ... \)` y `\[ ... \]`) con verificación inmediata.
+Una suite unificada diseñada tanto para desarrollo de contenidos de aulas virtuales como para visualización y redacción de documentos en Markdown:
+- **Modo Moodle:** Diseñado para código HTML y componentes de aulas virtuales. Valida el renderizado exacto de tablas, avisos y fórmulas KaTeX antes de publicar en Moodle u otras plataformas educativas.
+- **Modo Markdown:** Visor y editor universal de Markdown (GFM) para redactar notas, documentación y apuntes con renderizado instantáneo de fórmulas matemáticas en LaTeX, bloques de código y exportación rápida.
+- **Detección sintáctica:** Alerta de etiquetas HTML sin cerrar o bloques Markdown residuales.
+- **Soporte matemático riguroso:** KaTeX en línea `\( ... \)` y en bloque `\[ ... \]` o `$$ ... $$`.
 
-**Academic Preview Suite v3.0** resuelve estas necesidades mediante una arquitectura web modular blindada contra excepciones y fallos de entorno, con un **Hub de bienvenida permanente**, soporte para **Modo Moodle (HTML)** y **Modo Markdown (GFM)**, y una utilidad estrella: **Copiar directo a HTML listo para Moodle**.
+**Previsualizador Moodle & Markdown** resuelve estas necesidades mediante una arquitectura web modular blindada contra excepciones y fallos de entorno, 100% responsiva para ordenadores, tablets y smartphones.
 
 ---
 
-## 🛡️ Blindaje Técnico y Resiliencia (Novedades v3.0)
+## 🛡️ Blindaje Técnico, Interactividad y Resiliencia (Novedades v3.1)
 
 1. **Parser Markdown Resiliente con Modo Offline / Respaldo Nativo:**
    - Si el CDN de `marked.js` no carga o la red se interrumpe, el sistema activa automáticamente un parser nativo interno seguro, evitando pantallas en blanco o bloqueos del editor.
-2. **Capa Segura de Almacenamiento (`SafeStorage`):**
+2. **Sistema de Zoom Ergonómico e Híbrido Estilo Overleaf:**
+   - Píldoras interactivas en cabeceras (`14px` en editor, `100%` en vista previa) que muestran el valor en vivo sin tapar el contenido.
+   - Atajos de ratón (`Ctrl + Rueda`) y teclado (`Ctrl + 0`).
+   - Soporte táctil nativo **Pinch-to-zoom (2 dedos)** y micro-popovers flotantes con botones `[ − ]`, `[ + ]` y `[ Restablecer ]`.
+3. **Calibración Visual Óptima (80%-83%):**
+   - Reducción proporcional del grosor de la barra superior, cabeceras e inferior para maximizar el área de trabajo y legibilidad del código.
+   - Botoneras unificadas sin divisiones internas, botón "Limpiar" reactivo con iluminación en Rojo Nórdico (`#FF4757`) y conmutador de modo dinámico bicolor (Violeta Boreal `#A855F7` para Markdown y Ámbar Solar `#FF9234` para Moodle).
+4. **Capa Segura de Almacenamiento (`SafeStorage`):**
    - Acceso blindado a `localStorage` con captura de excepciones para garantizar funcionamiento en navegación privada, modo incógnito estricto (Safari/Firefox) o entornos corporativos restringidos.
-3. **Control de Validación de Archivos:**
+5. **Control de Validación de Archivos:**
    - Límite de seguridad de 5 MB por archivo para prevenir congelamientos del navegador.
    - Filtro de extensiones permitidas (`.html`, `.htm`, `.md`, `.markdown`, `.txt`) con rechazo amigable de binarios.
-4. **Auto-cierre y Envoltura Inteligente de Delimitadores (Estilo IDE):**
+6. **Auto-cierre y Envoltura Inteligente de Delimitadores (Estilo IDE):**
    - Si se selecciona texto y se presiona `(`, `[`, `{`, `"`, `'` o `` ` ``, el editor envuelve la selección automáticamente sin borrar el texto.
-5. **Aislamiento de Condiciones de Carrera:**
+7. **Aislamiento de Condiciones de Carrera:**
    - Limpieza atómica de temporizadores de *debounce* y grabación de historial al conmutar entre modos, impidiendo sobreescrituras accidentales de buffers.
-6. **Accesibilidad Universal (WCAG 2.1):**
+8. **Accesibilidad Universal (WCAG 2.1):**
    - Tarjetas interactivas del Hub navegables y activables mediante teclado (<kbd>Tab</kbd> + <kbd>Enter</kbd> / <kbd>Espacio</kbd>).
    - Anillos de enfoque `:focus-visible` calibrados en CSS.
 
@@ -58,7 +66,7 @@ En el contexto de la educación técnica superior y la formación virtual, la re
 ### 1. Hub de Entrada Elegante y Conmutación de Modos
 - **Pantalla de Bienvenida Permanente:** Menú inicial de selección con diseño Dark IDE que presenta con claridad las herramientas disponibles.
 - **Acceso por Hash:** Soporte para enlaces directos (`#moodle` y `#markdown`) con sincronización en el historial del navegador.
-- **Navegación Sin Recargas:** Botón `⊞ Menú` en la barra superior y selector rápido para alternar de modo preservando los borradores en memoria.
+- **Navegación Intuitiva:** Clic en el logotipo o título para volver a la pantalla de bienvenida (Hub) y botón conmutador único para alternar instantáneamente entre Modo Moodle y Modo Markdown preservando los borradores en memoria.
 
 ### 2. Modo Moodle (HTML Semántico Continuo)
 - **Lienzo de Renderizado Moodle:** Simulación exacta de tarjeta de aula virtual en modo claro y oscuro.
@@ -110,7 +118,8 @@ flowchart TD
 | :--- | :--- | :--- |
 | <kbd>Tab</kbd> | **Indentar Texto** | Inserta 2 espacios de indentación respetando la selección |
 | <kbd>Ctrl</kbd> + <kbd>Z</kbd> | **Deshacer** | Revierte el último cambio mediante pila de historial del modo activo |
-| <kbd>Ctrl</kbd> + <kbd>Y</kbd> | **Rehacer** | Restaura el cambio revertido |
+| <kbd>Ctrl</kbd> + <kbd>Y</kbd> / <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> | **Rehacer** | Restaura el cambio revertido |
+| <kbd>Ctrl</kbd> + <kbd>Rueda</kbd> / <kbd>Ctrl</kbd> + <kbd>0</kbd> | **Zoom de Panel** | Ajuste y restablecimiento ergonómico de zoom en editor o vista previa |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> | **Copiar Contenido** | Copia el contenido del editor al portapapeles |
 | <kbd>Ctrl</kbd> + <kbd>Enter</kbd> | **Actualizar Render** | Fuerza una compilación síncrona manual de KaTeX y Prism |
 | <kbd>Ctrl</kbd> + <kbd>P</kbd> | **Exportar / Imprimir** | Diálogo de impresión calibrado para formato A4 |
@@ -169,7 +178,7 @@ La suite está diseñada para funcionar inmediatamente sin requerir entornos Nod
 
 ## 📜 Historial de Cambios (Changelog)
 
-Consulta el archivo [CHANGELOG.md](CHANGELOG.md) para revisar en detalle la evolución completa del software, desde el prototipo inicial en MathJax hasta la versión actual v3.0.
+Consulta el archivo [CHANGELOG.md](CHANGELOG.md) para revisar en detalle la evolución completa del software, desde el prototipo inicial en MathJax hasta la versión actual v3.1.
 
 ---
 

@@ -1,20 +1,57 @@
 /* ==========================================================================
-   HUB DE INICIO / PANTALLA DE BIENVENIDA (Academic Preview Suite)
+   HUB DE INICIO / PANTALLA DE BIENVENIDA
+   Sistema de Diseño: Aurora Boreal Nórdica
+   Vista fija (100vh / 100dvh) - Selección de texto permitida - Logotipos nítidos
    ========================================================================== */
 
 #hub-screen {
   position: fixed;
   inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
   z-index: 1000;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 32px 20px;
-  background: radial-gradient(circle at 50% 20%, #151f38 0%, #090d16 70%);
-  color: var(--app-text-main, #f8fafc);
-  overflow-y: auto;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  padding: 28px 24px 20px;
+  background-color: #050B1A;
+  /* Luz Cenital de Estudio difusa (Estilo Linear / Raycast): Iluminación continua superior sin bombillas ni focos aislados */
+  background-image: 
+    radial-gradient(ellipse 100% 60% at 50% -10%, rgba(0, 212, 255, 0.14) 0%, rgba(0, 255, 135, 0.05) 42%, transparent 78%),
+    linear-gradient(180deg, rgba(8, 20, 42, 0.5) 0%, #050B1A 100%);
+  color: #FAFBFC;
+  overflow: hidden; /* Cero barras de scroll por defecto */
+  font-family: 'Montserrat', sans-serif;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+  box-sizing: border-box;
+}
+
+/* Capa de Cuadrícula Milimétrica Técnica (Blueprint Boreal con Difuminado Radial) */
+#hub-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(0, 212, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 212, 255, 0.055) 1px, transparent 1px);
+  background-size: 38px 38px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 35%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 35%, transparent 80%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Viñeta ambiental sutil para contraste */
+#hub-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(5, 11, 26, 0.65) 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 #hub-screen.hidden {
@@ -23,25 +60,28 @@
   pointer-events: none;
 }
 
-/* Encabezado del Hub */
+/* --- Encabezado del Hub (Texto 100% Seleccionable) --- */
 .hub-header {
   text-align: center;
-  max-width: 780px;
-  margin-top: 20px;
-  margin-bottom: 28px;
+  max-width: 760px;
+  margin-top: 10px;
+  position: relative;
+  z-index: 2;
 }
 
 .hub-brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 18px;
-  border-radius: var(--radius-full, 9999px);
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  margin-bottom: 16px;
-  backdrop-filter: blur(8px);
+  gap: 10px;
+  padding: 6px 18px;
+  border-radius: 9999px;
+  background: rgba(10, 22, 40, 0.75);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 255, 135, 0.08);
+  margin-bottom: 14px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  user-select: none;
 }
 
 .hub-brand-icon {
@@ -50,52 +90,75 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-sm, 4px);
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-  color: #ffffff;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #00FF87 0%, #00D4FF 100%);
+  color: #050B1A;
+  box-shadow: 0 2px 10px rgba(0, 255, 135, 0.35);
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.hub-brand-icon:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 16px rgba(0, 255, 135, 0.55);
+}
+
+.hub-brand-icon:active {
+  transform: scale(0.92);
+}
+
+.hub-brand-icon.spin-click {
+  transform: rotate(360deg) scale(1.25);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.7);
 }
 
 .hub-brand-icon svg {
-  width: 18px;
-  height: 18px;
-  stroke-width: 2.2;
+  width: 17px;
+  height: 17px;
+  stroke-width: 2;
 }
 
 .hub-brand-title {
-  font-size: 13px;
+  font-size: 11.5px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-accent-blue, #38bdf8);
+  color: #00FF87;
 }
 
 .hub-title {
-  font-size: clamp(28px, 4.5vw, 42px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
-  margin: 0 0 12px;
-  background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+  font-size: clamp(1.85rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0 0 8px;
+  background: linear-gradient(135deg, #FAFBFC 30%, #E8F4F8 70%, #00FF87 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .hub-subtitle {
-  font-size: clamp(14px, 2vw, 16px);
-  color: var(--app-text-muted, #94a3b8);
-  margin: 0;
+  font-size: clamp(13.5px, 1.6vw, 15px);
+  color: #9ab3cf;
+  margin: 0 auto;
   line-height: 1.5;
+  max-width: 580px;
+  font-weight: 400;
 }
 
-/* Grilla de Tarjetas de Selección */
+/* --- Grilla de Tarjetas de Selección --- */
 .hub-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 440px));
-  gap: 28px;
+  grid-template-columns: repeat(2, minmax(280px, 390px));
+  gap: 26px;
   width: 100%;
-  max-width: 940px;
-  margin: 10px auto 30px;
+  max-width: 840px;
+  margin: auto 0;
   justify-content: center;
+  position: relative;
+  z-index: 2;
 }
 
 .hub-card {
@@ -103,14 +166,15 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 32px 28px;
-  border-radius: var(--radius-lg, 12px);
-  background: rgba(19, 27, 46, 0.75);
-  border: 1px solid rgba(51, 65, 85, 0.8);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(12px);
+  padding: 28px 26px;
+  border-radius: 8px;
+  background: rgba(10, 22, 40, 0.75);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(5, 11, 26, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   cursor: pointer;
-  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   overflow: hidden;
 }
 
@@ -120,149 +184,93 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  opacity: 0.8;
-  transition: opacity 0.2s ease, height 0.2s ease;
+  height: 3px;
+  opacity: 0.9;
 }
 
 .hub-card-moodle::before {
-  background: linear-gradient(90deg, #f97316, #fb923c);
+  background: linear-gradient(90deg, #00D4FF, #00FF87);
 }
 
 .hub-card-markdown::before {
-  background: linear-gradient(90deg, #38bdf8, #818cf8);
-}
-
-.hub-card:hover,
-.hub-card:focus-visible {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+  background: linear-gradient(90deg, #00FF87, #7B2FBE);
 }
 
 .hub-card:focus-visible {
-  outline: 2px solid var(--color-accent-blue, #38bdf8);
+  outline: 2px solid #00FF87;
   outline-offset: 3px;
 }
 
 .hub-card-moodle:hover,
 .hub-card-moodle:focus-visible {
-  border-color: rgba(249, 115, 22, 0.5);
-  box-shadow: 0 20px 40px rgba(249, 115, 22, 0.15);
+  border-color: rgba(0, 212, 255, 0.6);
+  box-shadow: 0 12px 32px rgba(5, 11, 26, 0.8), 0 0 20px rgba(0, 212, 255, 0.15);
+  background: rgba(10, 22, 40, 0.88);
 }
 
 .hub-card-markdown:hover,
 .hub-card-markdown:focus-visible {
-  border-color: rgba(56, 189, 248, 0.5);
-  box-shadow: 0 20px 40px rgba(56, 189, 248, 0.15);
+  border-color: rgba(0, 255, 135, 0.6);
+  box-shadow: 0 12px 32px rgba(5, 11, 26, 0.8), 0 0 20px rgba(0, 255, 135, 0.15);
+  background: rgba(10, 22, 40, 0.88);
 }
 
-/* Contenido de la Tarjeta */
 .hub-card-top {
-  margin-bottom: 24px;
-}
-
-.hub-card-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: var(--radius-full, 9999px);
   margin-bottom: 16px;
-}
-
-.hub-card-moodle .hub-card-badge {
-  background: rgba(249, 115, 22, 0.15);
-  color: #fb923c;
-  border: 1px solid rgba(249, 115, 22, 0.3);
-}
-
-.hub-card-markdown .hub-card-badge {
-  background: rgba(56, 189, 248, 0.15);
-  color: #7dd3fc;
-  border: 1px solid rgba(56, 189, 248, 0.3);
 }
 
 .hub-card-title-row {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   margin-bottom: 12px;
 }
 
+/* Logotipos Destacados con Brillo Boreal */
 .hub-card-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md, 8px);
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .hub-card-moodle .hub-card-icon {
-  background: rgba(249, 115, 22, 0.12);
-  color: #f97316;
-  border: 1px solid rgba(249, 115, 22, 0.25);
+  background: rgba(0, 212, 255, 0.15);
+  color: #00D4FF;
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 212, 255, 0.2);
 }
 
 .hub-card-markdown .hub-card-icon {
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: rgba(0, 255, 135, 0.15);
+  color: #00FF87;
+  border: 1px solid rgba(0, 255, 135, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 255, 135, 0.2);
 }
 
 .hub-card-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
 }
 
 .hub-card-title {
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 700;
-  color: #ffffff;
+  color: #FAFBFC;
   margin: 0;
+  letter-spacing: -0.01em;
 }
 
 .hub-card-desc {
   font-size: 13.5px;
-  color: var(--app-text-muted, #94a3b8);
+  color: #9ab3cf;
   line-height: 1.55;
-  margin: 0 0 16px;
-}
-
-.hub-card-features {
-  list-style: none;
-  padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.hub-card-features li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12.5px;
-  color: #cbd5e1;
-}
-
-.hub-card-features li svg {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
-
-.hub-card-moodle .hub-card-features li svg {
-  color: #fb923c;
-}
-
-.hub-card-markdown .hub-card-features li svg {
-  color: #38bdf8;
+  font-weight: 400;
 }
 
 /* Botón de acción de la tarjeta */
@@ -271,68 +279,108 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 12px 18px;
-  border-radius: var(--radius-md, 8px);
-  font-size: 13.5px;
+  padding: 11px 18px;
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: 600;
-  transition: background-color 0.2s ease, transform 0.15s ease;
-  margin-top: 20px;
+  transition: all 0.18s ease;
+  margin-top: 18px;
+  user-select: none;
 }
 
 .hub-card-moodle .hub-card-action {
-  background: rgba(249, 115, 22, 0.15);
-  color: #ffedd5;
-  border: 1px solid rgba(249, 115, 22, 0.35);
+  background: rgba(10, 22, 40, 0.6);
+  color: #E8F4F8;
+  border: 1px solid rgba(0, 212, 255, 0.35);
 }
 
 .hub-card-moodle:hover .hub-card-action {
-  background: #ea580c;
-  color: #ffffff;
-  border-color: #ea580c;
+  background: linear-gradient(135deg, #00D4FF 0%, #00FF87 100%);
+  color: #050B1A;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(0, 212, 255, 0.3);
 }
 
 .hub-card-markdown .hub-card-action {
-  background: rgba(56, 189, 248, 0.15);
-  color: #e0f2fe;
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(10, 22, 40, 0.6);
+  color: #E8F4F8;
+  border: 1px solid rgba(0, 255, 135, 0.35);
 }
 
 .hub-card-markdown:hover .hub-card-action {
-  background: #0284c7;
-  color: #ffffff;
-  border-color: #0284c7;
+  background: linear-gradient(135deg, #00FF87 0%, #7B2FBE 100%);
+  color: #FAFBFC;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(0, 255, 135, 0.3);
 }
 
 /* Pie de página del Hub */
 .hub-footer {
   text-align: center;
-  font-size: 12px;
-  color: var(--app-text-dim, #64748b);
-  margin-top: 16px;
+  font-size: 11.5px;
+  color: #5c7799;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 6px;
 }
 
-.hub-footer a {
-  color: var(--app-text-muted, #94a3b8);
-  text-decoration: none;
-  font-weight: 500;
+.hub-footer p {
+  margin: 0;
 }
 
-.hub-footer a:hover {
-  color: var(--color-accent-blue, #38bdf8);
+/* Adaptabilidad para Tablets y Móviles */
+@media (max-width: 960px) {
+  .hub-cards-grid {
+    max-width: 720px;
+    gap: 20px;
+  }
+
+  .hub-card {
+    padding: 24px 22px;
+  }
 }
 
-/* Adaptabilidad Móvil */
-@media (max-width: 640px) {
+@media (max-height: 650px), (max-width: 768px) {
   #hub-screen {
-    padding: 20px 14px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 680px) {
+  .hub-header {
+    margin-top: 4px;
+  }
+
+  .hub-title {
+    font-size: 1.5rem;
+    line-height: 1.25;
+  }
+
+  .hub-subtitle {
+    font-size: 13px;
+    line-height: 1.55;
+    padding: 0 4px;
   }
 
   .hub-cards-grid {
     grid-template-columns: 1fr;
     gap: 16px;
+    max-width: 420px;
+    width: 100%;
   }
 
   .hub-card {
-    padding: 22px 18px;
+    padding: 20px 18px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .hub-card-action {
+    min-height: 44px;
+    touch-action: manipulation;
   }
 }

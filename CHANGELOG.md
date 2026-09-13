@@ -5,6 +5,46 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
+## [3.1.0] - 2026-09-13
+
+### Añadido
+- **Sistema de Zoom Ergonómico e Híbrido Estilo Overleaf:**
+  - Pseudobotones compactos en las cabeceras (`14px` en editor, `100%` en vista previa) que muestran el valor en vivo sin tapar el contenido.
+  - Control de escritorio mediante ratón (`Ctrl + Rueda`) y teclado (`Ctrl + +`, `Ctrl + -`, `Ctrl + 0`).
+  - Gesto táctil nativo **Pinch-to-zoom (2 dedos)** en editor y vista previa para móviles y tablets.
+  - **Micro-popover táctil** al pulsar el pseudobotón con controles cómodos `[ − ]`, `[ + ]` y `[ Restablecer ]`.
+- **Fondo de Landing Page: Luz Cenital de Estudio (Estilo Linear / Raycast):**
+  - Iluminación difusa continua desde el borde superior central sobre una cuadrícula técnica milimétrica boreal (eliminación de focos circulares aislados).
+- **Easter Egg de Rickroll Sutil y Experiencia de Regreso:**
+  - Reubicación en el badge de versión (`v3.1`) y en `Made by Antigravity` en la barra inferior y footer del Hub (cero activaciones accidentales).
+  - Apertura directa en YouTube en pestaña nueva (sin iframes pesados).
+  - Modal flotante minimalista que recibe al usuario al volver a la pestaña con el hombre bailando (`🕺`) y título en letras grandes.
+- **Navegación Rápida:** Clic en el logo o título principal de la barra superior regresa naturalmente a la pantalla de bienvenida (Hub).
+
+### Cambiado
+- **Rediseño Visual Aurora Boreal Nórdica:** Paleta cromática Dark IDE con cian neón (`#00D4FF`), esmeralda (`#00FF87`), azul abisal (`#050B1A`) y violeta boreal.
+- **Calibración Ergonómica de Barras:** Reducción proporcional del grosor de la barra superior, cabeceras e inferior al 80%-83% de su altura original para maximizar el área de trabajo del editor y vista previa.
+- **Botoneras Unificadas (`.btn-group`):** Contenedor exterior unificado sin divisiones internas ("solo el cuadrito"), con iluminación cian al pasar el cursor.
+- **Botón "Limpiar" Reactivo:** Integración sin delimitación en reposo (fondo y borde transparentes, texto e ícono en Rojo Nórdico `#FF4757`) e iluminación con resplandor completo al pasar el cursor.
+- **Conmutador de Modo Bicolor Reactivo:** Iluminación contextual e inteligente con halo Violeta Boreal (`#A855F7`) al invitar a Modo Markdown y Ámbar Solar Moodle (`#FF9234`) al conmutar a Modo Moodle.
+- **Simplificación de la Landing Page:** Eliminación de detalles técnicos innecesarios para el usuario final, manteniendo descripciones concisas y directas.
+- **Claridad de Botones:** Renombrado a "Reestablecer Plantilla" y botón único conmutador de modo ("Modo Moodle" / "Modo Markdown").
+- **Estándares WAI-ARIA:** Diálogos modales con roles accesibles (`role="dialog"`, `aria-modal="true"`, `aria-labelledby`).
+
+### Optimizado
+- **Auditoría Integral de Rendimiento y Clean Code:**
+  - Escaneo de saltos de línea optimizado mediante `charCodeAt(10)` en $O(N)$ con memoización, eliminando el stutter al teclear en documentos extensos.
+  - Debounce de 100ms en el redimensionamiento de ventana (`resize`) para evitar reflows continuos de layout.
+  - Conversión recursiva de tablas HTML a Markdown preservando fórmulas LaTeX sin romper filas ni columnas.
+
+### Eliminado
+- Enlace inexistente a `css/variables.css` que provocaba errores 404 en la consola del navegador.
+- Función huérfana `copyMoodleHtmlFromMarkdown` y botón redundante de copia directa a Moodle.
+- Notificaciones flotantes superpuestas que bloqueaban la visibilidad del documento.
+- Selectores CSS obsoletos (`.font-ctrl`, `.btn-hub`, `.mode-badge`, etc.).
+
+---
+
 ## [3.0.0] - 2026-09-13
 
 ### Añadido
