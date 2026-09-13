@@ -1,13 +1,14 @@
-# Previsualizador Moodle v2.0
+# Academic Preview Suite v3.0
 
-[![Version](https://img.shields.io/badge/Versi%C3%B3n-2.0.0-0284c7?style=for-the-badge)](https://github.com/Klopezxd/previsualizador-moodle)
+[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.0.0-0284c7?style=for-the-badge)](https://github.com/Klopezxd/previsualizador-moodle)
 [![Licencia](https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge)](LICENSE)
 [![Despliegue](https://img.shields.io/badge/GitHub%20Pages-Activo-22c55e?style=for-the-badge&logo=github)](https://klopezxd.github.io/previsualizador-moodle/)
 [![KaTeX](https://img.shields.io/badge/KaTeX-0.16.11-00d084?style=for-the-badge&logo=latex&logoColor=white)](https://katex.org/)
 [![Prism.js](https://img.shields.io/badge/Prism.js-1.29.0-blueviolet?style=for-the-badge)](https://prismjs.com/)
-[![Arquitectura](https://img.shields.io/badge/Arquitectura-Single--File%20SPA-f97316?style=for-the-badge)](https://developer.mozilla.org/es/docs/Web/JavaScript)
+[![Marked.js](https://img.shields.io/badge/Marked.js-12.0.2-ef4444?style=for-the-badge&logo=markdown&logoColor=white)](https://marked.js.org/)
+[![Arquitectura](https://img.shields.io/badge/Arquitectura-Modular%20SPA%20v3.0-f97316?style=for-the-badge)](https://developer.mozilla.org/es/docs/Web/JavaScript)
 
-> **Entorno interactivo y reactivo de alta fidelidad para desarrollo, validación heurística y renderizado en tiempo real de contenidos académicos destinados a plataformas LMS (Moodle).**
+> **Entorno interactivo y reactivo de alta fidelidad para redacción, validación heurística y renderizado en tiempo real de contenidos académicos destinados a Moodle y Markdown.**
 
 ---
 
@@ -17,67 +18,88 @@ La aplicación se encuentra disponible de forma pública y sin costo de infraest
 
 🔗 **[https://klopezxd.github.io/previsualizador-moodle/](https://klopezxd.github.io/previsualizador-moodle/)**
 
-Compatible con navegadores modernos en sistemas de escritorio (Windows, macOS, Linux) y dispositivos móviles (Android, iOS).
+* **Acceso directo al Modo Moodle:** [https://klopezxd.github.io/previsualizador-moodle/#moodle](https://klopezxd.github.io/previsualizador-moodle/#moodle)
+* **Acceso directo al Modo Markdown:** [https://klopezxd.github.io/previsualizador-moodle/#markdown](https://klopezxd.github.io/previsualizador-moodle/#markdown)
 
 ---
 
 ## 📋 Descripción del Proyecto
 
-En el contexto de la educación superior y la formación técnica virtual, la elaboración de materiales didácticos, guías de laboratorio, estudios de caso y aportes en foros de discusión dentro de la plataforma **Moodle** presenta desafíos recurrentes:
+En el contexto de la educación técnica superior y la formación virtual, la redacción de informes, foros y guías de laboratorio suele requerir un flujo continuo entre formatos:
+- Estudiantes que redactan borradores en Markdown o generan esquemas con asistentes de IA, pero necesitan entregas limpias en HTML para el aula virtual (Moodle).
+- Etiquetas desbalanceadas (`<table>`, `<pre>`) o residuos de sintaxis (```` ```html ````) que rompen el diseño del LMS.
+- Necesidad de renderizado matemático riguroso en LaTeX (`\( ... \)` y `\[ ... \]`) con verificación inmediata.
 
-- Incompatibilidad o renderizado fallido de fórmulas matemáticas complejas.
-- Inserción involuntaria de artefactos de texto generados por herramientas de IA (residuos de etiquetas Markdown).
-- Etiquetas HTML desbalanceadas que alteran la estructura visual de las aulas virtuales.
-- Ciclos lentos de prueba y error que obligan a publicar contenido incompleto o con errores en la plataforma de producción.
-
-**Previsualizador Moodle v2.0** resuelve estas problemáticas ofreciendo un entorno de trabajo síncrono, liviano y desacoplado, que simula el entorno de renderizado de Moodle en el navegador del usuario con latencia cero y validación proactiva de sintaxis.
+**Academic Preview Suite v3.0** resuelve estas necesidades mediante una arquitectura web modular blindada contra excepciones y fallos de entorno, con un **Hub de bienvenida permanente**, soporte para **Modo Moodle (HTML)** y **Modo Markdown (GFM)**, y una utilidad estrella: **Copiar directo a HTML listo para Moodle**.
 
 ---
 
-## 🚀 Características Arquitectónicas y Funcionales
+## 🛡️ Blindaje Técnico y Resiliencia (Novedades v3.0)
 
-### 1. Compilación Matemática Síncrona (KaTeX Engine)
-- **Rendimiento Ultraligero:** Integración del compilador KaTeX (v0.16.11), optimizado para renderizar fórmulas matemáticas en menos de 5 milisegundos, reduciendo el consumo de memoria en un **85%** frente a soluciones como MathJax.
-- **Soporte Completo de Delimitadores:**
-  - **Fórmulas en Bloque:** `\[ ... \]` y `$$ ... $$`
-  - **Fórmulas en Línea:** `\( ... \)` y `$ ... $`
-- **Tolerancia y Aislamiento de Errores:** En caso de sintaxis LaTeX inválida, el sistema captura la excepción de forma aislada, señalando el error sin interrumpir el flujo de trabajo del editor.
-
-### 2. Inspector Estático de Sintaxis Crítica (Cero Falsas Alarmas)
-El editor incorpora un motor de telemetría y validación heurística de contenido en tiempo real:
-- **Detección de Residuos de IA:** Localiza bloques de código Markdown huérfanos (```` ``` ```` o ```` ```html ````) generados inadvertidamente al copiar contenido de asistentes de inteligencia artificial.
-- **Validación Estructural de HTML:** Identifica tablas no cerradas (`<table>`) o bloques de código preformateado desbalanceados (`<pre>`).
-- **Navegación Directa de Errores:** Alerta interactiva con salto de foco automático hacia la línea exacta del documento donde se originó el conflicto.
-
-### 3. Arquitectura Autónoma (Single-File Architecture - SFA)
-- **Portabilidad Absoluta:** Diseñado bajo el patrón de arquitectura de archivo único. Puede ejecutarse localmente con doble clic sobre el archivo `.html` sin requerir entornos de desarrollo Node.js, compiladores ni servidores locales.
-- **Zero-Dependency Vector System:** Sistema de iconografía embebido mediante un diccionario de símbolos SVG (`<symbol>`). Elimina dependencias de webfonts de terceros (como FontAwesome), ahorrando más de 450 KB en transferencias de red y previniendo efectos FOUT/FOIT.
-- **Privacidad Estricta (Client-Side Only):** Toda la computación y procesamiento se ejecuta en la memoria del navegador. No se transmiten datos ni contenidos académicos hacia servidores externos.
-
-### 4. Interfaz Adaptativa y Soporte Táctil Avanzado
-- **Modo Escritorio (> 768px):** Distribución de panel dual (código fuente / vista previa) con divisor arrastrable mediante la API de `PointerEvents`.
-- **Modo Móvil (≤ 768px):** Disposición vertical con jerarquía ergonómica y control táctil suave (`touchmove`).
-- **Contención de Desbordamiento Seguro:** Las tablas con múltiples columnas y las expresiones matemáticas extensas cuentan con desplazamiento horizontal encapsulado para no romper el layout.
-
-### 5. Motor de Exportación e Impresión Formato A4
-- Hoja de estilos `@media print` calibrada al milímetro para formatos estándar A4.
-- Supresión automática de paneles de control, barras de estado y elementos no editoriales.
-- Preservación fidedigna de los esquemas cromáticos de sintaxis (Prism Tomorrow) y fuentes vectoriales nítidas aptas para generación de informes PDF profesionales vía `Ctrl + P`.
+1. **Parser Markdown Resiliente con Modo Offline / Respaldo Nativo:**
+   - Si el CDN de `marked.js` no carga o la red se interrumpe, el sistema activa automáticamente un parser nativo interno seguro, evitando pantallas en blanco o bloqueos del editor.
+2. **Capa Segura de Almacenamiento (`SafeStorage`):**
+   - Acceso blindado a `localStorage` con captura de excepciones para garantizar funcionamiento en navegación privada, modo incógnito estricto (Safari/Firefox) o entornos corporativos restringidos.
+3. **Control de Validación de Archivos:**
+   - Límite de seguridad de 5 MB por archivo para prevenir congelamientos del navegador.
+   - Filtro de extensiones permitidas (`.html`, `.htm`, `.md`, `.markdown`, `.txt`) con rechazo amigable de binarios.
+4. **Auto-cierre y Envoltura Inteligente de Delimitadores (Estilo IDE):**
+   - Si se selecciona texto y se presiona `(`, `[`, `{`, `"`, `'` o `` ` ``, el editor envuelve la selección automáticamente sin borrar el texto.
+5. **Aislamiento de Condiciones de Carrera:**
+   - Limpieza atómica de temporizadores de *debounce* y grabación de historial al conmutar entre modos, impidiendo sobreescrituras accidentales de buffers.
+6. **Accesibilidad Universal (WCAG 2.1):**
+   - Tarjetas interactivas del Hub navegables y activables mediante teclado (<kbd>Tab</kbd> + <kbd>Enter</kbd> / <kbd>Espacio</kbd>).
+   - Anillos de enfoque `:focus-visible` calibrados en CSS.
 
 ---
 
-## 🏗️ Flujo de Datos del Sistema
+## 🚀 Características Funcionales
+
+### 1. Hub de Entrada Elegante y Conmutación de Modos
+- **Pantalla de Bienvenida Permanente:** Menú inicial de selección con diseño Dark IDE que presenta con claridad las herramientas disponibles.
+- **Acceso por Hash:** Soporte para enlaces directos (`#moodle` y `#markdown`) con sincronización en el historial del navegador.
+- **Navegación Sin Recargas:** Botón `⊞ Menú` en la barra superior y selector rápido para alternar de modo preservando los borradores en memoria.
+
+### 2. Modo Moodle (HTML Semántico Continuo)
+- **Lienzo de Renderizado Moodle:** Simulación exacta de tarjeta de aula virtual en modo claro y oscuro.
+- **Linter Heurístico de Sintaxis:**
+  - Detección inmediata de residuos de IA (```` ``` ```` o ```html````).
+  - Alerta de etiquetas desbalanceadas (`<table>` y `<pre>`).
+  - Detección de delimitadores LaTeX huérfanos.
+  - Salto de cursor directo a la línea del error con un clic en la píldora de telemetría.
+- **Telemetría Libre:** Contador de palabras, caracteres y líneas en tiempo real sin límites artificiales.
+
+### 3. Modo Markdown (GFM + Motor KaTeX)
+- **Especificación Completa:** Soporte para encabezados, tablas comparativas, listas de tareas (`- [x]`) y bloques de código Prism.
+- **Fórmulas Matemáticas Integradas:** Delimitadores LaTeX en bloque (`$$ ... $$`, `\[ ... \]`) y en línea (`\( ... \)`).
+- **⭐ Exportador a Moodle:** Botón que compila el Markdown a HTML continuo semántico limpio, formateando las tablas con clases nativas y enviándolo al portapapeles listo para pegar.
+
+### 4. Compilación Matemática y Resaltado Léxico
+- **KaTeX Engine (v0.16.11):** Compilación matemática en menos de 5 ms en el cliente.
+- **Prism.js (v1.29.0):** Resaltado léxico de Python, C++, Java, LaTeX, JavaScript, SQL y R con tema Tomorrow.
+
+---
+
+## 🏗️ Flujo de Procesamiento del Sistema
 
 ```mermaid
-flowchart LR
-    A[Entrada en Editor] --> B[Scheduler con Debounce]
-    B --> C[Linter Heurístico]
-    C -->|Validación de Sintaxis| D[Inyección DOM Segura]
-    D --> E[Compilador KaTeX]
-    D --> F[Tokenizador Prism.js]
-    E --> G[Vista Previa Final]
-    F --> G
-    C -->|Reporte de Métricas| H[Barra de Telemetría]
+flowchart TD
+    Entrada[Entrada en Editor] --> Scheduler[Scheduler con Debounce]
+    Scheduler --> CondicionModo{Modo Activo}
+    
+    CondicionModo -->|Modo Moodle| InyMoodle[Inyección Directa DOM]
+    CondicionModo -->|Modo Markdown| Transpila[Marked.js / Fallback Nativo]
+    
+    Transpila --> InyMoodle
+    InyMoodle --> KaTeX[Compilador KaTeX]
+    InyMoodle --> Prism[Tokenizador Prism.js]
+    
+    KaTeX --> Vista[Vista Previa Final]
+    Prism --> Vista
+    
+    CondicionModo -->|Modo Moodle| Linter[Linter Heurístico Blindado]
+    Linter --> Telemetria[Barra de Telemetría Libre]
+    CondicionModo -->|Modo Markdown| Telemetria
 ```
 
 ---
@@ -86,44 +108,68 @@ flowchart LR
 
 | Atajo | Acción | Descripción |
 | :--- | :--- | :--- |
-| <kbd>Tab</kbd> | **Indentar Código** | Inserta 2 espacios de indentación respetando la selección |
-| <kbd>Ctrl</kbd> + <kbd>Z</kbd> | **Deshacer** | Revierte el último cambio mediante pila de historial |
+| <kbd>Tab</kbd> | **Indentar Texto** | Inserta 2 espacios de indentación respetando la selección |
+| <kbd>Ctrl</kbd> + <kbd>Z</kbd> | **Deshacer** | Revierte el último cambio mediante pila de historial del modo activo |
 | <kbd>Ctrl</kbd> + <kbd>Y</kbd> | **Rehacer** | Restaura el cambio revertido |
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> | **Copiar Código** | Copia el contenido íntegro del editor al portapapeles |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> | **Copiar Contenido** | Copia el contenido del editor al portapapeles |
 | <kbd>Ctrl</kbd> + <kbd>Enter</kbd> | **Actualizar Render** | Fuerza una compilación síncrona manual de KaTeX y Prism |
-| <kbd>Ctrl</kbd> + <kbd>P</kbd> | **Exportar / Imprimir** | Abre el diálogo nativo de impresión calibrado para A4 |
+| <kbd>Ctrl</kbd> + <kbd>P</kbd> | **Exportar / Imprimir** | Diálogo de impresión calibrado para formato A4 |
 | <kbd>Esc</kbd> | **Cerrar Diálogos** | Cierra cualquier modal o menú flotante abierto |
 
 ---
 
-## 🛠️ Stack Tecnológico y Estándares
+## 🛠️ Estructura del Repositorio
 
-- **Lenguajes:** HTML5 Semántico, CSS3 Moderno (Variables CSS / Design Tokens, Flexbox, CSS Grid), JavaScript ES6+ (Strict Mode, IIFE).
-- **Motores Externos (CDN Unificado):**
-  - [KaTeX v0.16.11](https://katex.org/) — Compilación matemática en tiempo real.
-  - [Prism.js v1.29.0](https://prismjs.com/) — Resaltado léxico de bloques de código.
-- **Tipografía:** [Inter](https://fonts.google.com/specimen/Inter) y [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) (Subconjunto latino optimizado).
-- **Estándares de Calidad:** Principios Clean Code, arquitectura sin estado en servidor, separación de responsabilidades y accesibilidad semántica.
+```text
+previsualizador-moodle/
+├── css/
+│   ├── styles.css        # Layout dual, design tokens, temas y print A4
+│   └── hub.css           # Pantalla de bienvenida y tarjetas de selección
+├── js/
+│   ├── config.js         # Constantes, configuraciones, límites y plantillas base
+│   ├── linter.js         # Inspector heurístico de sintaxis crítica protegido
+│   ├── markdown.js       # Transpilador Markdown con protección LaTeX y fallback
+│   └── app.js            # Controlador central, router, SafeStorage y eventos
+├── index.html            # Estructura limpia HTML5
+├── .editorconfig         # Consistencia de formato (2 espacios, LF, UTF-8)
+├── .gitignore            # Exclusión de temporales y notas privadas
+├── .nojekyll             # Bypass de Jekyll para GitHub Pages
+├── CHANGELOG.md          # Bitácora histórica según estándar Keep a Changelog
+├── LICENSE               # Licencia libre MIT
+└── README.md             # Documentación oficial del proyecto
+```
 
 ---
 
 ## 📦 Ejecución y Despliegue
 
-### Ejecución Local
-1. Clona este repositorio o descarga el código fuente:
-   ```bash
-   git clone https://github.com/Klopezxd/previsualizador-moodle.git
-   ```
-2. Abre directamente el archivo `index.html` en tu navegador preferido:
-   - Doble clic en el explorador de archivos, o
-   - Arrastra el archivo hacia una ventana de Google Chrome, Mozilla Firefox, Microsoft Edge o Safari.
+### 1. Ejecución en Local (Sin conexión ni dependencias)
 
-### Despliegue en GitHub Pages
-1. Sube el repositorio a tu cuenta de GitHub.
-2. Ingresa a **Settings** > **Pages** en el repositorio.
-3. En la sección **Build and deployment**, selecciona la fuente **Deploy from a branch**.
-4. Configura la rama `main` (o `master`) y la carpeta `/ (root)`.
-5. Haz clic en **Save**. En pocos minutos tu previsualizador estará activo globalmente.
+La suite está diseñada para funcionar inmediatamente sin requerir entornos Node.js ni compiladores:
+
+* **Método A (Doble Clic Directo):**  
+  Clona el repositorio o descarga el archivo ZIP, abre la carpeta y haz **doble clic en `index.html`** para ejecutarlo directamente en Google Chrome, Microsoft Edge, Mozilla Firefox o Safari a través del protocolo nativo `file:///`.
+* **Método B (Servidor Local con Python o VS Code):**  
+  Para simular un entorno idéntico a producción:
+  ```bash
+  # Iniciar servidor local nativo con Python en el puerto 8000:
+  python -m http.server 8000
+  ```
+  Luego abre en tu navegador: `http://localhost:8000`.
+
+### 2. Despliegue en GitHub Pages
+
+1. Sube este repositorio a tu cuenta de GitHub.
+2. Ve a **Settings** > **Pages** en tu repositorio.
+3. En **Build and deployment**, selecciona la fuente **Deploy from a branch**.
+4. Elige la rama `main` y la carpeta `/ (root)`.
+5. Haz clic en **Save**. En menos de 2 minutos estará publicado globalmente.
+
+---
+
+## 📜 Historial de Cambios (Changelog)
+
+Consulta el archivo [CHANGELOG.md](CHANGELOG.md) para revisar en detalle la evolución completa del software, desde el prototipo inicial en MathJax hasta la versión actual v3.0.
 
 ---
 

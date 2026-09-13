@@ -1,0 +1,1365 @@
+    /* --- 1. Design Tokens y Paleta --- */
+    :root {
+      --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', Consolas, Monaco, monospace;
+
+      /* Interfaz base (Dark IDE) */
+      --app-bg-darkest: #090d16;
+      --app-bg-dark: #0f172a;
+      --app-bg-surface: #1e293b;
+      --app-bg-surface-hover: #334155;
+      --app-border: #334155;
+      --app-text-main: #f8fafc;
+      --app-text-muted: #94a3b8;
+      --app-text-dim: #64748b;
+
+      --color-moodle: #f97316;
+      --color-moodle-hover: #ea580c;
+      --color-accent-blue: #38bdf8;
+      --color-accent-purple: #c084fc;
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --color-danger: #ef4444;
+
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+
+      /* Lienzo Moodle: Tema claro */
+      --preview-stage-bg: #f1f5f9;
+      --preview-card-bg: #ffffff;
+      --preview-card-border: #cbd5e1;
+      --preview-card-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      --preview-text: #1e293b;
+      --preview-heading: #0f172a;
+      --preview-border-subtle: #e2e8f0;
+
+      --preview-alert-info-bg: #e0f2fe;
+      --preview-alert-info-border: #0284c7;
+      --preview-alert-info-text: #0369a1;
+
+      --preview-alert-success-bg: #dcfce7;
+      --preview-alert-success-border: #16a34a;
+      --preview-alert-success-text: #15803d;
+
+      --preview-alert-warning-bg: #fef3c7;
+      --preview-alert-warning-border: #d97706;
+      --preview-alert-warning-text: #b45309;
+
+      --preview-alert-danger-bg: #fee2e2;
+      --preview-alert-danger-border: #dc2626;
+      --preview-alert-danger-text: #b91c1c;
+
+      --preview-table-th-bg: #f8fafc;
+      --preview-table-th-text: #0f172a;
+      --preview-table-stripe-bg: #f8fafc;
+      --preview-table-border: #cbd5e1;
+    }
+
+    /* Lienzo Moodle: Tema oscuro */
+    .theme-dark {
+      --preview-stage-bg: #090d16;
+      --preview-card-bg: #131b2e;
+      --preview-card-border: #223049;
+      --preview-card-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      --preview-text: #e2e8f0;
+      --preview-heading: #f8fafc;
+      --preview-border-subtle: #2a3b5a;
+
+      --preview-alert-info-bg: rgba(14, 116, 144, 0.2);
+      --preview-alert-info-border: #06b6d4;
+      --preview-alert-info-text: #67e8f9;
+
+      --preview-alert-success-bg: rgba(21, 128, 61, 0.2);
+      --preview-alert-success-border: #22c55e;
+      --preview-alert-success-text: #86efac;
+
+      --preview-alert-warning-bg: rgba(180, 83, 9, 0.2);
+      --preview-alert-warning-border: #f59e0b;
+      --preview-alert-warning-text: #fde047;
+
+      --preview-alert-danger-bg: rgba(185, 28, 28, 0.2);
+      --preview-alert-danger-border: #ef4444;
+      --preview-alert-danger-text: #fca5a5;
+
+      --preview-table-th-bg: #1a253c;
+      --preview-table-th-text: #f8fafc;
+      --preview-table-stripe-bg: #162035;
+      --preview-table-border: #2a3b5a;
+    }
+
+    /* --- 2. Reset y Contenedor Principal --- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: var(--font-sans);
+      background-color: var(--app-bg-darkest);
+      color: var(--app-text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      height: 100vh;
+      height: 100dvh;
+      width: 100%;
+      background: var(--app-bg-dark);
+      overflow: hidden;
+    }
+
+    /* --- 3. Barra Superior (Topbar) --- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px;
+      background: var(--app-bg-darkest);
+      border-bottom: 1px solid var(--app-border);
+      gap: 12px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--color-moodle-hover) 0%, var(--color-moodle) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 18px;
+      box-shadow: 0 2px 8px rgba(249, 115, 22, 0.35);
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--app-bg-surface);
+      padding: 2px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--app-border);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--app-text-muted);
+      font-family: var(--font-sans);
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .btn:hover {
+      background: var(--app-bg-surface-hover);
+      color: var(--app-text-main);
+    }
+
+    .btn:focus-visible,
+    button:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid var(--color-accent-blue);
+      outline-offset: 1px;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn .icon, .btn i {
+      width: 16px;
+      height: 16px;
+      font-size: 16px;
+    }
+
+    .btn-primary {
+      background: var(--color-moodle);
+      color: #ffffff !important;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(249, 115, 22, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-moodle-hover);
+      color: #ffffff;
+    }
+
+    .btn-outline {
+      border: 1px solid var(--app-border);
+      background: var(--app-bg-surface);
+    }
+
+    .btn-danger {
+      color: #f87171;
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--color-danger);
+    }
+
+    .btn-hub {
+      background: rgba(56, 189, 248, 0.1);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    .btn-hub:hover {
+      background: rgba(56, 189, 248, 0.22);
+      color: #ffffff;
+      border-color: #38bdf8;
+    }
+
+    .btn-copy-moodle {
+      background: rgba(249, 115, 22, 0.18);
+      color: #fb923c;
+      border: 1px solid rgba(249, 115, 22, 0.4);
+      font-weight: 600;
+    }
+
+    .btn-copy-moodle:hover {
+      background: #ea580c;
+      color: #ffffff;
+      border-color: #ea580c;
+    }
+
+    .mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .mode-badge.mode-moodle {
+      background: rgba(249, 115, 22, 0.15);
+      color: #fb923c;
+      border: 1px solid rgba(249, 115, 22, 0.3);
+    }
+
+    .mode-badge.mode-markdown {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .sep {
+      width: 1px;
+      height: 20px;
+      background: var(--app-border);
+      margin: 0 2px;
+    }
+
+    /* Iconografía Vectorial SVG Sprite */
+    .icon {
+      width: 1.15em;
+      height: 1.15em;
+      vertical-align: -0.18em;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    /* --- 4. Paneles y Divisor (Split View) --- */
+    .panels {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      background: var(--app-bg-dark);
+      overflow: hidden;
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #left-panel {
+      flex: 1;
+    }
+
+    #right-panel {
+      flex: 1;
+      border-left: 1px solid var(--app-border);
+    }
+
+    .resizer {
+      width: 7px;
+      background: var(--app-bg-darkest);
+      cursor: col-resize;
+      flex-shrink: 0;
+      position: relative;
+      transition: background 0.15s ease;
+      z-index: 5;
+    }
+
+    .resizer::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 3px;
+      height: 26px;
+      border-radius: 2px;
+      background: var(--app-border);
+    }
+
+    .resizer:hover, .resizer.dragging {
+      background: var(--color-moodle);
+    }
+
+    .resizer:hover::after, .resizer.dragging::after {
+      background: #ffffff;
+    }
+
+    /* Cabeceras de Panel */
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: var(--app-bg-darkest);
+      border-bottom: 1px solid var(--app-border);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--app-text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #e2e8f0;
+    }
+
+    .panel-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Indicador de Estado del Render */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    .status-pill.ok {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-pill.updating {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .status-pill.error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .status-pill.error:hover {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: rgba(239, 68, 68, 0.6);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status-pill.updating .status-dot,
+    .status-pill.error .status-dot {
+      animation: pulse 0.9s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.4; }
+      to { opacity: 1; }
+    }
+
+    /* Control de Escala Tipográfica */
+    .font-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--app-bg-surface);
+      border: 1px solid var(--app-border);
+      border-radius: var(--radius-sm);
+      padding: 1px 3px;
+    }
+
+    .font-ctrl button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--app-text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    .font-ctrl button:hover {
+      background: var(--app-bg-surface-hover);
+      color: var(--app-text-main);
+    }
+
+    .font-ctrl span {
+      min-width: 18px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--app-text-main);
+    }
+
+    .panel-header .btn {
+      padding: 3px 9px;
+      font-size: 11px;
+      gap: 5px;
+      border-radius: var(--radius-sm);
+    }
+
+    .panel-header .btn i {
+      font-size: 13px;
+    }
+
+    .panel-header .btn-primary {
+      padding: 3px 10px;
+    }
+
+    /* --- 5. Editor de Código y Numeración --- */
+    .editor-wrap {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      background: #0b101b;
+      position: relative;
+    }
+
+    .line-numbers {
+      padding: 14px 8px 14px 12px;
+      background: #070a12;
+      color: #384258;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.65;
+      text-align: right;
+      user-select: none;
+      min-width: 44px;
+      border-right: 1px solid #1a2233;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .line-numbers div {
+      height: 1.65em;
+    }
+
+    .line-numbers div.line-err {
+      color: #ef4444 !important;
+      font-weight: 700;
+      background: rgba(239, 68, 68, 0.22);
+      border-radius: 2px;
+    }
+
+    #editor {
+      flex: 1;
+      resize: none;
+      border: none;
+      outline: none;
+      padding: 14px 18px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.65;
+      background: transparent;
+      color: #e2e8f0;
+      tab-size: 2;
+      overflow-y: auto;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    #editor::placeholder {
+      color: #475569;
+    }
+
+    /* Overlay Drag & Drop */
+    .drop-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.92);
+      border: 2px dashed var(--color-moodle);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 20;
+      color: #ffffff;
+    }
+
+    .drop-overlay.active {
+      display: flex;
+    }
+
+    /* --- 6. Lienzo de Vista Previa (Moodle) --- */
+    .preview-wrap {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--preview-stage-bg);
+      transition: background-color 0.2s ease;
+      position: relative;
+    }
+
+    .preview-stage {
+      padding: 28px;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100%;
+    }
+
+    .preview-card {
+      width: 100%;
+      max-width: 880px;
+      background-color: var(--preview-card-bg);
+      border: 1px solid var(--preview-card-border);
+      box-shadow: var(--preview-card-shadow);
+      color: var(--preview-text);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    #preview-inner {
+      padding: 28px 32px;
+      font-size: 15px;
+      line-height: 1.75;
+      word-wrap: break-word;
+    }
+
+    /* Tipografía del Contenido */
+    #preview-inner h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 14px;
+      padding-bottom: 8px;
+      color: var(--preview-heading);
+      border-bottom: 1px solid var(--preview-border-subtle);
+    }
+
+    #preview-inner h2 {
+      font-size: 19px;
+      font-weight: 600;
+      margin: 22px 0 10px;
+      color: var(--preview-heading);
+    }
+
+    #preview-inner h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 18px 0 8px;
+      color: var(--preview-heading);
+    }
+
+    #preview-inner p {
+      margin: 0 0 12px;
+      color: var(--preview-text);
+    }
+
+    #preview-inner ul, #preview-inner ol {
+      margin: 0 0 14px 26px;
+    }
+
+    #preview-inner li {
+      margin-bottom: 4px;
+    }
+
+    /* Alertas Bootstrap (Moodle) */
+    .alert {
+      padding: 12px 16px;
+      margin: 14px 0;
+      border-radius: 6px;
+      font-size: 14px;
+      border-left: 4px solid;
+    }
+
+    .alert-info {
+      background-color: var(--preview-alert-info-bg);
+      border-color: var(--preview-alert-info-border);
+      color: var(--preview-alert-info-text);
+    }
+
+    .alert-success {
+      background-color: var(--preview-alert-success-bg);
+      border-color: var(--preview-alert-success-border);
+      color: var(--preview-alert-success-text);
+    }
+
+    .alert-warning {
+      background-color: var(--preview-alert-warning-bg);
+      border-color: var(--preview-alert-warning-border);
+      color: var(--preview-alert-warning-text);
+    }
+
+    .alert-danger {
+      background-color: var(--preview-alert-danger-bg);
+      border-color: var(--preview-alert-danger-border);
+      color: var(--preview-alert-danger-text);
+    }
+
+    /* Tablas de Datos */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    .table th, .table td {
+      padding: 10px 14px;
+      border: 1px solid var(--preview-table-border);
+      text-align: left;
+    }
+
+    .table th {
+      font-weight: 600;
+      background-color: var(--preview-table-th-bg);
+      color: var(--preview-table-th-text);
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: var(--preview-table-stripe-bg);
+    }
+
+    /* Bloques de Código Fuente */
+    #preview-inner pre {
+      margin: 16px 0;
+      border-radius: 8px;
+      font-size: 13.5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    /* Fórmulas Matemáticas KaTeX */
+    .theme-dark .katex {
+      color: #f8fafc !important;
+    }
+
+    .katex-display {
+      margin: 1.2em 0 !important;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 4px 0;
+    }
+
+    .katex-error {
+      color: var(--color-danger) !important;
+      background: rgba(239, 68, 68, 0.1);
+      padding: 1px 4px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Estado Inicial Vacío */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 70px 20px;
+      color: var(--app-text-dim);
+      text-align: center;
+    }
+
+    .empty-state .icon, .empty-state i {
+      width: 48px;
+      height: 48px;
+      font-size: 46px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+      max-width: 320px;
+    }
+
+    /* --- 7. Barra de Estado Inferior --- */
+    .statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 18px;
+      background: var(--app-bg-darkest);
+      border-top: 1px solid var(--app-border);
+      font-size: 11px;
+      color: var(--app-text-muted);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .statusbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .statusbar-stats {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #cbd5e1;
+    }
+
+    .statusbar-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .author-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(249, 115, 22, 0.1);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      color: #fdba74;
+      font-weight: 500;
+      border: 1px solid rgba(249, 115, 22, 0.25);
+    }
+
+    .author-badge .icon, .author-badge i {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      color: var(--color-moodle);
+    }
+
+    .version-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--color-accent-blue);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      letter-spacing: 0.03em;
+    }
+
+    .antigravity-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(168, 85, 247, 0.12);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      color: #d8b4fe;
+      font-size: 11px;
+      font-weight: 500;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .antigravity-badge .icon, .antigravity-badge i {
+      color: var(--color-accent-purple);
+      font-size: 13px;
+      width: 13px;
+      height: 13px;
+    }
+
+    /* --- 8. Modales y Notificaciones Flotantes --- */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--app-bg-surface);
+      border: 1px solid var(--app-border);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      animation: modalIn 0.2s ease-out;
+    }
+
+    @keyframes modalIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: var(--app-bg-darkest);
+      border-bottom: 1px solid var(--app-border);
+    }
+
+    .modal-header h3 {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #ffffff;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--app-text-muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+    }
+
+    .modal-close:hover {
+      color: #ffffff;
+    }
+
+    .modal-body {
+      padding: 16px 18px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      border-top: 1px solid var(--app-border);
+      font-size: 11px;
+      color: var(--app-text-muted);
+      background: var(--app-bg-surface);
+      border-bottom-left-radius: var(--radius-lg);
+      border-bottom-right-radius: var(--radius-lg);
+    }
+
+    .modal-footer-author {
+      color: #fdba74;
+      font-weight: 500;
+    }
+
+    .modal-footer-author .icon, .modal-footer-author i {
+      color: var(--color-moodle);
+      width: 13px;
+      height: 13px;
+    }
+
+    .modal-footer-version {
+      color: var(--color-accent-blue);
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .shortcut-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #334155;
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .shortcut-row:last-child {
+      border-bottom: none;
+    }
+
+    .kbd {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #0f172a;
+      border: 1px solid #475569;
+      color: #e2e8f0;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 45px;
+      right: 20px;
+      padding: 9px 16px;
+      border-radius: var(--radius-md);
+      background: #0f172a;
+      color: #ffffff;
+      border: 1px solid var(--color-success);
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast .icon, .toast i {
+      color: #34d399;
+      font-size: 16px;
+      width: 18px;
+      height: 18px;
+    }
+
+    #file-input {
+      display: none;
+    }
+
+    /* ==========================================================================
+       ADAPTACIÓN RESPONSIVA (PANTALLAS <= 768px)
+       ========================================================================== */
+    @media (max-width: 768px) {
+      /* 1. Topbar compacta */
+      .topbar {
+        padding: 8px 10px;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .brand {
+        gap: 8px;
+      }
+
+      .brand-title {
+        font-size: 14px;
+      }
+
+      .toolbar {
+        gap: 4px;
+      }
+
+      .btn-label, #theme-text {
+        display: none; /* Modo solo iconos en pantallas reducidas */
+      }
+
+      .btn {
+        padding: 6px 8px;
+      }
+
+      .sep {
+        margin: 0 1px;
+      }
+
+      /* 2. Apilamiento vertical (Editor superior, Vista previa inferior) */
+      .panels {
+        flex-direction: column !important;
+      }
+
+      #left-panel {
+        flex: none !important;
+        width: 100% !important;
+        height: 38vh;
+        height: 38dvh;
+        border-right: none !important;
+      }
+
+      .resizer {
+        width: 100% !important;
+        height: 8px !important;
+        cursor: row-resize !important;
+      }
+
+      .resizer::after {
+        width: 28px !important;
+        height: 3px !important;
+      }
+
+      #right-panel {
+        flex: 1 !important;
+        width: 100% !important;
+        border-left: none !important;
+        border-top: 1px solid var(--app-border) !important;
+      }
+
+      /* 3. Cabeceras compactas */
+      .panel-header {
+        padding: 6px 10px;
+      }
+
+      .panel-header-right {
+        gap: 6px;
+      }
+
+      #last-update {
+        display: none; /* Optimiza espacio en cabecera */
+      }
+
+      /* 4. Lienzo de previsualización táctil */
+      .preview-stage {
+        padding: 10px 8px;
+      }
+
+      .preview-card {
+        border-radius: 8px;
+      }
+
+      #preview-inner {
+        padding: 16px 14px;
+        font-size: 14.5px;
+      }
+
+      #preview-inner .table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* 5. Barra de estado inferior simplificada */
+      .statusbar {
+        padding: 6px 10px;
+        justify-content: center;
+        flex-shrink: 0;
+        z-index: 20;
+        background: #090d16;
+        border-top: 1px solid var(--app-border);
+      }
+
+      .statusbar-left {
+        display: none;
+      }
+
+      .statusbar-right {
+        gap: 6px;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+
+      .author-badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 9px;
+        color: #fdba74;
+        background: rgba(249, 115, 22, 0.15);
+        border: 1px solid rgba(249, 115, 22, 0.35);
+        white-space: nowrap;
+      }
+
+      .antigravity-badge {
+        font-size: 10px;
+        padding: 2px 6px;
+        white-space: nowrap;
+      }
+
+      .version-badge {
+        font-size: 9px;
+        padding: 1px 5px;
+        white-space: nowrap;
+      }
+    }
+
+    /* ==========================================================================
+       ESTILOS DE IMPRESIÓN Y EXPORTACIÓN A4 (Ctrl + P)
+       ========================================================================== */
+    @page {
+      size: A4 portrait;
+      margin: 1.8cm 1.5cm;
+    }
+
+    @media print {
+      /* 1. Normalización de fondo y lienzo de impresión */
+      html, body, #app, .panels, #right-panel, .preview-wrap, .preview-stage {
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        background: #ffffff !important;
+        color: #111827 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
+        border: none !important;
+      }
+
+      /* 2. Ocultación de controles y elementos de interfaz */
+      #hub-screen,
+      .topbar,
+      .statusbar,
+      .panel-header,
+      #left-panel,
+      .resizer,
+      .toast,
+      .modal-overlay,
+      .drop-overlay,
+      .empty-state {
+        display: none !important;
+      }
+
+      /* 3. Tarjeta a página completa sin márgenes artificiales */
+      .preview-card {
+        border: none !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+      }
+
+      #preview-inner {
+        padding: 0 !important;
+        font-size: 11pt !important;
+        line-height: 1.6 !important;
+        color: #1e293b !important;
+      }
+
+      /* 4. Encabezados académicos (protección contra saltos huérfanos) */
+      #preview-inner h1 {
+        font-size: 20pt !important;
+        color: #0f172a !important;
+        border-bottom: 2px solid #e2e8f0 !important;
+        padding-bottom: 6pt !important;
+        margin-top: 0 !important;
+        margin-bottom: 12pt !important;
+        page-break-after: avoid;
+        break-after: avoid;
+      }
+
+      #preview-inner h2 {
+        font-size: 14pt !important;
+        color: #1e293b !important;
+        margin-top: 18pt !important;
+        margin-bottom: 8pt !important;
+        page-break-after: avoid;
+        break-after: avoid;
+      }
+
+      #preview-inner h3 {
+        font-size: 12pt !important;
+        color: #334155 !important;
+        page-break-after: avoid;
+        break-after: avoid;
+      }
+
+      /* 5. Fórmulas LaTeX KaTeX (anti-rotura en salto de página) */
+      .katex-display, .katex {
+        color: #000000 !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .katex-display {
+        margin: 12pt 0 !important;
+      }
+
+      /* 6. Tablas de datos con bordes y sombreado exactos */
+      .table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 14pt 0 !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        font-size: 10pt !important;
+      }
+
+      .table th, .table td {
+        border: 1px solid #cbd5e1 !important;
+        padding: 6pt 10pt !important;
+        color: #1e293b !important;
+      }
+
+      .table th {
+        background-color: #f1f5f9 !important;
+        font-weight: 600 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f8fafc !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      /* 7. Bloques de código fuente (tema oscuro de alto contraste) */
+      #preview-inner pre {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+        border-radius: 8px !important;
+        padding: 12pt 16pt !important;
+        font-size: 9.5pt !important;
+        line-height: 1.55 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color: #f8fafc !important;
+      }
+
+      #preview-inner pre code {
+        color: #f8fafc !important;
+        font-family: var(--font-mono) !important;
+        text-shadow: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      #preview-inner pre .token.comment,
+      #preview-inner pre .token.prolog,
+      #preview-inner pre .token.doctype,
+      #preview-inner pre .token.cdata {
+        color: #94a3b8 !important;
+        font-style: italic;
+      }
+
+      #preview-inner pre .token.keyword,
+      #preview-inner pre .token.tag {
+        color: #f472b6 !important;
+        font-weight: 600;
+      }
+
+      #preview-inner pre .token.string {
+        color: #4ade80 !important;
+      }
+
+      #preview-inner pre .token.function {
+        color: #60a5fa !important;
+      }
+
+      #preview-inner pre .token.number {
+        color: #fb923c !important;
+      }
+
+      #preview-inner pre .token.operator {
+        color: #e2e8f0 !important;
+      }
+
+      /* 8. Cajas de alerta Bootstrap (bordes y fondos nítidos) */
+      .alert {
+        border-radius: 6px !important;
+        padding: 10pt 14pt !important;
+        margin: 12pt 0 !important;
+        border-left: 4px solid !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .alert-info {
+        background-color: #f0f9ff !important;
+        border-color: #0284c7 !important;
+        color: #0369a1 !important;
+      }
+
+      .alert-success {
+        background-color: #f0fdf4 !important;
+        border-color: #16a34a !important;
+        color: #15803d !important;
+      }
+
+      .alert-warning {
+        background-color: #fffbeb !important;
+        border-color: #d97706 !important;
+        color: #b45309 !important;
+      }
+
+      .alert-danger {
+        background-color: #fef2f2 !important;
+        border-color: #dc2626 !important;
+        color: #b91c1c !important;
+      }
+    }

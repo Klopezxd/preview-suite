@@ -7,3 +7,8 @@ desktop.ini
 *.bak
 *.tmp
 *~
+
+# Documentación y notas privadas
+USER.md
+PENDIENTES.md
+
