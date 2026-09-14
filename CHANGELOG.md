@@ -27,6 +27,8 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - **Botoneras Unificadas (`.btn-group`):** Contenedor exterior unificado sin divisiones internas ("solo el cuadrito"), con iluminación cian al pasar el cursor.
 - **Botón "Limpiar" Reactivo:** Integración sin delimitación en reposo (fondo y borde transparentes, texto e ícono en Rojo Nórdico `#FF4757`) e iluminación con resplandor completo al pasar el cursor.
 - **Conmutador de Modo Bicolor Reactivo:** Iluminación contextual e inteligente con halo Violeta Boreal (`#A855F7`) al invitar a Modo Markdown y Ámbar Solar Moodle (`#FF9234`) al conmutar a Modo Moodle.
+- **Control de Zoom Adaptativo:** En computadora el clic en la lupa restablece directamente al tamaño por defecto (14px / 100%), reservando el menú emergente táctil exclusivamente para celulares y tablets.
+- **Blindaje ante Extensiones de Modo Oscuro (Dark Reader):** Incorporación de directiva nativa `<meta name="darkreader-lock">` y `color-scheme: dark;` para autodesactivar extensiones invasivas y evitar doble inversión de colores.
 - **Simplificación de la Landing Page:** Eliminación de detalles técnicos innecesarios para el usuario final, manteniendo descripciones concisas y directas.
 - **Claridad de Botones:** Renombrado a "Reestablecer Plantilla" y botón único conmutador de modo ("Modo Moodle" / "Modo Markdown").
 - **Estándares WAI-ARIA:** Diálogos modales con roles accesibles (`role="dialog"`, `aria-modal="true"`, `aria-labelledby`).

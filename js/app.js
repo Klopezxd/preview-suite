@@ -599,7 +599,7 @@
     if (DOM.valFontPopover) DOM.valFontPopover.textContent = `${state.fontSize}px`;
 
     if (DOM.btnFontReset) {
-      DOM.btnFontReset.title = `Tamaño de fuente: ${state.fontSize}px (Ctrl + Rueda para ajustar, clic para abrir controles)`;
+      DOM.btnFontReset.title = `Tamaño de fuente: ${state.fontSize}px (Ctrl + Rueda para ajustar, clic para restablecer)`;
       DOM.btnFontReset.classList.remove('zoom-active');
       void DOM.btnFontReset.offsetWidth;
       DOM.btnFontReset.classList.add('zoom-active');
@@ -628,7 +628,7 @@
     }
 
     if (DOM.btnPreviewZoomReset) {
-      DOM.btnPreviewZoomReset.title = `Zoom: ${state.previewZoom}% (Ctrl + Rueda para ajustar, clic para abrir controles)`;
+      DOM.btnPreviewZoomReset.title = `Zoom: ${state.previewZoom}% (Ctrl + Rueda para ajustar, clic para restablecer)`;
       DOM.btnPreviewZoomReset.classList.remove('zoom-active');
       void DOM.btnPreviewZoomReset.offsetWidth;
       DOM.btnPreviewZoomReset.classList.add('zoom-active');
@@ -646,7 +646,7 @@
     if (DOM.labelFontSize) DOM.labelFontSize.textContent = `${state.fontSize}px`;
     if (DOM.valFontPopover) DOM.valFontPopover.textContent = `${state.fontSize}px`;
     if (DOM.btnFontReset) {
-      DOM.btnFontReset.title = `Tamaño de fuente: ${state.fontSize}px (Ctrl + Rueda para ajustar, clic para abrir controles)`;
+      DOM.btnFontReset.title = `Tamaño de fuente: ${state.fontSize}px (Ctrl + Rueda para ajustar, clic para restablecer)`;
       DOM.btnFontReset.classList.remove('zoom-active');
       void DOM.btnFontReset.offsetWidth;
       DOM.btnFontReset.classList.add('zoom-active');
@@ -669,7 +669,7 @@
       DOM.valPreviewPopover.textContent = '100%';
     }
     if (DOM.btnPreviewZoomReset) {
-      DOM.btnPreviewZoomReset.title = 'Zoom: 100% (Ctrl + Rueda para ajustar, clic para abrir controles)';
+      DOM.btnPreviewZoomReset.title = 'Zoom: 100% (Ctrl + Rueda para ajustar, clic para restablecer)';
       DOM.btnPreviewZoomReset.classList.remove('zoom-active');
       void DOM.btnPreviewZoomReset.offsetWidth;
       DOM.btnPreviewZoomReset.classList.add('zoom-active');
@@ -854,6 +854,10 @@
     }
   }
 
+  function isMobileOrTablet() {
+    return window.matchMedia('(max-width: 1024px)').matches || ('ontouchstart' in window && window.innerWidth <= 1024);
+  }
+
   function closeAllZoomPopovers() {
     if (DOM.editorZoomPopover) DOM.editorZoomPopover.classList.remove('open');
     if (DOM.previewZoomPopover) DOM.previewZoomPopover.classList.remove('open');
@@ -986,6 +990,11 @@
     if (DOM.btnFontReset) {
       DOM.btnFontReset.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (!isMobileOrTablet()) {
+          resetEditorFont();
+          showToast('Tamaño de fuente restablecido a 14px');
+          return;
+        }
         const wasOpen = DOM.editorZoomPopover && DOM.editorZoomPopover.classList.contains('open');
         closeAllZoomPopovers();
         if (!wasOpen && DOM.editorZoomPopover) {
@@ -998,6 +1007,11 @@
     if (DOM.btnPreviewZoomReset) {
       DOM.btnPreviewZoomReset.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (!isMobileOrTablet()) {
+          resetPreviewZoom();
+          showToast('Zoom de vista previa restablecido a 100%');
+          return;
+        }
         const wasOpen = DOM.previewZoomPopover && DOM.previewZoomPopover.classList.contains('open');
         closeAllZoomPopovers();
         if (!wasOpen && DOM.previewZoomPopover) {
@@ -1250,6 +1264,9 @@
           if (DOM.btnViewSplit) DOM.btnViewSplit.classList.add('active');
           if (DOM.btnViewEditor) DOM.btnViewEditor.classList.remove('active');
           if (DOM.btnViewPreview) DOM.btnViewPreview.classList.remove('active');
+        }
+        if (window.innerWidth > 1024) {
+          closeAllZoomPopovers();
         }
       }, 100);
     });

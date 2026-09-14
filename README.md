@@ -41,8 +41,9 @@ Una suite unificada diseñada tanto para desarrollo de contenidos de aulas virtu
    - Si el CDN de `marked.js` no carga o la red se interrumpe, el sistema activa automáticamente un parser nativo interno seguro, evitando pantallas en blanco o bloqueos del editor.
 2. **Sistema de Zoom Ergonómico e Híbrido Estilo Overleaf:**
    - Píldoras interactivas en cabeceras (`14px` en editor, `100%` en vista previa) que muestran el valor en vivo sin tapar el contenido.
-   - Atajos de ratón (`Ctrl + Rueda`) y teclado (`Ctrl + 0`).
-   - Soporte táctil nativo **Pinch-to-zoom (2 dedos)** y micro-popovers flotantes con botones `[ − ]`, `[ + ]` y `[ Restablecer ]`.
+   - Atajos de ratón (`Ctrl + Rueda`), teclado (`Ctrl + 0`) y clic directo en la lupa para restablecer en PC.
+   - Soporte táctil nativo **Pinch-to-zoom (2 dedos)** y micro-popovers flotantes exclusivos para pantallas táctiles (móviles y tablets).
+   - Blindaje nativo con `<meta name="darkreader-lock">` y `color-scheme: dark;` para desactivar extensiones invasivas de oscurecimiento forzado.
 3. **Calibración Visual Óptima (80%-83%):**
    - Reducción proporcional del grosor de la barra superior, cabeceras e inferior para maximizar el área de trabajo y legibilidad del código.
    - Botoneras unificadas sin divisiones internas, botón "Limpiar" reactivo con iluminación en Rojo Nórdico (`#FF4757`) y conmutador de modo dinámico bicolor (Violeta Boreal `#A855F7` para Markdown y Ámbar Solar `#FF9234` para Moodle).

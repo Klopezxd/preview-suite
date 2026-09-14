@@ -16,6 +16,7 @@
 
 /* --- 1. Design Tokens y Variables CSS --- */
 :root {
+  color-scheme: dark;
   --font-sans: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, Monaco, monospace;
 
@@ -682,7 +683,7 @@ textarea:focus-visible {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   padding: 8px 10px;
-  display: none;
+  display: none !important; /* En computadora nunca se despliega */
   flex-direction: column;
   gap: 6px;
   z-index: 60;
@@ -690,8 +691,11 @@ textarea:focus-visible {
   animation: popoverFadeIn 0.16s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.zoom-popover.open {
-  display: flex;
+/* El menú táctil de zoom solo se activa en vista de celular y tablet (<= 1024px) */
+@media (max-width: 1024px) {
+  .zoom-popover.open {
+    display: flex !important;
+  }
 }
 
 @keyframes popoverFadeIn {
