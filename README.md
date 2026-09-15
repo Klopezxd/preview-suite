@@ -1,8 +1,8 @@
-# Previsualizador Moodle & Markdown
+# Preview Suite (Moodle & Markdown)
 
-[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.1.0-0284c7?style=for-the-badge)](https://github.com/Klopezxd/previsualizador-moodle)
+[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.1.0-0284c7?style=for-the-badge)](https://github.com/Klopezxd/preview-suite)
 [![Licencia](https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge)](LICENSE)
-[![Despliegue](https://img.shields.io/badge/GitHub%20Pages-Activo-22c55e?style=for-the-badge&logo=github)](https://klopezxd.github.io/previsualizador-moodle/)
+[![Despliegue](https://img.shields.io/badge/GitHub%20Pages-Activo-22c55e?style=for-the-badge&logo=github)](https://klopezxd.github.io/preview-suite/)
 [![KaTeX](https://img.shields.io/badge/KaTeX-0.16.11-00d084?style=for-the-badge&logo=latex&logoColor=white)](https://katex.org/)
 [![Prism.js](https://img.shields.io/badge/Prism.js-1.29.0-blueviolet?style=for-the-badge)](https://prismjs.com/)
 [![Marked.js](https://img.shields.io/badge/Marked.js-12.0.2-ef4444?style=for-the-badge&logo=markdown&logoColor=white)](https://marked.js.org/)
@@ -16,10 +16,10 @@
 
 La aplicación se encuentra disponible de forma pública y sin costo de infraestructura a través del siguiente enlace oficial:
 
-🔗 **[https://klopezxd.github.io/previsualizador-moodle/](https://klopezxd.github.io/previsualizador-moodle/)**
+🔗 **[https://klopezxd.github.io/preview-suite/](https://klopezxd.github.io/preview-suite/)**
 
-* **Acceso directo al Modo Moodle:** [https://klopezxd.github.io/previsualizador-moodle/#moodle](https://klopezxd.github.io/previsualizador-moodle/#moodle)
-* **Acceso directo al Modo Markdown:** [https://klopezxd.github.io/previsualizador-moodle/#markdown](https://klopezxd.github.io/previsualizador-moodle/#markdown)
+* **Acceso directo al Modo Moodle:** [https://klopezxd.github.io/preview-suite/#moodle](https://klopezxd.github.io/preview-suite/#moodle)
+* **Acceso directo al Modo Markdown:** [https://klopezxd.github.io/preview-suite/#markdown](https://klopezxd.github.io/preview-suite/#markdown)
 
 ---
 
@@ -131,7 +131,7 @@ flowchart TD
 ## 🛠️ Estructura del Repositorio
 
 ```text
-previsualizador-moodle/
+preview-suite/
 ├── css/
 │   ├── styles.css        # Layout dual, design tokens, temas y print A4
 │   └── hub.css           # Pantalla de bienvenida y tarjetas de selección
