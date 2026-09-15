@@ -2,7 +2,8 @@
 
 [![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.1.0-0284c7?style=for-the-badge)](https://github.com/Klopezxd/preview-suite)
 [![Licencia](https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge)](LICENSE)
-[![Despliegue](https://img.shields.io/badge/GitHub%20Pages-Activo-22c55e?style=for-the-badge&logo=github)](https://klopezxd.github.io/preview-suite/)
+[![Despliegue Vercel](https://img.shields.io/badge/Vercel-Producci%C3%B3n-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://preview-suite.vercel.app)
+[![Despliegue GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Activo-22c55e?style=for-the-badge&logo=github)](https://klopezxd.github.io/preview-suite/)
 [![KaTeX](https://img.shields.io/badge/KaTeX-0.16.11-00d084?style=for-the-badge&logo=latex&logoColor=white)](https://katex.org/)
 [![Prism.js](https://img.shields.io/badge/Prism.js-1.29.0-blueviolet?style=for-the-badge)](https://prismjs.com/)
 [![Marked.js](https://img.shields.io/badge/Marked.js-12.0.2-ef4444?style=for-the-badge&logo=markdown&logoColor=white)](https://marked.js.org/)
@@ -14,12 +15,13 @@
 
 ## 🌐 Despliegue en Producción (Demo en Vivo)
 
-La aplicación se encuentra disponible de forma pública y sin costo de infraestructura a través del siguiente enlace oficial:
+La aplicación se encuentra disponible de forma pública y con alta disponibilidad a través de su infraestructura en Vercel y su réplica de respaldo en GitHub Pages:
 
-🔗 **[https://klopezxd.github.io/preview-suite/](https://klopezxd.github.io/preview-suite/)**
+* 🚀 **Vercel (Producción Principal):** **[https://preview-suite.vercel.app](https://preview-suite.vercel.app)**
+  * **Acceso directo al Modo Moodle:** [https://preview-suite.vercel.app/#moodle](https://preview-suite.vercel.app/#moodle)
+  * **Acceso directo al Modo Markdown:** [https://preview-suite.vercel.app/#markdown](https://preview-suite.vercel.app/#markdown)
 
-* **Acceso directo al Modo Moodle:** [https://klopezxd.github.io/preview-suite/#moodle](https://klopezxd.github.io/preview-suite/#moodle)
-* **Acceso directo al Modo Markdown:** [https://klopezxd.github.io/preview-suite/#markdown](https://klopezxd.github.io/preview-suite/#markdown)
+* 🔗 **GitHub Pages (Espejo de Respaldo):** [https://klopezxd.github.io/preview-suite/](https://klopezxd.github.io/preview-suite/)
 
 ---
 
