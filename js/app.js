@@ -871,8 +871,8 @@
     const triggerRickroll = () => {
       waitingForReturn = true;
 
-      // 1. Abrir enlace directo de YouTube en una pestaña nueva
-      window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank', 'noopener,noreferrer');
+      // 1. Abrir pantalla secreta sin anuncios en una pestaña nueva
+      window.open('surprise.html', '_blank');
 
       // 2. Preparar el detector para cuando el usuario regrese a esta pestaña
       const onUserReturn = () => {
