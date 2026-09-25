@@ -1,13 +1,13 @@
 /**
  * Configuración global del sistema y plantillas académicas iniciales.
  * @module config
- * @version 3.1.0
+ * @version 3.1.1
  */
 (() => {
   'use strict';
 
   const CONFIG = {
-    VERSION: '3.1.0',
+    VERSION: '3.1.1',
     FONT_SIZE_MIN: 10,
     FONT_SIZE_MAX: 26,
     DEFAULT_FONT_SIZE: 14,

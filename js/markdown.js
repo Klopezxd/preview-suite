@@ -2,7 +2,7 @@
  * Motor de compilación Markdown y exportación limpia para Moodle.
  * Blindado contra fallos de CDN, errores de sintaxis y colisiones LaTeX.
  * @module markdown
- * @version 3.1.0
+ * @version 3.1.1
  */
 (() => {
   'use strict';
@@ -144,7 +144,7 @@
     if (!markdownText || !markdownText.trim()) return '';
     try {
       const compiled = parseMarkdown(markdownText);
-      return `<!-- Generado con Suite Previsualizador Académico v3.1 (Modo Markdown -> Moodle) -->\n${compiled.trim()}`;
+      return `<!-- Generado con Suite Previsualizador Académico v3.1.1 (Modo Markdown -> Moodle) -->\n${compiled.trim()}`;
     } catch (err) {
       console.error('[MarkdownEngine] Error al exportar para Moodle:', err);
       return markdownText;

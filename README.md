@@ -1,6 +1,6 @@
 # Preview Suite (Moodle & Markdown)
 
-[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.1.0-0284c7?style=for-the-badge)](https://github.com/Klopezxd/preview-suite)
+[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.1.1-0284c7?style=for-the-badge)](https://github.com/Klopezxd/preview-suite)
 [![Licencia](https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge)](LICENSE)
 [![Despliegue Vercel](https://img.shields.io/badge/Vercel-Producci%C3%B3n-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://preview-suite.vercel.app)
 [![Despliegue GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Activo-22c55e?style=for-the-badge&logo=github)](https://klopezxd.github.io/preview-suite/)
@@ -181,7 +181,7 @@ La suite está diseñada para funcionar inmediatamente sin requerir entornos Nod
 
 ## 📜 Historial de Cambios (Changelog)
 
-Consulta el archivo [CHANGELOG.md](CHANGELOG.md) para revisar en detalle la evolución completa del software, desde el prototipo inicial en MathJax hasta la versión actual v3.1.
+Consulta el archivo [CHANGELOG.md](CHANGELOG.md) para revisar en detalle la evolución completa del software, desde el prototipo inicial en MathJax hasta la versión actual v3.1.1.
 
 ---
 

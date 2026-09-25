@@ -2,7 +2,7 @@
  * Inspector heurístico de sintaxis crítica para entregas Moodle.
  * Blindado contra entradas nulas, excepciones DOM y textos masivos.
  * @module linter
- * @version 3.1.0
+ * @version 3.1.1
  */
 (() => {
   'use strict';

@@ -5,6 +5,22 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
+## [3.1.1] - 2026-09-24
+
+### Corregido
+- **Iconografía Oficial de Markdown:** Corrección integral del trazado SVG del icono de Markdown (`#icon-markdown`) implementando las proporciones matemáticas canónicas (glifo "M" nítido, flecha descendente `↓` balanceada y márgenes simétricos).
+
+### Cambiado
+- **Easter Egg Inmersivo sin Anuncios (`surprise.html`):**
+  - Creación de una página dedicada a pantalla completa en pestaña nueva que sirve el reproductor sin cookies de rastreo y con cabeceras *Referer* legítimas, erradicando el "Error 153" de YouTube.
+  - Eliminación de botones artificiales de retorno en la pestaña del video para preservar la autenticidad del Rickroll y detonar el modal de bienvenida al volver a la suite.
+
+### Infraestructura
+- **Migración de Nombre de Repositorio:** Actualización oficial de referencias, remotos y metadatos tras el renombramiento a `preview-suite`.
+- **Despliegue Continuo (CI/CD) en Vercel:** Integración automatizada para producción global en `preview-suite.vercel.app` sincronizada con la rama `main` de GitHub.
+
+---
+
 ## [3.1.0] - 2026-09-13
 
 ### Añadido
