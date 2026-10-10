@@ -1209,6 +1209,7 @@ textarea:focus-visible {
   width: 100%;
   display: flex;
   justify-content: center;
+  line-height: normal !important;
 }
 
 .mermaid-output svg {
@@ -1216,6 +1217,37 @@ textarea:focus-visible {
   height: auto;
   display: block;
   margin: 0 auto;
+}
+
+/* Reset y aislamiento estricto de métricas tipográficas en diagramas Mermaid */
+.mermaid-output * {
+  box-sizing: border-box;
+}
+
+.mermaid-output foreignObject {
+  overflow: visible !important;
+}
+
+.mermaid-output foreignObject div,
+.mermaid-output foreignObject span,
+.mermaid-output .nodeLabel,
+.mermaid-output .label {
+  line-height: 1.35 !important;
+  font-size: 13px !important;
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.mermaid-output foreignObject p,
+.mermaid-output .nodeLabel p {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.35 !important;
+}
+
+.mermaid-output svg text {
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif !important;
 }
 
 .mermaid-loading {

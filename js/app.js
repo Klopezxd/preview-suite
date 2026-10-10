@@ -437,7 +437,34 @@
         startOnLoad: false,
         theme: isDark ? 'dark' : 'default',
         securityLevel: 'loose',
-        fontFamily: 'Montserrat, system-ui, -apple-system, sans-serif'
+        fontFamily: 'Montserrat, system-ui, -apple-system, sans-serif',
+        fontSize: 13,
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          padding: 18,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true,
+          boxMargin: 12,
+          boxTextMargin: 6
+        },
+        themeVariables: isDark ? {
+          darkMode: true,
+          background: '#0A1628',
+          primaryColor: '#00D4FF',
+          primaryTextColor: '#FAFBFC',
+          primaryBorderColor: '#00D4FF',
+          lineColor: '#00FF87',
+          secondaryColor: '#A855F7',
+          tertiaryColor: '#050B1A',
+          fontFamily: 'Montserrat, system-ui, -apple-system, sans-serif',
+          fontSize: '13px'
+        } : {
+          fontFamily: 'Montserrat, system-ui, -apple-system, sans-serif',
+          fontSize: '13px'
+        }
       });
     } catch (initErr) {
       console.warn('[Mermaid] Error en inicialización:', initErr);
