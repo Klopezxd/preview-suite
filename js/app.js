@@ -3,7 +3,7 @@
  * Arquitectura blindada contra excepciones, fallos de red, restricciones de almacenamiento
  * y desbordamientos de memoria.
  * @module app
- * @version 3.1.1
+ * @version 3.2.0
  */
 (() => {
   'use strict';
@@ -402,6 +402,101 @@
 
   // --- 6. Motor de Renderizado Unificado y Tolerante a Fallos ---
 
+  function escapeHtml(str) {
+    if (!str || typeof str !== 'string') return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  let mermaidRenderToken = 0;
+
+  /**
+   * Renderiza todos los diagramas Mermaid en el lienzo de vista previa.
+   * Maneja inicialización de tema adaptativo, errores de sintaxis en vivo y aislamiento DOM.
+   */
+  async function renderMermaidDiagrams() {
+    if (!DOM.previewInner) return;
+    const blocks = DOM.previewInner.querySelectorAll('.mermaid-block');
+    if (blocks.length === 0) return;
+
+    if (!window.mermaid) {
+      // Mermaid aún descargando del CDN; se ejecutará automáticamente en __onMermaidReady
+      return;
+    }
+
+    const isDark = document.body.classList.contains('theme-dark') || 
+                   (DOM.previewWrap && DOM.previewWrap.classList.contains('theme-dark')) ||
+                   state.isDarkMode;
+
+    try {
+      window.mermaid.initialize({
+        startOnLoad: false,
+        theme: isDark ? 'dark' : 'default',
+        securityLevel: 'loose',
+        fontFamily: 'Montserrat, system-ui, -apple-system, sans-serif'
+      });
+    } catch (initErr) {
+      console.warn('[Mermaid] Error en inicialización:', initErr);
+    }
+
+    const currentToken = ++mermaidRenderToken;
+
+    for (let i = 0; i < blocks.length; i++) {
+      const block = blocks[i];
+      const outputEl = block.querySelector('.mermaid-output');
+      const rawCode = block.dataset.mermaidCode 
+        ? decodeURIComponent(block.dataset.mermaidCode)
+        : (block.querySelector('.mermaid-raw') ? block.querySelector('.mermaid-raw').textContent : '');
+
+      if (!outputEl || !rawCode || !rawCode.trim()) continue;
+
+      const uniqueId = `mermaid_diag_${Date.now()}_${i}_${Math.floor(Math.random() * 1000)}`;
+
+      try {
+        const renderResult = await window.mermaid.render(uniqueId, rawCode.trim());
+        // Descartar si otro ciclo de renderizado inició mientras este se procesaba
+        if (currentToken !== mermaidRenderToken) return;
+
+        const svgCode = typeof renderResult === 'string' ? renderResult : (renderResult.svg || '');
+        outputEl.innerHTML = svgCode;
+        outputEl.classList.remove('has-error');
+        outputEl.classList.add('rendered');
+
+        if (renderResult.bindFunctions) {
+          try {
+            renderResult.bindFunctions(outputEl);
+          } catch (bindErr) {
+            // Ignorado de forma segura
+          }
+        }
+      } catch (err) {
+        if (currentToken !== mermaidRenderToken) return;
+
+        // Limpiar elementos residuales que Mermaid inyecta en el DOM ante fallos de sintaxis
+        const dangling = document.getElementById('d' + uniqueId);
+        if (dangling) dangling.remove();
+        const dangling2 = document.getElementById(uniqueId);
+        if (dangling2 && dangling2.parentElement !== outputEl) dangling2.remove();
+
+        outputEl.classList.add('has-error');
+        const firstLineErr = err.message ? err.message.split('\n')[0] : 'Error en sintaxis de diagrama';
+        outputEl.innerHTML = `
+          <div class="mermaid-syntax-hint">
+            <span class="mermaid-hint-icon">⚙️</span>
+            <div class="mermaid-hint-body">
+              <strong>Diagrama Mermaid en edición</strong>
+              <span>Esperando sintaxis completa (${escapeHtml(firstLineErr)})</span>
+            </div>
+          </div>
+        `;
+      }
+    }
+  }
+
   function renderPreview() {
     if (!DOM.editor || !DOM.previewInner) return;
 
@@ -450,12 +545,18 @@
               { left: '$$',  right: '$$',  display: true },
               { left: '$',   right: '$',   display: false }
             ],
+            ignoredClasses: ['katex-ignore', 'mermaid', 'mermaid-output', 'mermaid-raw', 'mermaid-block'],
             throwOnError: false,
             errorColor: '#ef4444'
           });
         } catch (katexErr) {
           console.warn('[KaTeX] Advertencia aislada en compilación matemática:', katexErr);
         }
+      }
+
+      // 4. Renderizado asíncrono de Diagramas Mermaid (Modo Markdown)
+      if (state.currentMode === 'markdown') {
+        renderMermaidDiagrams();
       }
 
       // 4. Inspección heurística de errores (Modo Moodle)
@@ -697,6 +798,10 @@
     }
 
     SafeStorage.set('suite_preview_theme', state.isDarkMode ? 'dark' : 'light');
+
+    if (state.currentMode === 'markdown') {
+      renderMermaidDiagrams();
+    }
   }
 
   function toggleTheme() {
@@ -1058,6 +1163,65 @@
     if (DOM.statusPill) {
       DOM.statusPill.addEventListener('click', () => {
         if (state.currentError) jumpToLine(state.currentError.line);
+      });
+    }
+
+    // Delegación de eventos interactivos en vista previa (Copiar código y exportar SVG de diagramas)
+    if (DOM.previewInner) {
+      DOM.previewInner.addEventListener('click', async (e) => {
+        // 1. Botón Copiar bloque de código estándar
+        const copyCodeBtn = e.target.closest('.btn-copy-code-block');
+        if (copyCodeBtn) {
+          const wrapper = copyCodeBtn.closest('.code-block-wrapper');
+          const codeEl = wrapper ? wrapper.querySelector('pre code') : null;
+          if (codeEl) {
+            await copyTextSafely(codeEl.textContent, 'Código copiado al portapapeles');
+            copyCodeBtn.classList.add('copied');
+            const label = copyCodeBtn.querySelector('span');
+            if (label) label.textContent = '¡Copiado!';
+            setTimeout(() => {
+              copyCodeBtn.classList.remove('copied');
+              if (label) label.textContent = 'Copiar';
+            }, 1800);
+          }
+          return;
+        }
+
+        // 2. Botón Copiar código fuente de Diagrama Mermaid
+        const copyMermaidBtn = e.target.closest('.btn-copy-mermaid-source');
+        if (copyMermaidBtn) {
+          const block = copyMermaidBtn.closest('.mermaid-block');
+          const rawCode = block && block.dataset.mermaidCode
+            ? decodeURIComponent(block.dataset.mermaidCode)
+            : (block && block.querySelector('.mermaid-raw') ? block.querySelector('.mermaid-raw').textContent : '');
+          if (rawCode) {
+            await copyTextSafely(rawCode, 'Sintaxis Mermaid copiada al portapapeles');
+            const label = copyMermaidBtn.querySelector('span');
+            if (label) {
+              label.textContent = '¡Copiado!';
+              setTimeout(() => { label.textContent = 'Copiar'; }, 1800);
+            }
+          }
+          return;
+        }
+
+        // 3. Botón Copiar SVG vectorial generado de Diagrama Mermaid
+        const copySvgBtn = e.target.closest('.btn-copy-mermaid-svg');
+        if (copySvgBtn) {
+          const block = copySvgBtn.closest('.mermaid-block');
+          const svgEl = block ? block.querySelector('.mermaid-output svg') : null;
+          if (svgEl) {
+            await copyTextSafely(svgEl.outerHTML, 'SVG del diagrama copiado al portapapeles');
+            const label = copySvgBtn.querySelector('span');
+            if (label) {
+              label.textContent = '¡Copiado!';
+              setTimeout(() => { label.textContent = 'SVG'; }, 1800);
+            }
+          } else {
+            showToast('El diagrama aún no ha sido renderizado');
+          }
+          return;
+        }
       });
     }
 
@@ -1442,9 +1606,19 @@
 
     // Disparadores directos desde scripts CDN
     window.__onKaTeXReady = () => renderPreview();
+    window.__onMermaidReady = () => {
+      if (state.currentMode === 'markdown') {
+        renderMermaidDiagrams();
+      }
+    };
     window.__onPrismReady = () => {
-      if (window.Prism && DOM.previewInner) {
-        try { Prism.highlightAllUnder(DOM.previewInner); } catch {}
+      if (window.Prism) {
+        if (window.Prism.plugins && window.Prism.plugins.autoloader) {
+          window.Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/';
+        }
+        if (DOM.previewInner) {
+          try { Prism.highlightAllUnder(DOM.previewInner); } catch {}
+        }
       }
     };
 

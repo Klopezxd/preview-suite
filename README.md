@@ -1,15 +1,16 @@
 # Preview Suite (Moodle & Markdown)
 
-[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.1.1-0284c7?style=for-the-badge)](https://github.com/Klopezxd/preview-suite)
+[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.2.0-0284c7?style=for-the-badge)](https://github.com/Klopezxd/preview-suite)
 [![Licencia](https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge)](LICENSE)
 [![Despliegue Vercel](https://img.shields.io/badge/Vercel-Producci%C3%B3n-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://preview-suite.vercel.app)
 [![Despliegue GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Activo-22c55e?style=for-the-badge&logo=github)](https://klopezxd.github.io/preview-suite/)
 [![KaTeX](https://img.shields.io/badge/KaTeX-0.16.11-00d084?style=for-the-badge&logo=latex&logoColor=white)](https://katex.org/)
+[![Mermaid.js](https://img.shields.io/badge/Mermaid.js-10.9-ff3670?style=for-the-badge)](https://mermaid.js.org/)
 [![Prism.js](https://img.shields.io/badge/Prism.js-1.29.0-blueviolet?style=for-the-badge)](https://prismjs.com/)
 [![Marked.js](https://img.shields.io/badge/Marked.js-12.0.2-ef4444?style=for-the-badge&logo=markdown&logoColor=white)](https://marked.js.org/)
-[![Arquitectura](https://img.shields.io/badge/Arquitectura-Modular%20SPA%20v3.1-f97316?style=for-the-badge)](https://developer.mozilla.org/es/docs/Web/JavaScript)
+[![Arquitectura](https://img.shields.io/badge/Arquitectura-Modular%20SPA%20v3.2-f97316?style=for-the-badge)](https://developer.mozilla.org/es/docs/Web/JavaScript)
 
-> **Entorno interactivo y reactivo para redacción, visualización y validación en tiempo real de documentos técnicos y académicos con soporte para KaTeX, Prism.js y Markdown (GFM).**
+> **Entorno interactivo y reactivo para redacción, visualización y validación en tiempo real de documentos técnicos y académicos con soporte para KaTeX, Mermaid.js, Prism.js y Markdown (GFM).**
 
 ---
 
@@ -35,9 +36,33 @@ Una suite unificada diseñada tanto para desarrollo de contenidos de aulas virtu
 
 **Previsualizador Moodle & Markdown** resuelve estas necesidades mediante una arquitectura web modular blindada contra excepciones y fallos de entorno, 100% responsiva para ordenadores, tablets y smartphones.
 
+## 🌟 Compatibilidad Total con Markdown Moderno (Novedades v3.2)
+
+1. **Diagramas Mermaid en Vivo y Exportación SVG (`mermaid`):**
+   - Renderizado vectorial reactivo para diagramas de flujo (`flowchart`, `graph`), secuencias (`sequenceDiagram`), diagramas de clases (`classDiagram`), máquinas de estados (`stateDiagram`), entidad-relación (`erDiagram`), diagramas de Gantt (`gantt`), circulares (`pie`), mapas mentales (`mindmap`), líneas de tiempo y git (`gitGraph`).
+   - Adaptación temática automática al alternar entre Modo Claro y Modo Oscuro, con paleta nórdica personalizada.
+   - Barra de herramientas en cada diagrama para **copiar código fuente** y **exportar SVG vectorial** con un solo clic.
+   - Tolerancia a fallos en tiempo real mientras el usuario escribe la sintaxis, sin romper la interfaz.
+2. **Alertas y Callouts GitHub Flavored Markdown (GFM):**
+   - Soporte para los 5 tipos oficiales: `> [!NOTE]` (Nota), `> [!TIP]` (Consejo), `> [!IMPORTANT]` (Importante), `> [!WARNING]` (Advertencia) y `> [!CAUTION]` (Precaución).
+   - Insensibilidad a mayúsculas/minúsculas y soporte para títulos personalizados en la misma línea.
+   - Fórmulas matemáticas LaTeX KaTeX, formato enriquecido, código y listas dentro de las alertas.
+3. **Resaltado Léxico Universal con Prism Autoloader:**
+   - Carga dinámica bajo demanda para cualquier lenguaje de programación soportado por Prism (Bash, Shell, TypeScript, JSON, YAML, HTML, CSS, Rust, Go, C#, C++, Java, PHP, Markdown, Dockerfile, etc.).
+4. **Bloques de Código Mejorados con Botón de Copiado:**
+   - Encabezado con etiqueta en mayúsculas del lenguaje detectado y botón interactivo "Copiar" en la vista previa.
+5. **Tablas Responsivas y Estilizadas:**
+   - Contenedor con scroll horizontal suave (`.table-responsive`), bordes limpios y alineación de columnas (`:---`, `:---:`, `---:`).
+6. **Listas de Verificación (Task Lists / Checklists):**
+   - Sintaxis `- [ ]` y `- [x]` sin viñetas residuales del navegador, con casillas estilizadas.
+7. **Notas al Pie (Footnotes GFM):**
+   - Sintaxis `[^1]` y `[^1]: Explicación` con superíndices vinculados y sección final con retorno `↩`.
+8. **Elementos Extendidos:**
+   - Texto tachado (`~~tachado~~`), resaltado (`==resaltado==`), bloques colapsables (`<details><summary>`), teclas (`<kbd>`) y citas estándar `> ...`.
+
 ---
 
-## 🛡️ Blindaje Técnico, Interactividad y Resiliencia (Novedades v3.1)
+## 🛡️ Blindaje Técnico, Interactividad y Resiliencia (v3.1)
 
 1. **Parser Markdown Resiliente con Modo Offline / Respaldo Nativo:**
    - Si el CDN de `marked.js` no carga o la red se interrumpe, el sistema activa automáticamente un parser nativo interno seguro, evitando pantallas en blanco o bloqueos del editor.
@@ -181,7 +206,7 @@ La suite está diseñada para funcionar inmediatamente sin requerir entornos Nod
 
 ## 📜 Historial de Cambios (Changelog)
 
-Consulta el archivo [CHANGELOG.md](CHANGELOG.md) para revisar en detalle la evolución completa del software, desde el prototipo inicial en MathJax hasta la versión actual v3.1.1.
+Consulta el archivo [CHANGELOG.md](CHANGELOG.md) para revisar en detalle la evolución completa del software, desde el prototipo inicial en MathJax hasta la versión actual v3.2.0.
 
 ---
 

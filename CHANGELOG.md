@@ -3,6 +3,48 @@
 Todos los cambios notables de este proyecto se documentan en este archivo.  
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a [Semantic Versioning (SemVer 2.0.0)](https://semver.org/lang/es/).
 
+## [3.2.0] - 2026-10-10
+
+### Añadido
+- **Soporte Integral para Diagramas Mermaid (`mermaid`):**
+  - Motor vectorial integrado con Mermaid v10 para procesar bloques de código ````mermaid`.
+  - Soporte completo para diagramas de flujo (`flowchart`, `graph`), diagramas de secuencia (`sequenceDiagram`), diagramas de clases (`classDiagram`), máquinas de estados (`stateDiagram`), diagramas de entidad-relación (`erDiagram`), diagramas de Gantt (`gantt`), diagramas circulares (`pie`), mapas mentales (`mindmap`), líneas de tiempo (`timeline`) y ramas de git (`gitGraph`).
+  - Adaptación temática automática con la paleta nórdica de la Suite al conmutar entre Modo Claro y Modo Oscuro.
+  - Barra de herramientas interactiva en cada diagrama con botones para:
+    - **Copiar código:** Copia la sintaxis Mermaid al portapapeles.
+    - **SVG:** Exporta el markup vectorial SVG renderizado directamente al portapapeles.
+  - Tolerancia y recuperación de errores en vivo mientras el usuario redacta la sintaxis del diagrama, evitando mensajes obstructivos o bloqueos del renderizador.
+- **Alertas y Callouts Oficiales GitHub Flavored Markdown (GFM):**
+  - Compatibilidad completa con la especificación de GitHub para los 5 tipos oficiales:
+    - `> [!NOTE]` (Nota - Cyan Glaciar)
+    - `> [!TIP]` (Consejo - Verde Esmeralda)
+    - `> [!IMPORTANT]` (Importante - Violeta Boreal)
+    - `> [!WARNING]` (Advertencia - Ámbar Solar)
+    - `> [!CAUTION]` (Precaución - Rojo Fresa Boreal)
+  - Soporte insensible a mayúsculas/minúsculas y admisión de títulos personalizados en la misma línea.
+  - Coexistencia armónica con fórmulas matemáticas LaTeX KaTeX, negritas, código en línea y listas multinivel.
+  - Iconografía SVG dedicada e integrada para cada tipo de alerta (`#icon-alert-note`, `#icon-alert-tip`, `#icon-alert-important`, `#icon-alert-warning`, `#icon-alert-caution`).
+- **Resaltado Léxico Universal bajo demanda (Prism Autoloader):**
+  - Incorporación del plugin Autoloader de Prism.js que descarga automáticamente componentes de gramática para cualquier lenguaje (Bash, Shell, TypeScript, JSON, YAML, HTML, CSS, Rust, Go, C#, C++, Java, PHP, Markdown, Dockerfile, etc.).
+- **Bloques de Código Mejorados en Vista Previa:**
+  - Encabezado con badge del lenguaje detectado y botón interactivo "Copiar" con retroalimentación animada ("¡Copiado!").
+- **Tablas Responsivas y Alineadas:**
+  - Envoltorio automático `.table-responsive` que permite desplazamiento horizontal suave en dispositivos móviles y pantallas divididas.
+  - Alineación de texto por columna (`:---`, `:---:`, `---:`) y estilos `.table-striped .table-bordered`.
+- **Listas de Verificación (Task Lists / Checklists):**
+  - Renderizado nativo de `- [ ]` y `- [x]` sin viñetas residuales del navegador, con casillas de verificación estilizadas.
+- **Notas al Pie de Página (Footnotes GFM):**
+  - Sintaxis `[^1]` en texto y `[^1]: Detalle` al final, con superíndices vinculados y retorno rápido `↩`.
+- **Elementos Tipográficos Extendidos:**
+  - Texto tachado (`~~tachado~~`), texto resaltado (`==resaltado==`), bloques desplegables (`<details><summary>`), teclas de teclado (`<kbd>`) y estilo refinado para citas tradicionales `> ...`.
+- **Plantilla Inicial Enriquecida:**
+  - Actualización de `DEFAULT_MARKDOWN_TEMPLATE` para demostrar de inmediato diagramas Mermaid, alertas GFM, tablas alineadas, código Python con copiado y fórmulas LaTeX.
+
+### Cambiado
+- Incremento de versión general del sistema a `v3.2.0`.
+- Optimización de `protectMathDelimiters` para proteger bloques Mermaid y citas complejas sin colisiones de sintaxis.
+- Protección en KaTeX `ignoredClasses` para excluir bloques `.mermaid` y contenedores asociados de transformaciones matemáticas involuntarias.
+
 ---
 
 ## [3.1.1] - 2026-09-24

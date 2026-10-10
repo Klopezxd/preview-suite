@@ -1,13 +1,13 @@
 /**
  * Configuración global del sistema y plantillas académicas iniciales.
  * @module config
- * @version 3.1.1
+ * @version 3.2.0
  */
 (() => {
   'use strict';
 
   const CONFIG = {
-    VERSION: '3.1.1',
+    VERSION: '3.2.0',
     FONT_SIZE_MIN: 10,
     FONT_SIZE_MAX: 26,
     DEFAULT_FONT_SIZE: 14,
@@ -107,26 +107,44 @@ print(f"Evaluación en pi: {valor_evaluado.evalf():.4f}")</code></pre>
 <p><strong>Conclusión:</strong> La tasa de cambio instantánea en \\( x = \\pi \\) es exactamente \\( -2\\pi \\) (aproximadamente \\( -6.2832 \\)), lo que indica que la función decrece con una pendiente negativa en dicho instante.</p>`;
 
   /**
-   * Plantilla académica base para Markdown (GFM + KaTeX + Código).
+   * Plantilla académica base para Markdown (GFM + Mermaid + Alertas + KaTeX + Código).
    */
   const DEFAULT_MARKDOWN_TEMPLATE = `# Análisis Numérico y Modelado Matemático
 
-> **Objetivo:** Determinar la aproximación de raíces mediante el método de Newton-Raphson y verificar la tasa de convergencia cuadrática.
+> [!IMPORTANT]
+> **El Primer Mandamiento del Desarrollo:**
+> **La autoevaluación sincera y continua.** Todo modelo computacional requiere validar rigurosamente sus hipótesis analíticas y verificar la estabilidad numérica antes de su despliegue en entornos productivos.
+
+> [!NOTE]
+> Esta suite cuenta con soporte nativo para **Diagramas Mermaid**, **Alertas GFM** (\`[!NOTE]\`, \`[!TIP]\`, \`[!IMPORTANT]\`, \`[!WARNING]\`, \`[!CAUTION]\`), **tablas con alineación**, fórmulas matemáticas **KaTeX** y bloques de código con botón de copia rápida.
 
 ---
 
-## 1. Fundamentación Teórica
+## 1. Flujo Algorítmico (Diagrama Mermaid)
 
-Sea \\( f: [a, b] \\to \\mathbb{R} \\) una función dos veces continuamente diferenciable. La relación de recurrencia del método de **Newton-Raphson** se define como:
+\`\`\`mermaid
+flowchart LR
+    A["Entrada: f(x), x₀, tol"] --> B["Calcular f(xₙ) y f'(xₙ)"]
+    B --> C{"¿|f(xₙ)| < tol?"}
+    C -- Sí --> D["Raíz convergente xₙ"]
+    C -- No --> E["xₙ₊₁ = xₙ - f(xₙ)/f'(xₙ)"]
+    E --> B
+\`\`\`
+
+---
+
+## 2. Fundamentación Teórica
+
+Sea \\( f: [a, b] \\to \\mathbb{R} \\) una función dos veces continuamente diferenciable. La relación de recurrencia del método de **Newton-Raphson** se define analíticamente como:
 
 \\[ x_{n+1} = x_n - \\frac{f(x_n)}{f'(x_n)}, \\quad n \\ge 0 \\]
 
-El error en cada iteración satisface la relación de convergencia asintótica:
+El error en cada iteración satisface la relación de convergencia asintótica cuadrática:
 \\[ |e_{n+1}| \\approx \\frac{|f''(r)|}{2|f'(r)|} |e_n|^2 \\]
 
 ---
 
-## 2. Tabla Comparativa de Convergencia
+## 3. Tabla Comparativa de Convergencia
 
 | Iteración \\( n \\) | Aproximación \\( x_n \\) | \\( f(x_n) \\) | Error Estimado \\( |x_n - x_{n-1}| \\) |
 | :---: | :---: | :---: | :---: |
@@ -137,49 +155,45 @@ El error en cada iteración satisface la relación de convergencia asintótica:
 
 ---
 
-## 3. Implementación Algorítmica en Python
-
-A continuación se presenta la implementación vectorial optimizada:
+## 4. Implementación Algorítmica en Python
 
 \`\`\`python
 import numpy as np
 
 def newton_raphson(f, df, x0, tol=1e-6, max_iter=50):
     """
-    Aproximación de raíz mediante el método de Newton-Raphson.
+    Aproximación de raíces continuas mediante el método de Newton-Raphson.
     """
     x = float(x0)
     for i in range(max_iter):
         fx = f(x)
         dfx = df(x)
         if abs(dfx) < 1e-12:
-            raise ZeroDivisionError("Derivada nula en x = {}".format(x))
+            raise ZeroDivisionError(f"Derivada nula detectada en x = {x}")
         x_next = x - fx / dfx
         if abs(x_next - x) < tol:
             return x_next, i + 1
         x = x_next
     return x, max_iter
 
-# Función de prueba: f(x) = x^2 - 3 (raíz exacta sqrt(3) ≈ 1.7320508)
+# Función objetivo: f(x) = x^2 - 3 (raíz exacta sqrt(3) ≈ 1.7320508)
 f = lambda x: x**2 - 3
-df = lambda x: 2*x
+df = lambda x: 2 * x
 raiz, iteraciones = newton_raphson(f, df, x0=2.0)
 print(f"Raíz calculada: {raiz:.6f} en {iteraciones} iteraciones")
 \`\`\`
 
 ---
 
-## 4. Lista de Verificación de Requisitos
+## 5. Lista de Verificación de Requisitos
 
-- [x] Función continua y derivable en el intervalo evaluado.
+- [x] Función continua y diferenciable en el intervalo de búsqueda.
 - [x] Primera derivada no nula en la vecindad de la raíz (\\( f'(x) \\ne 0 \\)).
-- [x] Validación experimental con tolerancia \\( 10^{-6} \\).
-- [ ] Análisis de estabilidad con raíces múltiples.
+- [x] Tolerancia numérica satisfecha (\\( \\le 10^{-6} \\)).
+- [ ] Validación de orden superior ante raíces múltiples.
 
----
-
-## 5. Conclusión y Síntesis
-El método exhibe una **convergencia cuadrática local**, duplicando el número de dígitos significativos correctos en cada paso cuando la estimación inicial \\( x_0 \\) es suficientemente cercana a la raíz.`;
+> [!TIP]
+> Puedes exportar el diagrama Mermaid directamente a SVG o copiar su sintaxis haciendo clic en los botones de la barra superior del diagrama.`;
 
   window.APP_CONFIG = {
     CONFIG,

@@ -972,6 +972,531 @@ textarea:focus-visible {
   color: var(--preview-alert-danger-text);
 }
 
+/* ==========================================================================
+   ALERTAS GITHUB FLAVORED MARKDOWN (CALLOUTS / ADMONITIONS)
+   ========================================================================== */
+.markdown-alert {
+  margin: 18px 0;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  border-left: 4px solid;
+  background-color: rgba(0, 212, 255, 0.06);
+  color: var(--preview-text);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.markdown-alert-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.95em;
+  margin-bottom: 8px;
+  text-transform: capitalize;
+  letter-spacing: -0.01em;
+}
+
+.markdown-alert-title .icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.markdown-alert-content {
+  font-size: 0.95em;
+  line-height: 1.65;
+}
+
+.markdown-alert-content > :first-child {
+  margin-top: 0;
+}
+
+.markdown-alert-content > :last-child {
+  margin-bottom: 0;
+}
+
+/* NOTE: Cyan Glaciar / Azul */
+.markdown-alert-note {
+  border-left-color: #00D4FF;
+  background-color: rgba(0, 212, 255, 0.07);
+}
+.markdown-alert-note .markdown-alert-title {
+  color: #0099cc;
+}
+.theme-dark .markdown-alert-note {
+  border-left-color: #00D4FF;
+  background-color: rgba(0, 212, 255, 0.12);
+}
+.theme-dark .markdown-alert-note .markdown-alert-title {
+  color: #38bdf8;
+}
+
+/* TIP: Verde Esmeralda / Aurora Green */
+.markdown-alert-tip {
+  border-left-color: #00FF87;
+  background-color: rgba(0, 255, 135, 0.07);
+}
+.markdown-alert-tip .markdown-alert-title {
+  color: #059669;
+}
+.theme-dark .markdown-alert-tip {
+  border-left-color: #00FF87;
+  background-color: rgba(0, 255, 135, 0.12);
+}
+.theme-dark .markdown-alert-tip .markdown-alert-title {
+  color: #4ade80;
+}
+
+/* IMPORTANT: Violeta Boreal */
+.markdown-alert-important {
+  border-left-color: #A855F7;
+  background-color: rgba(168, 85, 247, 0.08);
+}
+.markdown-alert-important .markdown-alert-title {
+  color: #7c3aed;
+}
+.theme-dark .markdown-alert-important {
+  border-left-color: #A855F7;
+  background-color: rgba(168, 85, 247, 0.14);
+}
+.theme-dark .markdown-alert-important .markdown-alert-title {
+  color: #c084fc;
+}
+
+/* WARNING: Ámbar Solar */
+.markdown-alert-warning {
+  border-left-color: #F59E0B;
+  background-color: rgba(245, 158, 11, 0.07);
+}
+.markdown-alert-warning .markdown-alert-title {
+  color: #d97706;
+}
+.theme-dark .markdown-alert-warning {
+  border-left-color: #F59E0B;
+  background-color: rgba(245, 158, 11, 0.12);
+}
+.theme-dark .markdown-alert-warning .markdown-alert-title {
+  color: #fbbf24;
+}
+
+/* CAUTION: Rojo Fresa Boreal */
+.markdown-alert-caution {
+  border-left-color: #EF4444;
+  background-color: rgba(239, 68, 68, 0.07);
+}
+.markdown-alert-caution .markdown-alert-title {
+  color: #dc2626;
+}
+.theme-dark .markdown-alert-caution {
+  border-left-color: #EF4444;
+  background-color: rgba(239, 68, 68, 0.12);
+}
+.theme-dark .markdown-alert-caution .markdown-alert-title {
+  color: #f87171;
+}
+
+/* Blockquote estándar en Markdown */
+#preview-inner blockquote:not(.markdown-alert) {
+  margin: 16px 0;
+  padding: 10px 18px;
+  border-left: 4px solid var(--preview-border-subtle, #cbd5e1);
+  background-color: rgba(0, 212, 255, 0.03);
+  color: var(--preview-text);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-style: italic;
+}
+.theme-dark #preview-inner blockquote:not(.markdown-alert) {
+  border-left-color: rgba(0, 212, 255, 0.35);
+  background-color: rgba(255, 255, 255, 0.02);
+  color: #94a3b8;
+}
+#preview-inner blockquote:not(.markdown-alert) p {
+  margin: 6px 0;
+}
+
+/* ==========================================================================
+   DIAGRAMAS MERMAID
+   ========================================================================== */
+.mermaid-block {
+  margin: 22px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--preview-card-border);
+  background-color: var(--preview-card-bg);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.mermaid-block:hover {
+  border-color: rgba(0, 212, 255, 0.35);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+.mermaid-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid var(--preview-card-border);
+  font-size: 12px;
+}
+
+.theme-dark .mermaid-toolbar {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.mermaid-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: #00D4FF;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+.mermaid-label .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.mermaid-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-mermaid-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  border-radius: 4px;
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  background: transparent;
+  color: var(--preview-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-mermaid-action .icon {
+  width: 12px;
+  height: 12px;
+}
+
+.btn-mermaid-action:hover {
+  background: rgba(0, 212, 255, 0.15);
+  border-color: #00D4FF;
+  color: #00D4FF;
+}
+
+.mermaid-viewport {
+  padding: 24px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: auto;
+  min-height: 80px;
+  background: var(--preview-card-bg);
+}
+
+.mermaid-output {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.mermaid-output svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.mermaid-loading {
+  font-size: 13px;
+  color: #64748b;
+  font-family: var(--font-mono);
+}
+
+.mermaid-syntax-hint {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px dashed rgba(245, 158, 11, 0.4);
+  color: #d97706;
+  font-size: 12px;
+  width: 100%;
+  max-width: 540px;
+}
+
+.theme-dark .mermaid-syntax-hint {
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.mermaid-hint-icon {
+  font-size: 18px;
+}
+
+.mermaid-hint-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ==========================================================================
+   BLOQUES DE CÓDIGO CON BOTÓN DE COPIADO Y BADGE DE LENGUAJE
+   ========================================================================== */
+.code-block-wrapper {
+  position: relative;
+  margin: 18px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  overflow: hidden;
+  background: #0d1527;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  background: rgba(0, 0, 0, 0.35);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 11px;
+}
+
+.code-block-lang {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: #00FF87;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.btn-copy-code-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #cbd5e1;
+  font-size: 11px;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+}
+
+.btn-copy-code-block .icon {
+  width: 12px;
+  height: 12px;
+}
+
+.btn-copy-code-block:hover {
+  background: rgba(0, 212, 255, 0.2);
+  border-color: #00D4FF;
+  color: #ffffff;
+}
+
+.btn-copy-code-block.copied {
+  background: rgba(0, 255, 135, 0.25);
+  border-color: #00FF87;
+  color: #00FF87;
+}
+
+.code-block-wrapper pre {
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 14px 18px !important;
+  overflow-x: auto;
+}
+
+/* ==========================================================================
+   TABLAS RESPONSIVAS
+   ========================================================================== */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin: 16px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-bordered {
+  border: 1px solid var(--preview-table-border);
+}
+
+/* ==========================================================================
+   TASK LISTS / CHECKLISTS
+   ========================================================================== */
+.task-list {
+  list-style-type: none !important;
+  padding-left: 4px !important;
+}
+
+.task-list-item {
+  list-style-type: none !important;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.task-list-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--preview-border-subtle, #94a3b8);
+  border-radius: 3px;
+  outline: none;
+  cursor: default;
+  position: relative;
+  flex-shrink: 0;
+  top: 2px;
+  background-color: transparent;
+  transition: all 0.15s ease;
+}
+
+.task-list-checkbox:checked {
+  background-color: #00FF87;
+  border-color: #00FF87;
+}
+
+.task-list-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid #050B1A;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* ==========================================================================
+   NOTAS AL PIE (FOOTNOTES)
+   ========================================================================== */
+.footnote-ref a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #00D4FF;
+  padding: 0 2px;
+}
+
+.footnotes {
+  margin-top: 32px;
+  padding-top: 14px;
+  border-top: 1px solid var(--preview-border-subtle);
+  font-size: 0.88em;
+  color: var(--app-text-muted, #94a3b8);
+}
+
+.footnotes-sep {
+  display: none;
+}
+
+.footnotes ol {
+  padding-left: 20px;
+}
+
+.footnotes li {
+  margin-bottom: 6px;
+}
+
+.footnote-backref {
+  text-decoration: none;
+  margin-left: 4px;
+  color: #00FF87;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   ELEMENTOS ADICIONALES DE MARKDOWN EXTENDIDO
+   ========================================================================== */
+#preview-inner code:not(pre code) {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  color: #00D4FF;
+}
+
+.theme-light #preview-inner code:not(pre code) {
+  background-color: rgba(9, 105, 218, 0.08);
+  border-color: rgba(9, 105, 218, 0.2);
+  color: #0969da;
+}
+
+#preview-inner del {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+#preview-inner mark {
+  background-color: rgba(255, 235, 59, 0.3);
+  color: inherit;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+#preview-inner details {
+  margin: 16px 0;
+  padding: 10px 14px;
+  border: 1px solid var(--preview-card-border);
+  border-radius: var(--radius-md);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.theme-dark #preview-inner details {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+#preview-inner details summary {
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  color: var(--preview-heading);
+}
+
+#preview-inner hr {
+  margin: 28px 0;
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--preview-border-subtle), transparent);
+}
+
+#preview-inner kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--preview-text);
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
 /* Tablas de Datos */
 .table {
   width: 100%;
