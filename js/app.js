@@ -93,7 +93,6 @@
       statusTxt: document.getElementById('status-txt'),
       charCount: document.getElementById('char-count'),
       lastUpdate: document.getElementById('last-update'),
-      labelFontSize: document.getElementById('label-font-size'),
       themeIcon: document.getElementById('theme-icon'),
       themeText: document.getElementById('theme-text'),
 
@@ -413,6 +412,7 @@
   }
 
   let mermaidRenderToken = 0;
+  let lastMermaidTheme = null;
 
   /**
    * Renderiza todos los diagramas Mermaid en el lienzo de vista previa.
@@ -432,42 +432,45 @@
                    (DOM.previewWrap && DOM.previewWrap.classList.contains('theme-dark')) ||
                    state.isDarkMode;
 
-    try {
-      window.mermaid.initialize({
-        startOnLoad: false,
-        theme: isDark ? 'dark' : 'default',
-        securityLevel: 'loose',
-        fontFamily: 'Montserrat, system-ui, -apple-system, sans-serif',
-        fontSize: 13,
-        flowchart: {
-          useMaxWidth: true,
-          htmlLabels: true,
-          padding: 18,
-          curve: 'basis'
-        },
-        sequence: {
-          useMaxWidth: true,
-          boxMargin: 12,
-          boxTextMargin: 6
-        },
-        themeVariables: isDark ? {
-          darkMode: true,
-          background: '#0A1628',
-          primaryColor: '#00D4FF',
-          primaryTextColor: '#FAFBFC',
-          primaryBorderColor: '#00D4FF',
-          lineColor: '#00FF87',
-          secondaryColor: '#A855F7',
-          tertiaryColor: '#050B1A',
+    if (lastMermaidTheme !== isDark) {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose',
           fontFamily: 'Montserrat, system-ui, -apple-system, sans-serif',
-          fontSize: '13px'
-        } : {
-          fontFamily: 'Montserrat, system-ui, -apple-system, sans-serif',
-          fontSize: '13px'
-        }
-      });
-    } catch (initErr) {
-      console.warn('[Mermaid] Error en inicialización:', initErr);
+          fontSize: 13,
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true,
+            padding: 18,
+            curve: 'basis'
+          },
+          sequence: {
+            useMaxWidth: true,
+            boxMargin: 12,
+            boxTextMargin: 6
+          },
+          themeVariables: isDark ? {
+            darkMode: true,
+            background: '#0A1628',
+            primaryColor: '#00D4FF',
+            primaryTextColor: '#FAFBFC',
+            primaryBorderColor: '#00D4FF',
+            lineColor: '#00FF87',
+            secondaryColor: '#A855F7',
+            tertiaryColor: '#050B1A',
+            fontFamily: 'Montserrat, system-ui, -apple-system, sans-serif',
+            fontSize: '13px'
+          } : {
+            fontFamily: 'Montserrat, system-ui, -apple-system, sans-serif',
+            fontSize: '13px'
+          }
+        });
+        lastMermaidTheme = isDark;
+      } catch (initErr) {
+        console.warn('[Mermaid] Error en inicialización:', initErr);
+      }
     }
 
     const currentToken = ++mermaidRenderToken;
@@ -778,7 +781,8 @@
       DOM.btnFontReset.classList.remove('zoom-active');
       void DOM.btnFontReset.offsetWidth;
       DOM.btnFontReset.classList.add('zoom-active');
-      setTimeout(() => {
+      clearTimeout(state.zoomPulseTimer);
+      state.zoomPulseTimer = setTimeout(() => {
         if (DOM.btnFontReset) DOM.btnFontReset.classList.remove('zoom-active');
       }, 350);
     }
@@ -801,7 +805,8 @@
       DOM.btnPreviewZoomReset.classList.remove('zoom-active');
       void DOM.btnPreviewZoomReset.offsetWidth;
       DOM.btnPreviewZoomReset.classList.add('zoom-active');
-      setTimeout(() => {
+      clearTimeout(state.previewZoomPulseTimer);
+      state.previewZoomPulseTimer = setTimeout(() => {
         if (DOM.btnPreviewZoomReset) DOM.btnPreviewZoomReset.classList.remove('zoom-active');
       }, 350);
     }
@@ -1356,6 +1361,8 @@
             DOM.editor.value = DOM.editor.value.slice(0, currentPos) + AUTO_CLOSE_MAP[e.key] + DOM.editor.value.slice(currentPos);
             DOM.editor.selectionStart = DOM.editor.selectionEnd = currentPos;
             state.buffers[state.currentMode] = DOM.editor.value;
+            pushHistoryState(DOM.editor.value);
+            schedulePreviewUpdate();
           }, 0);
         }
       }
@@ -1463,7 +1470,7 @@
     });
   }
 
-  // --- 9. Control Ergonómico de Zoom y Escala (Rueda y Atajos) ---
+  // --- 10. Control Ergonómico de Zoom y Escala (Rueda y Atajos) ---
   function setupZoomEvents() {
     let wheelAccumulator = 0;
     let wheelResetTimer = null;
@@ -1579,7 +1586,7 @@
     });
   }
 
-  // --- 10. Inicialización y Ciclo de Vida ---
+  // --- 11. Inicialización y Ciclo de Vida ---
   function initApp() {
     if (state.isInitialized) return;
     state.isInitialized = true;
@@ -1605,6 +1612,10 @@
     if (DOM.previewCard) DOM.previewCard.style.zoom = `${state.previewZoom}%`;
     if (DOM.labelFontSize) DOM.labelFontSize.textContent = `${state.fontSize}px`;
     if (DOM.labelPreviewZoom) DOM.labelPreviewZoom.textContent = `${state.previewZoom}%`;
+    if (DOM.versionBadge && CONFIG.VERSION) {
+      DOM.versionBadge.textContent = `v${CONFIG.VERSION}`;
+      DOM.versionBadge.title = `v${CONFIG.VERSION}`;
+    }
     updateLineNumbers();
     updateContentStatistics();
     updateUndoButtonState();

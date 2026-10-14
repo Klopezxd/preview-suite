@@ -364,7 +364,8 @@
     if (!markdownText || !markdownText.trim()) return '';
     try {
       const compiled = parseMarkdown(markdownText);
-      return `<!-- Generado con Suite Previsualizador Académico v3.2.1 (Modo Markdown -> Moodle) -->\n${compiled.trim()}`;
+      const appVersion = (window.APP_CONFIG && window.APP_CONFIG.CONFIG && window.APP_CONFIG.CONFIG.VERSION) || '3.2.1';
+      return `<!-- Generado con Suite Previsualizador Académico v${appVersion} (Modo Markdown -> Moodle) -->\n${compiled.trim()}`;
     } catch (err) {
       console.error('[MarkdownEngine] Error al exportar para Moodle:', err);
       return markdownText;

@@ -1563,15 +1563,15 @@ textarea:focus-visible {
   font-size: 0.88em;
   padding: 2px 6px;
   border-radius: 4px;
-  background-color: rgba(0, 212, 255, 0.08);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  color: #00D4FF;
+  background-color: rgba(9, 105, 218, 0.08);
+  border: 1px solid rgba(9, 105, 218, 0.2);
+  color: #0969da;
 }
 
-.theme-light #preview-inner code:not(pre code) {
-  background-color: rgba(9, 105, 218, 0.08);
-  border-color: rgba(9, 105, 218, 0.2);
-  color: #0969da;
+.theme-dark #preview-inner code:not(pre code) {
+  background-color: rgba(0, 212, 255, 0.12);
+  border-color: rgba(0, 212, 255, 0.25);
+  color: #00D4FF;
 }
 
 #preview-inner del {
@@ -2283,9 +2283,7 @@ textarea:focus-visible {
     gap: 6px;
   }
 
-  .font-ctrl button,
-  .font-ctrl .btn-zoom-reset {
-    min-width: 28px;
+  .zoom-pill {
     min-height: 28px;
     touch-action: manipulation;
   }
@@ -2597,5 +2595,59 @@ textarea:focus-visible {
     background-color: #fef2f2 !important;
     border-color: #dc2626 !important;
     color: #b91c1c !important;
+  }
+
+  /* Elementos interactivos ocultos en impresión / PDF */
+  .mobile-view-nav,
+  .btn-copy-code-block,
+  .mermaid-actions {
+    display: none !important;
+  }
+
+  /* Diagramas Mermaid en impresión */
+  .mermaid-block {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    border: 1px solid #cbd5e1 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    margin: 14pt 0 !important;
+  }
+
+  .mermaid-toolbar {
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    color: #334155 !important;
+  }
+
+  .mermaid-label {
+    color: #334155 !important;
+  }
+
+  /* Alertas GFM en impresión */
+  .markdown-alert {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    border-radius: 6px !important;
+    margin: 12pt 0 !important;
+  }
+
+  /* Bloques de código en impresión */
+  .code-block-wrapper {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #334155 !important;
+    margin: 12pt 0 !important;
+  }
+
+  .code-block-header {
+    background: #1e293b !important;
+    border-bottom: 1px solid #334155 !important;
+    color: #94a3b8 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }

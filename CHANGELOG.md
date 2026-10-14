@@ -11,6 +11,20 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
   - Se asignó la clase estándar `language-plaintext` a todos los bloques sin lenguaje especificado.
   - Se añadieron estilos globales y específicos con `color: #E2E8F0 !important;` y soporte de alto contraste para tokens de Prism.js en bloques de código dentro de la previsualización.
 
+### Optimizado y Refactorizado (Auditoría Clean Code)
+- **Rendimiento de Renderizado Mermaid:**
+  - Se implementó caché de tema visual para evitar reinicializaciones redundantes de `window.mermaid.initialize` en cada pulsación de tecla durante la edición.
+- **Limpieza de Selectores y Estilos Muertos:**
+  - Se eliminaron selectores CSS obsoletos (`.font-ctrl button`, `.font-ctrl .btn-zoom-reset`) reemplazándolos por reglas ergonómicas para `.zoom-pill`.
+  - Se corrigió la regla huérfana `.theme-light` para código en línea, garantizando alto contraste accesible (`#0969da`) en modo claro y Aurora cyan (`#00D4FF`) en modo oscuro.
+- **Sincronización Reactiva de Delimitadores:**
+  - El auto-cierre de delimitadores (`(`, `[`, `{`, etc.) ahora sincroniza de inmediato el buffer en memoria, registra el estado en el historial de deshacer y dispara la actualización del render en vivo.
+- **Arquitectura DRY y Calidad de Código:**
+  - Se eliminó propiedad duplicada `labelFontSize` en el caché del DOM.
+  - Se desacopló la inyección de versión en `compileToMoodleHtml`, haciéndola dinámica desde `APP_CONFIG.CONFIG.VERSION`.
+  - Se añadieron reglas de impresión y exportación A4 para Alertas GFM, bloques de código y diagramas Mermaid, ocultando controles interactivos (`.btn-copy-code-block`, `.mermaid-actions`).
+
+
 ## [3.2.0] - 2026-10-10
 
 ### Añadido

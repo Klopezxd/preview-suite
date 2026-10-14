@@ -12,3 +12,14 @@ desktop.ini
 USER.md
 PENDIENTES.md
 
+# IDEs y Editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs y diagnósticos
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
