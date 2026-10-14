@@ -4,7 +4,7 @@
  * Soporte integral para Diagramas Mermaid, Alertas GFM (Callouts), Tablas responsivas,
  * Listas de verificación (Task Lists), Bloques de código con copiado rápido y Notas al pie.
  * @module markdown
- * @version 3.2.0
+ * @version 3.2.1
  */
 (() => {
   'use strict';
@@ -156,7 +156,7 @@
 
     // 2. Bloques de código fuente estándar con encabezado y botón de copiado
     const displayLang = lang || 'código';
-    const langClass = lang ? `language-${lang}` : '';
+    const langClass = lang ? `language-${lang}` : 'language-plaintext';
     return `<div class="code-block-wrapper">
   <div class="code-block-header">
     <span class="code-block-lang">${escapeHtml(displayLang.toUpperCase())}</span>
@@ -364,7 +364,7 @@
     if (!markdownText || !markdownText.trim()) return '';
     try {
       const compiled = parseMarkdown(markdownText);
-      return `<!-- Generado con Suite Previsualizador Académico v3.2.0 (Modo Markdown -> Moodle) -->\n${compiled.trim()}`;
+      return `<!-- Generado con Suite Previsualizador Académico v3.2.1 (Modo Markdown -> Moodle) -->\n${compiled.trim()}`;
     } catch (err) {
       console.error('[MarkdownEngine] Error al exportar para Moodle:', err);
       return markdownText;

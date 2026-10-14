@@ -1355,6 +1355,104 @@ textarea:focus-visible {
   box-shadow: none !important;
   padding: 14px 18px !important;
   overflow-x: auto;
+  background: transparent !important;
+  color: #E2E8F0 !important;
+  font-family: var(--font-mono, 'JetBrains Mono', Consolas, Monaco, monospace) !important;
+  line-height: 1.6 !important;
+}
+
+.code-block-wrapper pre code,
+#preview-inner pre code {
+  color: #E2E8F0 !important;
+  font-family: var(--font-mono, 'JetBrains Mono', Consolas, Monaco, monospace) !important;
+  background: transparent !important;
+  text-shadow: none !important;
+  display: block;
+  line-height: 1.6 !important;
+}
+
+/* Tokens de sintaxis Prism con alto contraste sobre fondo oscuro */
+.code-block-wrapper pre .token,
+#preview-inner pre .token {
+  text-shadow: none !important;
+}
+
+.code-block-wrapper pre .token.comment,
+.code-block-wrapper pre .token.prolog,
+.code-block-wrapper pre .token.doctype,
+.code-block-wrapper pre .token.cdata,
+#preview-inner pre .token.comment,
+#preview-inner pre .token.prolog,
+#preview-inner pre .token.doctype,
+#preview-inner pre .token.cdata {
+  color: #94a3b8 !important;
+}
+
+.code-block-wrapper pre .token.punctuation,
+#preview-inner pre .token.punctuation {
+  color: #cbd5e1 !important;
+}
+
+.code-block-wrapper pre .token.property,
+.code-block-wrapper pre .token.tag,
+.code-block-wrapper pre .token.boolean,
+.code-block-wrapper pre .token.number,
+.code-block-wrapper pre .token.constant,
+.code-block-wrapper pre .token.symbol,
+#preview-inner pre .token.property,
+#preview-inner pre .token.tag,
+#preview-inner pre .token.boolean,
+#preview-inner pre .token.number,
+#preview-inner pre .token.constant,
+#preview-inner pre .token.symbol {
+  color: #f08d49 !important;
+}
+
+.code-block-wrapper pre .token.selector,
+.code-block-wrapper pre .token.attr-name,
+.code-block-wrapper pre .token.string,
+.code-block-wrapper pre .token.char,
+.code-block-wrapper pre .token.builtin,
+#preview-inner pre .token.selector,
+#preview-inner pre .token.attr-name,
+#preview-inner pre .token.string,
+#preview-inner pre .token.char,
+#preview-inner pre .token.builtin {
+  color: #7ec699 !important;
+}
+
+.code-block-wrapper pre .token.operator,
+.code-block-wrapper pre .token.entity,
+.code-block-wrapper pre .token.url,
+#preview-inner pre .token.operator,
+#preview-inner pre .token.entity,
+#preview-inner pre .token.url {
+  color: #67cdcc !important;
+}
+
+.code-block-wrapper pre .token.atrule,
+.code-block-wrapper pre .token.attr-value,
+.code-block-wrapper pre .token.keyword,
+#preview-inner pre .token.atrule,
+#preview-inner pre .token.attr-value,
+#preview-inner pre .token.keyword {
+  color: #cc99cd !important;
+}
+
+.code-block-wrapper pre .token.function,
+.code-block-wrapper pre .token.class-name,
+#preview-inner pre .token.function,
+#preview-inner pre .token.class-name {
+  color: #6196cc !important;
+}
+
+.code-block-wrapper pre .token.regex,
+.code-block-wrapper pre .token.important,
+.code-block-wrapper pre .token.variable,
+#preview-inner pre .token.regex,
+#preview-inner pre .token.important,
+#preview-inner pre .token.variable {
+  color: #f8c555 !important;
 }
 
 /* ==========================================================================
@@ -1560,6 +1658,8 @@ textarea:focus-visible {
   font-size: 0.9em;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(0, 212, 255, 0.15);
+  background-color: #0d1527;
+  color: #E2E8F0;
 }
 
 /* Fórmulas Matemáticas KaTeX */

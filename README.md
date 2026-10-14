@@ -1,6 +1,6 @@
 # Preview Suite (Moodle & Markdown)
 
-[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.2.0-0284c7?style=for-the-badge)](https://github.com/Klopezxd/preview-suite)
+[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.2.1-0284c7?style=for-the-badge)](https://github.com/Klopezxd/preview-suite)
 [![Licencia](https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge)](LICENSE)
 [![Despliegue Vercel](https://img.shields.io/badge/Vercel-Producci%C3%B3n-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://preview-suite.vercel.app)
 [![Despliegue GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Activo-22c55e?style=for-the-badge&logo=github)](https://klopezxd.github.io/preview-suite/)
@@ -8,7 +8,7 @@
 [![Mermaid.js](https://img.shields.io/badge/Mermaid.js-10.9-ff3670?style=for-the-badge)](https://mermaid.js.org/)
 [![Prism.js](https://img.shields.io/badge/Prism.js-1.29.0-blueviolet?style=for-the-badge)](https://prismjs.com/)
 [![Marked.js](https://img.shields.io/badge/Marked.js-12.0.2-ef4444?style=for-the-badge&logo=markdown&logoColor=white)](https://marked.js.org/)
-[![Arquitectura](https://img.shields.io/badge/Arquitectura-Modular%20SPA%20v3.2-f97316?style=for-the-badge)](https://developer.mozilla.org/es/docs/Web/JavaScript)
+[![Arquitectura](https://img.shields.io/badge/Arquitectura-Modular%20SPA%20v3.2.1-f97316?style=for-the-badge)](https://developer.mozilla.org/es/docs/Web/JavaScript)
 
 > **Entorno interactivo y reactivo para redacción, visualización y validación en tiempo real de documentos técnicos y académicos con soporte para KaTeX, Mermaid.js, Prism.js y Markdown (GFM).**
 
@@ -206,7 +206,7 @@ La suite está diseñada para funcionar inmediatamente sin requerir entornos Nod
 
 ## 📜 Historial de Cambios (Changelog)
 
-Consulta el archivo [CHANGELOG.md](CHANGELOG.md) para revisar en detalle la evolución completa del software, desde el prototipo inicial en MathJax hasta la versión actual v3.2.0.
+Consulta el archivo [CHANGELOG.md](CHANGELOG.md) para revisar en detalle la evolución completa del software, desde el prototipo inicial en MathJax hasta la versión actual v3.2.1.
 
 ---
 

@@ -3,6 +3,14 @@
 Todos los cambios notables de este proyecto se documentan en este archivo.  
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a [Semantic Versioning (SemVer 2.0.0)](https://semver.org/lang/es/).
 
+## [3.2.1] - 2026-10-13
+
+### Corregido
+- **Visibilidad y Contraste de Bloques de Código de Texto Plano y Diagramas de Árbol:**
+  - Se corrigió el problema en el modo de previsualización clara donde los bloques de código sin etiqueta de lenguaje explícita o diagramas de árbol de directorios (ASCII/Unicode como `├──`, `└──`) heredaban el color oscuro del texto (`#0A1628`) sobre el fondo oscuro del contenedor (`#0d1527`), volviéndose ilegibles sin selección manual.
+  - Se asignó la clase estándar `language-plaintext` a todos los bloques sin lenguaje especificado.
+  - Se añadieron estilos globales y específicos con `color: #E2E8F0 !important;` y soporte de alto contraste para tokens de Prism.js en bloques de código dentro de la previsualización.
+
 ## [3.2.0] - 2026-10-10
 
 ### Añadido
