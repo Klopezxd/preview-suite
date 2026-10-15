@@ -4,10 +4,10 @@
  * @version 3.2.1
  */
 (() => {
-  'use strict';
+  "use strict";
 
   const CONFIG = {
-    VERSION: '3.2.1',
+    VERSION: "3.3.0",
     FONT_SIZE_MIN: 10,
     FONT_SIZE_MAX: 26,
     DEFAULT_FONT_SIZE: 14,
@@ -16,20 +16,23 @@
     DEFAULT_PREVIEW_ZOOM: 100,
     PREVIEW_ZOOM_STEP: 10,
     DEBOUNCE_DELAY_MS: 300,
+    HISTORY_DELAY_MS: 300,
+    MAX_HISTORY_BYTES: 16 * 1024 * 1024,
+    MAX_LINE_MARKERS: 2000,
     TOAST_DURATION_MS: 2400,
     MAX_FILE_SIZE_BYTES: 5 * 1024 * 1024, // 5 MB máximo de seguridad
-    ALLOWED_EXTENSIONS: ['.html', '.htm', '.md', '.markdown', '.txt']
+    ALLOWED_EXTENSIONS: [".html", ".htm", ".md", ".markdown", ".txt"],
   };
 
   /** Mapeo de pares de delimitadores para auto-cierre y envoltura contextual. */
   const AUTO_CLOSE_MAP = {
-    '<': '>',
-    '(': ')',
-    '[': ']',
-    '{': '}',
+    "<": ">",
+    "(": ")",
+    "[": "]",
+    "{": "}",
     '"': '"',
     "'": "'",
-    '`': '`'
+    "`": "`",
   };
 
   /**
@@ -199,6 +202,6 @@ print(f"Raíz calculada: {raiz:.6f} en {iteraciones} iteraciones")
     CONFIG,
     AUTO_CLOSE_MAP,
     DEFAULT_MOODLE_TEMPLATE,
-    DEFAULT_MARKDOWN_TEMPLATE
+    DEFAULT_MARKDOWN_TEMPLATE,
   };
 })();

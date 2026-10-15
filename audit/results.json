@@ -1,0 +1,434 @@
+{
+  "generatedAt": "2026-10-15T23:04:29.231Z",
+  "browser": "155.0.4283.45",
+  "revision": "4ae429fe41bdd7f32a50e40f850a96beb3519396",
+  "dependencies": [
+    "https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js",
+    "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js",
+    "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js",
+    "https://cdn.jsdelivr.net/combine/npm/prismjs@1.29.0/prism.min.js,npm/prismjs@1.29.0/components/prism-python.min.js,npm/prismjs@1.29.0/components/prism-latex.min.js,npm/prismjs@1.29.0/components/prism-javascript.min.js,npm/prismjs@1.29.0/components/prism-r.min.js,npm/prismjs@1.29.0/components/prism-sql.min.js,npm/prismjs@1.29.0/components/prism-java.min.js,npm/prismjs@1.29.0/components/prism-cpp.min.js",
+    "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js",
+    "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
+  ],
+  "summary": {
+    "total": 61,
+    "pass": 31,
+    "fail": 30
+  },
+  "results": [
+    {
+      "name": "Initial Moodle preview",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "KaTeX renders default mathematics",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Prism C++ grammar loads from configured bundle",
+      "status": "FAIL",
+      "expected": true,
+      "actual": false
+    },
+    {
+      "name": "HTML preview updates",
+      "status": "PASS",
+      "expected": "Prueba",
+      "actual": "Prueba"
+    },
+    {
+      "name": "Theme button toggles preview theme",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Editor keyboard zoom",
+      "status": "PASS",
+      "expected": "15px",
+      "actual": "15px"
+    },
+    {
+      "name": "Editor zoom reset",
+      "status": "PASS",
+      "expected": "14px",
+      "actual": "14px"
+    },
+    {
+      "name": "Clear editor",
+      "status": "PASS",
+      "expected": "",
+      "actual": ""
+    },
+    {
+      "name": "Undo clear restores text",
+      "status": "PASS",
+      "expected": "<h1>Prueba</h1>",
+      "actual": "<h1>Prueba</h1>"
+    },
+    {
+      "name": "Redo clear",
+      "status": "PASS",
+      "expected": "",
+      "actual": ""
+    },
+    {
+      "name": "Undo flushes pending edit before reverting",
+      "status": "FAIL",
+      "expected": "A",
+      "actual": "<!-- DIRECTIVA DE FORMATO PARA LA IA:\n  - Genera contenido académico continuo y fluido para Moodle sin elementos ocultos.\n  - Usa fórmulas matemáticas en LaTeX delimitadas con \\( ... \\) en línea y \\[ ... \\] en bloque.\n  - NO agregues cajas de alerta coloreadas (alert-info, alert-success, etc.) a menos que se soliciten expresamente.\n  - Presenta las explicaciones y la respuesta final en párrafos naturales y limpios.\n-->\n\n<h1>Cálculo Diferencial y Modelado Matemático</h1>\n<p>Dada la función compuesta \\( h(x) = x^2 \\cdot \\cos(x) \\), se requiere determinar su derivada analítica aplicando la regla del producto y evaluar la tasa de cambio instantánea en el punto \\( x = \\pi \\).</p>\n\n<h2>1. Fundamentación Teórica</h2>\n<p>Si \\( f(x) \\) y \\( g(x) \\) son funciones diferenciables, la derivada de su producto se calcula mediante la fórmula:</p>\n\\[ \\frac{d}{dx}\\left[ f(x) \\cdot g(x) \\right] = f'(x)g(x) + f(x)g'(x) \\]\n\n<h2>2. Desarrollo Analítico</h2>\n<p>Identificando las funciones: \\( f(x) = x^2 \\implies f'(x) = 2x \\), y \\( g(x) = \\cos(x) \\implies g'(x) = -\\sin(x) \\). Aplicando la regla de derivación:</p>\n\\[ \\frac{d}{dx}\\left[ x^2 \\cdot \\cos(x) \\right] = (2x)\\cos(x) + x^2(-\\sin(x)) = 2x\\cos(x) - x^2\\sin(x) \\]\n\n<h2>3. Tabla de Puntos Evaluados</h2>\n<table class=\"table table-bordered table-striped\">\n  <thead>\n    <tr>\n      <th>Punto \\( x \\)</th>\n      <th>Valor \\( h(x) \\)</th>\n      <th>Derivada \\( h'(x) \\)</th>\n      <th>Comportamiento</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>\\( 0 \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>Punto estacionario</td>\n    </tr>\n    <tr>\n      <td>\\( \\frac{\\pi}{2} \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>\\( -\\frac{\\pi^2}{4} \\approx -2.467 \\)</td>\n      <td>Pendiente negativa (decreciente)</td>\n    </tr>\n    <tr>\n      <td>\\( \\pi \\)</td>\n      <td>\\( -\\pi^2 \\approx -9.870 \\)</td>\n      <td>\\( -2\\pi \\approx -6.283 \\)</td>\n      <td>Rápido descenso</td>\n    </tr>\n  </tbody>\n</table>\n\n<h2>4. Comprobación Computacional en Python</h2>\n<p>Validación simbólica del resultado mediante la librería SymPy:</p>\n<pre class=\"language-python\"><code class=\"language-python\">import sympy as sp\n\n# Definición de la variable simbólica y la función\nx = sp.Symbol('x')\nh = x**2 * sp.cos(x)\n\n# Cálculo simbólico de la primera derivada\nderivada = sp.diff(h, x)\nprint(f\"Derivada exacta: {derivada}\")\n\n# Evaluación numérica en x = pi\nvalor_evaluado = derivada.subs(x, sp.pi)\nprint(f\"Evaluación en pi: {valor_evaluado.evalf():.4f}\")</code></pre>\n\n<h2>5. Respuesta Final</h2>\n<p>Al evaluar analíticamente en el punto \\( x = \\pi \\), recordando que \\( \\cos(\\pi) = -1 \\) y \\( \\sin(\\pi) = 0 \\):</p>\n\\[ h'(\\pi) = 2(\\pi)(-1) - (\\pi)^2(0) = -2\\pi \\approx -6.28318 \\]\n<p><strong>Conclusión:</strong> La tasa de cambio instantánea en \\( x = \\pi \\) es exactamente \\( -2\\pi \\) (aproximadamente \\( -6.2832 \\)), lo que indica que la función decrece con una pendiente negativa en dicho instante.</p>"
+    },
+    {
+      "name": "Redo recovers pending edit",
+      "status": "FAIL",
+      "expected": "AB",
+      "actual": "<!-- DIRECTIVA DE FORMATO PARA LA IA:\n  - Genera contenido académico continuo y fluido para Moodle sin elementos ocultos.\n  - Usa fórmulas matemáticas en LaTeX delimitadas con \\( ... \\) en línea y \\[ ... \\] en bloque.\n  - NO agregues cajas de alerta coloreadas (alert-info, alert-success, etc.) a menos que se soliciten expresamente.\n  - Presenta las explicaciones y la respuesta final en párrafos naturales y limpios.\n-->\n\n<h1>Cálculo Diferencial y Modelado Matemático</h1>\n<p>Dada la función compuesta \\( h(x) = x^2 \\cdot \\cos(x) \\), se requiere determinar su derivada analítica aplicando la regla del producto y evaluar la tasa de cambio instantánea en el punto \\( x = \\pi \\).</p>\n\n<h2>1. Fundamentación Teórica</h2>\n<p>Si \\( f(x) \\) y \\( g(x) \\) son funciones diferenciables, la derivada de su producto se calcula mediante la fórmula:</p>\n\\[ \\frac{d}{dx}\\left[ f(x) \\cdot g(x) \\right] = f'(x)g(x) + f(x)g'(x) \\]\n\n<h2>2. Desarrollo Analítico</h2>\n<p>Identificando las funciones: \\( f(x) = x^2 \\implies f'(x) = 2x \\), y \\( g(x) = \\cos(x) \\implies g'(x) = -\\sin(x) \\). Aplicando la regla de derivación:</p>\n\\[ \\frac{d}{dx}\\left[ x^2 \\cdot \\cos(x) \\right] = (2x)\\cos(x) + x^2(-\\sin(x)) = 2x\\cos(x) - x^2\\sin(x) \\]\n\n<h2>3. Tabla de Puntos Evaluados</h2>\n<table class=\"table table-bordered table-striped\">\n  <thead>\n    <tr>\n      <th>Punto \\( x \\)</th>\n      <th>Valor \\( h(x) \\)</th>\n      <th>Derivada \\( h'(x) \\)</th>\n      <th>Comportamiento</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>\\( 0 \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>Punto estacionario</td>\n    </tr>\n    <tr>\n      <td>\\( \\frac{\\pi}{2} \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>\\( -\\frac{\\pi^2}{4} \\approx -2.467 \\)</td>\n      <td>Pendiente negativa (decreciente)</td>\n    </tr>\n    <tr>\n      <td>\\( \\pi \\)</td>\n      <td>\\( -\\pi^2 \\approx -9.870 \\)</td>\n      <td>\\( -2\\pi \\approx -6.283 \\)</td>\n      <td>Rápido descenso</td>\n    </tr>\n  </tbody>\n</table>\n\n<h2>4. Comprobación Computacional en Python</h2>\n<p>Validación simbólica del resultado mediante la librería SymPy:</p>\n<pre class=\"language-python\"><code class=\"language-python\">import sympy as sp\n\n# Definición de la variable simbólica y la función\nx = sp.Symbol('x')\nh = x**2 * sp.cos(x)\n\n# Cálculo simbólico de la primera derivada\nderivada = sp.diff(h, x)\nprint(f\"Derivada exacta: {derivada}\")\n\n# Evaluación numérica en x = pi\nvalor_evaluado = derivada.subs(x, sp.pi)\nprint(f\"Evaluación en pi: {valor_evaluado.evalf():.4f}\")</code></pre>\n\n<h2>5. Respuesta Final</h2>\n<p>Al evaluar analíticamente en el punto \\( x = \\pi \\), recordando que \\( \\cos(\\pi) = -1 \\) y \\( \\sin(\\pi) = 0 \\):</p>\n\\[ h'(\\pi) = 2(\\pi)(-1) - (\\pi)^2(0) = -2\\pi \\approx -6.28318 \\]\n<p><strong>Conclusión:</strong> La tasa de cambio instantánea en \\( x = \\pi \\) es exactamente \\( -2\\pi \\) (aproximadamente \\( -6.2832 \\)), lo que indica que la función decrece con una pendiente negativa en dicho instante.</p>"
+    },
+    {
+      "name": "Switching from untouched template preserves destination draft",
+      "status": "FAIL",
+      "expected": "BORRADOR MARKDOWN",
+      "actual": "# Análisis Numérico y Modelado Matemático\n\n> [!IMPORTANT]\n> **El Primer Mandamiento del Desarrollo:**\n> **La autoevaluación sincera y continua.** Todo modelo computacional requiere validar rigurosamente sus hipótesis analíticas y verificar la estabilidad numérica antes de su despliegue en entornos productivos.\n\n> [!NOTE]\n> Esta suite cuenta con soporte nativo para **Diagramas Mermaid**, **Alertas GFM** (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`), **tablas con alineación**, fórmulas matemáticas **KaTeX** y bloques de código con botón de copia rápida.\n\n---\n\n## 1. Flujo Algorítmico (Diagrama Mermaid)\n\n```mermaid\nflowchart LR\n    A[\"Entrada: f(x), x₀, tol\"] --> B[\"Calcular f(xₙ) y f'(xₙ)\"]\n    B --> C{\"¿|f(xₙ)| < tol?\"}\n    C -- Sí --> D[\"Raíz convergente xₙ\"]\n    C -- No --> E[\"xₙ₊₁ = xₙ - f(xₙ)/f'(xₙ)\"]\n    E --> B\n```\n\n---\n\n## 2. Fundamentación Teórica\n\nSea \\( f: [a, b] \\to \\mathbb{R} \\) una función dos veces continuamente diferenciable. La relación de recurrencia del método de **Newton-Raphson** se define analíticamente como:\n\n\\[ x_{n+1} = x_n - \\frac{f(x_n)}{f'(x_n)}, \\quad n \\ge 0 \\]\n\nEl error en cada iteración satisface la relación de convergencia asintótica cuadrática:\n\\[ |e_{n+1}| \\approx \\frac{|f''(r)|}{2|f'(r)|} |e_n|^2 \\]\n\n---\n\n## 3. Tabla Comparativa de Convergencia\n\n| Iteración \\( n \\) | Aproximación \\( x_n \\) | \\( f(x_n) \\) | Error Estimado \\( |x_n - x_{n-1}| \\) |\n| :---: | :---: | :---: | :---: |\n| **0** | 2.000000 | 3.000000 | — |\n| **1** | 1.750000 | 0.562500 | 0.250000 |\n| **2** | 1.732143 | 0.002409 | 0.017857 |\n| **3** | 1.732051 | 0.000001 | 0.000092 |\n\n---\n\n## 4. Implementación Algorítmica en Python\n\n```python\nimport numpy as np\n\ndef newton_raphson(f, df, x0, tol=1e-6, max_iter=50):\n    \"\"\"\n    Aproximación de raíces continuas mediante el método de Newton-Raphson.\n    \"\"\"\n    x = float(x0)\n    for i in range(max_iter):\n        fx = f(x)\n        dfx = df(x)\n        if abs(dfx) < 1e-12:\n            raise ZeroDivisionError(f\"Derivada nula detectada en x = {x}\")\n        x_next = x - fx / dfx\n        if abs(x_next - x) < tol:\n            return x_next, i + 1\n        x = x_next\n    return x, max_iter\n\n# Función objetivo: f(x) = x^2 - 3 (raíz exacta sqrt(3) ≈ 1.7320508)\nf = lambda x: x**2 - 3\ndf = lambda x: 2 * x\nraiz, iteraciones = newton_raphson(f, df, x0=2.0)\nprint(f\"Raíz calculada: {raiz:.6f} en {iteraciones} iteraciones\")\n```\n\n---\n\n## 5. Lista de Verificación de Requisitos\n\n- [x] Función continua y diferenciable en el intervalo de búsqueda.\n- [x] Primera derivada no nula en la vecindad de la raíz (\\( f'(x) \\ne 0 \\)).\n- [x] Tolerancia numérica satisfecha (\\( \\le 10^{-6} \\)).\n- [ ] Validación de orden superior ante raíces múltiples.\n\n> [!TIP]\n> Puedes exportar el diagrama Mermaid directamente a SVG o copiar su sintaxis haciendo clic en los botones de la barra superior del diagrama."
+    },
+    {
+      "name": "Tab indents without deleting selection",
+      "status": "FAIL",
+      "expected": "  texto seleccionado",
+      "actual": "  "
+    },
+    {
+      "name": "Imported HTML cannot execute in application origin",
+      "status": "FAIL",
+      "expected": null,
+      "actual": "yes"
+    },
+    {
+      "name": "Markdown raw HTML cannot execute in application origin",
+      "status": "FAIL",
+      "expected": null,
+      "actual": "yes"
+    },
+    {
+      "name": "Markdown heading",
+      "status": "PASS",
+      "expected": "Título",
+      "actual": "Título"
+    },
+    {
+      "name": "Markdown table has semantic thead",
+      "status": "FAIL",
+      "expected": true,
+      "actual": false
+    },
+    {
+      "name": "Markdown task list",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "GFM callout",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "LaTeX delimiters preserved",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Highlights preserve fenced code",
+      "status": "FAIL",
+      "expected": "==literal==",
+      "actual": "<mark>literal</mark>"
+    },
+    {
+      "name": "Highlights preserve inline code",
+      "status": "FAIL",
+      "expected": "==literal==",
+      "actual": "<mark>literal</mark>"
+    },
+    {
+      "name": "Footnotes preserve fenced code",
+      "status": "FAIL",
+      "expected": "[^a]: literal",
+      "actual": "\n\nref <sup class=\"footnote-ref\"><a href=\"#fn-a\" id=\"fnref-a\">1</a></sup>"
+    },
+    {
+      "name": "Footnote does not consume unindented following paragraph",
+      "status": "FAIL",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "Footnote content renders Markdown",
+      "status": "FAIL",
+      "expected": true,
+      "actual": false
+    },
+    {
+      "name": "HTML conversion preserves images",
+      "status": "FAIL",
+      "expected": true,
+      "actual": false
+    },
+    {
+      "name": "HTML conversion preserves nested list indentation",
+      "status": "FAIL",
+      "expected": true,
+      "actual": false
+    },
+    {
+      "name": "HTML conversion preserves ordered start",
+      "status": "FAIL",
+      "expected": true,
+      "actual": false
+    },
+    {
+      "name": "HTML conversion escapes literal Markdown",
+      "status": "FAIL",
+      "expected": "\\*literal\\*",
+      "actual": "*literal*"
+    },
+    {
+      "name": "Moodle export excludes UI buttons",
+      "status": "FAIL",
+      "expected": 0,
+      "actual": 2
+    },
+    {
+      "name": "Moodle Mermaid export contains rendered SVG",
+      "status": "FAIL",
+      "expected": true,
+      "actual": false
+    },
+    {
+      "name": "Moodle export excludes loading placeholder",
+      "status": "FAIL",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "Markdown rejects javascript links",
+      "status": "FAIL",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "Linter detects reversed table tags",
+      "status": "FAIL",
+      "expected": true,
+      "actual": false
+    },
+    {
+      "name": "Linter detects reversed math delimiters",
+      "status": "FAIL",
+      "expected": true,
+      "actual": false
+    },
+    {
+      "name": "Linter detects unclosed table",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Linter does not reject valid table past scan limit",
+      "status": "FAIL",
+      "expected": null,
+      "actual": {
+        "line": 1,
+        "type": "HTML",
+        "message": "Etiqueta <table> sin cerrar (rompe la estructura de la página)"
+      }
+    },
+    {
+      "name": "Mermaid renders in Markdown preview",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Transformed Mermaid renders in Moodle preview",
+      "status": "FAIL",
+      "expected": true,
+      "actual": false
+    },
+    {
+      "name": "Opening dialog moves focus inside",
+      "status": "FAIL",
+      "expected": true,
+      "actual": false
+    },
+    {
+      "name": "Escape closes dialog",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Brand button supports Enter",
+      "status": "FAIL",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "Delayed file load cannot overwrite another mode",
+      "status": "FAIL",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "Valid file import",
+      "status": "PASS",
+      "expected": "<p>Archivo válido</p>",
+      "actual": "<p>Archivo válido</p>"
+    },
+    {
+      "name": "File extension guard preserves document",
+      "status": "PASS",
+      "expected": "<p>Archivo válido</p>",
+      "actual": "<p>Archivo válido</p>"
+    },
+    {
+      "name": "Oversized file guard preserves document",
+      "status": "PASS",
+      "expected": "<p>Archivo válido</p>",
+      "actual": "<p>Archivo válido</p>"
+    },
+    {
+      "name": "HTML download filename",
+      "status": "PASS",
+      "expected": "codigo_moodle.html",
+      "actual": "codigo_moodle.html"
+    },
+    {
+      "name": "Download preserves document bytes",
+      "status": "PASS",
+      "expected": "<p>Archivo válido</p>",
+      "actual": "<p>Archivo válido</p>"
+    },
+    {
+      "name": "Restore template",
+      "status": "PASS",
+      "expected": "<!-- DIRECTIVA DE FORMATO PARA LA IA:\n  - Genera contenido académico continuo y fluido para Moodle sin elementos ocultos.\n  - Usa fórmulas matemáticas en LaTeX delimitadas con \\( ... \\) en línea y \\[ ... \\] en bloque.\n  - NO agregues cajas de alerta coloreadas (alert-info, alert-success, etc.) a menos que se soliciten expresamente.\n  - Presenta las explicaciones y la respuesta final en párrafos naturales y limpios.\n-->\n\n<h1>Cálculo Diferencial y Modelado Matemático</h1>\n<p>Dada la función compuesta \\( h(x) = x^2 \\cdot \\cos(x) \\), se requiere determinar su derivada analítica aplicando la regla del producto y evaluar la tasa de cambio instantánea en el punto \\( x = \\pi \\).</p>\n\n<h2>1. Fundamentación Teórica</h2>\n<p>Si \\( f(x) \\) y \\( g(x) \\) son funciones diferenciables, la derivada de su producto se calcula mediante la fórmula:</p>\n\\[ \\frac{d}{dx}\\left[ f(x) \\cdot g(x) \\right] = f'(x)g(x) + f(x)g'(x) \\]\n\n<h2>2. Desarrollo Analítico</h2>\n<p>Identificando las funciones: \\( f(x) = x^2 \\implies f'(x) = 2x \\), y \\( g(x) = \\cos(x) \\implies g'(x) = -\\sin(x) \\). Aplicando la regla de derivación:</p>\n\\[ \\frac{d}{dx}\\left[ x^2 \\cdot \\cos(x) \\right] = (2x)\\cos(x) + x^2(-\\sin(x)) = 2x\\cos(x) - x^2\\sin(x) \\]\n\n<h2>3. Tabla de Puntos Evaluados</h2>\n<table class=\"table table-bordered table-striped\">\n  <thead>\n    <tr>\n      <th>Punto \\( x \\)</th>\n      <th>Valor \\( h(x) \\)</th>\n      <th>Derivada \\( h'(x) \\)</th>\n      <th>Comportamiento</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>\\( 0 \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>Punto estacionario</td>\n    </tr>\n    <tr>\n      <td>\\( \\frac{\\pi}{2} \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>\\( -\\frac{\\pi^2}{4} \\approx -2.467 \\)</td>\n      <td>Pendiente negativa (decreciente)</td>\n    </tr>\n    <tr>\n      <td>\\( \\pi \\)</td>\n      <td>\\( -\\pi^2 \\approx -9.870 \\)</td>\n      <td>\\( -2\\pi \\approx -6.283 \\)</td>\n      <td>Rápido descenso</td>\n    </tr>\n  </tbody>\n</table>\n\n<h2>4. Comprobación Computacional en Python</h2>\n<p>Validación simbólica del resultado mediante la librería SymPy:</p>\n<pre class=\"language-python\"><code class=\"language-python\">import sympy as sp\n\n# Definición de la variable simbólica y la función\nx = sp.Symbol('x')\nh = x**2 * sp.cos(x)\n\n# Cálculo simbólico de la primera derivada\nderivada = sp.diff(h, x)\nprint(f\"Derivada exacta: {derivada}\")\n\n# Evaluación numérica en x = pi\nvalor_evaluado = derivada.subs(x, sp.pi)\nprint(f\"Evaluación en pi: {valor_evaluado.evalf():.4f}\")</code></pre>\n\n<h2>5. Respuesta Final</h2>\n<p>Al evaluar analíticamente en el punto \\( x = \\pi \\), recordando que \\( \\cos(\\pi) = -1 \\) y \\( \\sin(\\pi) = 0 \\):</p>\n\\[ h'(\\pi) = 2(\\pi)(-1) - (\\pi)^2(0) = -2\\pi \\approx -6.28318 \\]\n<p><strong>Conclusión:</strong> La tasa de cambio instantánea en \\( x = \\pi \\) es exactamente \\( -2\\pi \\) (aproximadamente \\( -6.2832 \\)), lo que indica que la función decrece con una pendiente negativa en dicho instante.</p>",
+      "actual": "<!-- DIRECTIVA DE FORMATO PARA LA IA:\n  - Genera contenido académico continuo y fluido para Moodle sin elementos ocultos.\n  - Usa fórmulas matemáticas en LaTeX delimitadas con \\( ... \\) en línea y \\[ ... \\] en bloque.\n  - NO agregues cajas de alerta coloreadas (alert-info, alert-success, etc.) a menos que se soliciten expresamente.\n  - Presenta las explicaciones y la respuesta final en párrafos naturales y limpios.\n-->\n\n<h1>Cálculo Diferencial y Modelado Matemático</h1>\n<p>Dada la función compuesta \\( h(x) = x^2 \\cdot \\cos(x) \\), se requiere determinar su derivada analítica aplicando la regla del producto y evaluar la tasa de cambio instantánea en el punto \\( x = \\pi \\).</p>\n\n<h2>1. Fundamentación Teórica</h2>\n<p>Si \\( f(x) \\) y \\( g(x) \\) son funciones diferenciables, la derivada de su producto se calcula mediante la fórmula:</p>\n\\[ \\frac{d}{dx}\\left[ f(x) \\cdot g(x) \\right] = f'(x)g(x) + f(x)g'(x) \\]\n\n<h2>2. Desarrollo Analítico</h2>\n<p>Identificando las funciones: \\( f(x) = x^2 \\implies f'(x) = 2x \\), y \\( g(x) = \\cos(x) \\implies g'(x) = -\\sin(x) \\). Aplicando la regla de derivación:</p>\n\\[ \\frac{d}{dx}\\left[ x^2 \\cdot \\cos(x) \\right] = (2x)\\cos(x) + x^2(-\\sin(x)) = 2x\\cos(x) - x^2\\sin(x) \\]\n\n<h2>3. Tabla de Puntos Evaluados</h2>\n<table class=\"table table-bordered table-striped\">\n  <thead>\n    <tr>\n      <th>Punto \\( x \\)</th>\n      <th>Valor \\( h(x) \\)</th>\n      <th>Derivada \\( h'(x) \\)</th>\n      <th>Comportamiento</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>\\( 0 \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>Punto estacionario</td>\n    </tr>\n    <tr>\n      <td>\\( \\frac{\\pi}{2} \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>\\( -\\frac{\\pi^2}{4} \\approx -2.467 \\)</td>\n      <td>Pendiente negativa (decreciente)</td>\n    </tr>\n    <tr>\n      <td>\\( \\pi \\)</td>\n      <td>\\( -\\pi^2 \\approx -9.870 \\)</td>\n      <td>\\( -2\\pi \\approx -6.283 \\)</td>\n      <td>Rápido descenso</td>\n    </tr>\n  </tbody>\n</table>\n\n<h2>4. Comprobación Computacional en Python</h2>\n<p>Validación simbólica del resultado mediante la librería SymPy:</p>\n<pre class=\"language-python\"><code class=\"language-python\">import sympy as sp\n\n# Definición de la variable simbólica y la función\nx = sp.Symbol('x')\nh = x**2 * sp.cos(x)\n\n# Cálculo simbólico de la primera derivada\nderivada = sp.diff(h, x)\nprint(f\"Derivada exacta: {derivada}\")\n\n# Evaluación numérica en x = pi\nvalor_evaluado = derivada.subs(x, sp.pi)\nprint(f\"Evaluación en pi: {valor_evaluado.evalf():.4f}\")</code></pre>\n\n<h2>5. Respuesta Final</h2>\n<p>Al evaluar analíticamente en el punto \\( x = \\pi \\), recordando que \\( \\cos(\\pi) = -1 \\) y \\( \\sin(\\pi) = 0 \\):</p>\n\\[ h'(\\pi) = 2(\\pi)(-1) - (\\pi)^2(0) = -2\\pi \\approx -6.28318 \\]\n<p><strong>Conclusión:</strong> La tasa de cambio instantánea en \\( x = \\pi \\) es exactamente \\( -2\\pi \\) (aproximadamente \\( -6.2832 \\)), lo que indica que la función decrece con una pendiente negativa en dicho instante.</p>"
+    },
+    {
+      "name": "Undo template restoration",
+      "status": "PASS",
+      "expected": "<p>Archivo válido</p>",
+      "actual": "<p>Archivo válido</p>"
+    },
+    {
+      "name": "Brand click shows hub",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Hub keyboard selection opens Markdown",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Delimiter auto-close",
+      "status": "PASS",
+      "expected": "()",
+      "actual": "()"
+    },
+    {
+      "name": "Failed clipboard operation does not show success label",
+      "status": "FAIL",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "Print hides editing panel",
+      "status": "PASS",
+      "expected": "none",
+      "actual": "none"
+    },
+    {
+      "name": "Print retains preview",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mobile preview view hides editor",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Mobile editor view hides preview",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Fallback parser renders headings",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Fallback parser supports documented alerts",
+      "status": "FAIL",
+      "expected": true,
+      "actual": false
+    }
+  ],
+  "observations": {
+    "heading": "Título",
+    "tableHead": false,
+    "checklist": true,
+    "alert": true,
+    "math": true,
+    "literalHighlight": "<mark>literal</mark>",
+    "inlineHighlight": "<mark>literal</mark>",
+    "footCode": "\n\nref <sup class=\"footnote-ref\"><a href=\"#fn-a\" id=\"fnref-a\">1</a></sup>",
+    "footParagraph": true,
+    "footStrong": false,
+    "image": "Foto",
+    "nestedList": "- Padre\n- Hijo",
+    "ordered": "1. Cuarto",
+    "literalMarkdown": "*literal*",
+    "exportButtons": 2,
+    "exportSvg": false,
+    "exportLoading": true,
+    "link": "javascript:alert%281%29",
+    "orphanTable": null,
+    "orphanMath": null,
+    "unclosedTable": {
+      "line": 1,
+      "type": "HTML",
+      "message": "Etiqueta <table> sin cerrar (rompe la estructura de la página)"
+    },
+    "longValidTable": {
+      "line": 1,
+      "type": "HTML",
+      "message": "Etiqueta <table> sin cerrar (rompe la estructura de la página)"
+    }
+  },
+  "pageErrors": [
+    {
+      "message": "Cannot set properties of undefined (setting 'class-name')",
+      "stack": "Uncaught TypeError: Cannot set properties of undefined (setting 'class-name')\n    at extend (https://cdn.jsdelivr.net/combine/npm/prismjs@1.29.0/prism.min.js,npm/prismjs@1.29.0/components/prism-python.min.js,npm/prismjs@1.29.0/components/prism-latex.min.js,npm/prismjs@1.29.0/components/prism-javascript.min.js,npm/prismjs@1.29.0/components/prism-r.min.js,npm/prismjs@1.29.0/components/prism-sql.min.js,npm/prismjs@1.29.0/components/prism-java.min.js,npm/prismjs@1.29.0/components/prism-cpp.min.js:20:1779)\n    at <anonymous> (https://cdn.jsdelivr.net/combine/npm/prismjs@1.29.0/prism.min.js,npm/prismjs@1.29.0/components/prism-python.min.js,npm/prismjs@1.29.0/components/prism-latex.min.js,npm/prismjs@1.29.0/components/prism-javascript.min.js,npm/prismjs@1.29.0/components/prism-r.min.js,npm/prismjs@1.29.0/components/prism-sql.min.js,npm/prismjs@1.29.0/components/prism-java.min.js,npm/prismjs@1.29.0/components/prism-cpp.min.js:43:855)\n    at <anonymous> (https://cdn.jsdelivr.net/combine/npm/prismjs@1.29.0/prism.min.js,npm/prismjs@1.29.0/components/prism-python.min.js,npm/prismjs@1.29.0/components/prism-latex.min.js,npm/prismjs@1.29.0/components/prism-javascript.min.js,npm/prismjs@1.29.0/components/prism-r.min.js,npm/prismjs@1.29.0/components/prism-sql.min.js,npm/prismjs@1.29.0/components/prism-java.min.js,npm/prismjs@1.29.0/components/prism-cpp.min.js:43:2588)"
+    }
+  ],
+  "pageErrorOccurrences": 13,
+  "limits": [
+    "External fonts and non-script CDN assets blocked for deterministic checks.",
+    "FileReader race uses controlled completion timing.",
+    "No real Moodle instance or OS clipboard tested."
+  ]
+}

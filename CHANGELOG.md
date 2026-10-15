@@ -3,6 +3,27 @@
 Todos los cambios notables de este proyecto se documentan en este archivo.  
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a [Semantic Versioning (SemVer 2.0.0)](https://semver.org/lang/es/).
 
+## [3.3.0] - 2026-10-15
+
+### Corregido
+- Sanitización de HTML, enlaces, clases, identificadores y SVG; Mermaid usa seguridad estricta.
+- Conservación de borradores al navegar, confirmación de reemplazos y recuperación local al recargar.
+- Historial que consolida cambios antes de deshacer y limita estados y memoria.
+- Protección frente a lecturas y transformaciones asíncronas obsoletas.
+- Tab y Shift+Tab preservan e indentan las líneas seleccionadas; autocierre sin temporizadores sobre otro documento.
+- Notas al pie y resaltado respetan el código literal; referencias de notas únicas y fórmulas preservadas en tablas.
+- Conversión HTML/Markdown mediante Turndown, con imágenes, listas anidadas, numeración y tablas complejas.
+- Exportación asíncrona a Moodle sin botones ni marcadores de carga; diagramas como SVG embebido en imágenes.
+- Linter ordenado sin falsos positivos por truncar a 10 000 líneas; carga de C++ con su dependencia de C.
+- Gestión de foco en modales, teclado en controles, divisor accesible y estados reales del portapapeles.
+- Numeración virtualizada y validación de tamaño de documentos además de archivos.
+
+### Infraestructura y calidad
+- Build estático reproducible para Vercel con `npm ci`, salida `dist/` y cabeceras de seguridad.
+- Bibliotecas, gramáticas y fuentes servidas desde el propio sitio; versiones exactas y lockfile.
+- ESLint, Prettier, pruebas de regresión, pruebas unitarias de historial y verificaciones en GitHub Actions.
+- Documentación revisada para distinguir capacidades verificadas, límites y requisitos de Moodle/Vercel.
+
 ## [3.2.1] - 2026-10-13
 
 ### Corregido

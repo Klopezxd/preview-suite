@@ -1,0 +1,781 @@
+{
+  "applicationVersion": "3.3.0",
+  "buildSha256": "bc5e800910d381f627ce1dae1e934de3a6c185df51ca3b97c17677c7150cc0c9",
+  "generatedAt": "2026-10-15T23:35:46.652Z",
+  "browser": "155.0.4283.45",
+  "revision": "4ae429fe41bdd7f32a50e40f850a96beb3519396",
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@fontsource/montserrat": "5.3.0",
+    "dompurify": "3.4.17",
+    "katex": "0.19.0",
+    "marked": "12.0.2",
+    "mermaid": "12.2.0",
+    "prismjs": "1.30.0",
+    "turndown": "7.2.4",
+    "turndown-plugin-gfm": "1.0.2"
+  },
+  "summary": {
+    "total": 119,
+    "pass": 119,
+    "fail": 0
+  },
+  "results": [
+    {
+      "name": "Initial Moodle preview",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "KaTeX renders default mathematics",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Prism C++ grammar loads from configured bundle",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "HTML preview updates",
+      "status": "PASS",
+      "expected": "Prueba",
+      "actual": "Prueba"
+    },
+    {
+      "name": "Theme button toggles preview theme",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Editor keyboard zoom",
+      "status": "PASS",
+      "expected": "15px",
+      "actual": "15px"
+    },
+    {
+      "name": "Editor zoom reset",
+      "status": "PASS",
+      "expected": "14px",
+      "actual": "14px"
+    },
+    {
+      "name": "Clear editor",
+      "status": "PASS",
+      "expected": "",
+      "actual": ""
+    },
+    {
+      "name": "Undo clear restores text",
+      "status": "PASS",
+      "expected": "<h1>Prueba</h1>",
+      "actual": "<h1>Prueba</h1>"
+    },
+    {
+      "name": "Redo clear",
+      "status": "PASS",
+      "expected": "",
+      "actual": ""
+    },
+    {
+      "name": "Undo flushes pending edit before reverting",
+      "status": "PASS",
+      "expected": "A",
+      "actual": "A"
+    },
+    {
+      "name": "Redo recovers pending edit",
+      "status": "PASS",
+      "expected": "AB",
+      "actual": "AB"
+    },
+    {
+      "name": "Switching from untouched template preserves destination draft",
+      "status": "PASS",
+      "expected": "BORRADOR MARKDOWN",
+      "actual": "BORRADOR MARKDOWN"
+    },
+    {
+      "name": "Tab indents without deleting selection",
+      "status": "PASS",
+      "expected": "  texto seleccionado",
+      "actual": "  texto seleccionado"
+    },
+    {
+      "name": "Imported HTML cannot execute in application origin",
+      "status": "PASS",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "name": "Markdown raw HTML cannot execute in application origin",
+      "status": "PASS",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "name": "Markdown heading",
+      "status": "PASS",
+      "expected": "Título",
+      "actual": "Título"
+    },
+    {
+      "name": "Markdown table has semantic thead",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Markdown task list",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "GFM callout",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "LaTeX delimiters preserved",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Highlights preserve fenced code",
+      "status": "PASS",
+      "expected": "==literal==",
+      "actual": "==literal=="
+    },
+    {
+      "name": "Highlights preserve inline code",
+      "status": "PASS",
+      "expected": "==literal==",
+      "actual": "==literal=="
+    },
+    {
+      "name": "Footnotes preserve fenced code",
+      "status": "PASS",
+      "expected": "[^a]: literal",
+      "actual": "[^a]: literal"
+    },
+    {
+      "name": "Footnote does not consume unindented following paragraph",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Footnote content renders Markdown",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "HTML conversion preserves images",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "HTML conversion preserves nested list indentation",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "HTML conversion preserves ordered start",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "HTML conversion escapes literal Markdown",
+      "status": "PASS",
+      "expected": "\\*literal\\*",
+      "actual": "\\*literal\\*"
+    },
+    {
+      "name": "Moodle export excludes UI buttons",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "Moodle Mermaid export contains portable SVG image",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Moodle export excludes loading placeholder",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Markdown rejects javascript links",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Linter detects reversed table tags",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Linter detects reversed math delimiters",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Linter detects unclosed table",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Linter does not reject valid table past scan limit",
+      "status": "PASS",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "name": "Mermaid renders in Markdown preview",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Transformed Mermaid renders in Moodle preview",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Opening dialog moves focus inside",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Dialog traps Tab within its controls",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Escape closes dialog",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Closing dialog restores opener focus",
+      "status": "PASS",
+      "expected": "btn-show-shortcuts",
+      "actual": "btn-show-shortcuts"
+    },
+    {
+      "name": "Brand button supports Enter",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Delayed file load cannot overwrite another mode",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Valid file import",
+      "status": "PASS",
+      "expected": "<p>Archivo válido</p>",
+      "actual": "<p>Archivo válido</p>"
+    },
+    {
+      "name": "File extension guard preserves document",
+      "status": "PASS",
+      "expected": "<p>Archivo válido</p>",
+      "actual": "<p>Archivo válido</p>"
+    },
+    {
+      "name": "Oversized file guard preserves document",
+      "status": "PASS",
+      "expected": "<p>Archivo válido</p>",
+      "actual": "<p>Archivo válido</p>"
+    },
+    {
+      "name": "HTML download filename",
+      "status": "PASS",
+      "expected": "codigo_moodle.html",
+      "actual": "codigo_moodle.html"
+    },
+    {
+      "name": "Download preserves document bytes",
+      "status": "PASS",
+      "expected": "<p>Archivo válido</p>",
+      "actual": "<p>Archivo válido</p>"
+    },
+    {
+      "name": "Restore template",
+      "status": "PASS",
+      "expected": "<!-- DIRECTIVA DE FORMATO PARA LA IA:\n  - Genera contenido académico continuo y fluido para Moodle sin elementos ocultos.\n  - Usa fórmulas matemáticas en LaTeX delimitadas con \\( ... \\) en línea y \\[ ... \\] en bloque.\n  - NO agregues cajas de alerta coloreadas (alert-info, alert-success, etc.) a menos que se soliciten expresamente.\n  - Presenta las explicaciones y la respuesta final en párrafos naturales y limpios.\n-->\n\n<h1>Cálculo Diferencial y Modelado Matemático</h1>\n<p>Dada la función compuesta \\( h(x) = x^2 \\cdot \\cos(x) \\), se requiere determinar su derivada analítica aplicando la regla del producto y evaluar la tasa de cambio instantánea en el punto \\( x = \\pi \\).</p>\n\n<h2>1. Fundamentación Teórica</h2>\n<p>Si \\( f(x) \\) y \\( g(x) \\) son funciones diferenciables, la derivada de su producto se calcula mediante la fórmula:</p>\n\\[ \\frac{d}{dx}\\left[ f(x) \\cdot g(x) \\right] = f'(x)g(x) + f(x)g'(x) \\]\n\n<h2>2. Desarrollo Analítico</h2>\n<p>Identificando las funciones: \\( f(x) = x^2 \\implies f'(x) = 2x \\), y \\( g(x) = \\cos(x) \\implies g'(x) = -\\sin(x) \\). Aplicando la regla de derivación:</p>\n\\[ \\frac{d}{dx}\\left[ x^2 \\cdot \\cos(x) \\right] = (2x)\\cos(x) + x^2(-\\sin(x)) = 2x\\cos(x) - x^2\\sin(x) \\]\n\n<h2>3. Tabla de Puntos Evaluados</h2>\n<table class=\"table table-bordered table-striped\">\n  <thead>\n    <tr>\n      <th>Punto \\( x \\)</th>\n      <th>Valor \\( h(x) \\)</th>\n      <th>Derivada \\( h'(x) \\)</th>\n      <th>Comportamiento</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>\\( 0 \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>Punto estacionario</td>\n    </tr>\n    <tr>\n      <td>\\( \\frac{\\pi}{2} \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>\\( -\\frac{\\pi^2}{4} \\approx -2.467 \\)</td>\n      <td>Pendiente negativa (decreciente)</td>\n    </tr>\n    <tr>\n      <td>\\( \\pi \\)</td>\n      <td>\\( -\\pi^2 \\approx -9.870 \\)</td>\n      <td>\\( -2\\pi \\approx -6.283 \\)</td>\n      <td>Rápido descenso</td>\n    </tr>\n  </tbody>\n</table>\n\n<h2>4. Comprobación Computacional en Python</h2>\n<p>Validación simbólica del resultado mediante la librería SymPy:</p>\n<pre class=\"language-python\"><code class=\"language-python\">import sympy as sp\n\n# Definición de la variable simbólica y la función\nx = sp.Symbol('x')\nh = x**2 * sp.cos(x)\n\n# Cálculo simbólico de la primera derivada\nderivada = sp.diff(h, x)\nprint(f\"Derivada exacta: {derivada}\")\n\n# Evaluación numérica en x = pi\nvalor_evaluado = derivada.subs(x, sp.pi)\nprint(f\"Evaluación en pi: {valor_evaluado.evalf():.4f}\")</code></pre>\n\n<h2>5. Respuesta Final</h2>\n<p>Al evaluar analíticamente en el punto \\( x = \\pi \\), recordando que \\( \\cos(\\pi) = -1 \\) y \\( \\sin(\\pi) = 0 \\):</p>\n\\[ h'(\\pi) = 2(\\pi)(-1) - (\\pi)^2(0) = -2\\pi \\approx -6.28318 \\]\n<p><strong>Conclusión:</strong> La tasa de cambio instantánea en \\( x = \\pi \\) es exactamente \\( -2\\pi \\) (aproximadamente \\( -6.2832 \\)), lo que indica que la función decrece con una pendiente negativa en dicho instante.</p>",
+      "actual": "<!-- DIRECTIVA DE FORMATO PARA LA IA:\n  - Genera contenido académico continuo y fluido para Moodle sin elementos ocultos.\n  - Usa fórmulas matemáticas en LaTeX delimitadas con \\( ... \\) en línea y \\[ ... \\] en bloque.\n  - NO agregues cajas de alerta coloreadas (alert-info, alert-success, etc.) a menos que se soliciten expresamente.\n  - Presenta las explicaciones y la respuesta final en párrafos naturales y limpios.\n-->\n\n<h1>Cálculo Diferencial y Modelado Matemático</h1>\n<p>Dada la función compuesta \\( h(x) = x^2 \\cdot \\cos(x) \\), se requiere determinar su derivada analítica aplicando la regla del producto y evaluar la tasa de cambio instantánea en el punto \\( x = \\pi \\).</p>\n\n<h2>1. Fundamentación Teórica</h2>\n<p>Si \\( f(x) \\) y \\( g(x) \\) son funciones diferenciables, la derivada de su producto se calcula mediante la fórmula:</p>\n\\[ \\frac{d}{dx}\\left[ f(x) \\cdot g(x) \\right] = f'(x)g(x) + f(x)g'(x) \\]\n\n<h2>2. Desarrollo Analítico</h2>\n<p>Identificando las funciones: \\( f(x) = x^2 \\implies f'(x) = 2x \\), y \\( g(x) = \\cos(x) \\implies g'(x) = -\\sin(x) \\). Aplicando la regla de derivación:</p>\n\\[ \\frac{d}{dx}\\left[ x^2 \\cdot \\cos(x) \\right] = (2x)\\cos(x) + x^2(-\\sin(x)) = 2x\\cos(x) - x^2\\sin(x) \\]\n\n<h2>3. Tabla de Puntos Evaluados</h2>\n<table class=\"table table-bordered table-striped\">\n  <thead>\n    <tr>\n      <th>Punto \\( x \\)</th>\n      <th>Valor \\( h(x) \\)</th>\n      <th>Derivada \\( h'(x) \\)</th>\n      <th>Comportamiento</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>\\( 0 \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>Punto estacionario</td>\n    </tr>\n    <tr>\n      <td>\\( \\frac{\\pi}{2} \\)</td>\n      <td>\\( 0 \\)</td>\n      <td>\\( -\\frac{\\pi^2}{4} \\approx -2.467 \\)</td>\n      <td>Pendiente negativa (decreciente)</td>\n    </tr>\n    <tr>\n      <td>\\( \\pi \\)</td>\n      <td>\\( -\\pi^2 \\approx -9.870 \\)</td>\n      <td>\\( -2\\pi \\approx -6.283 \\)</td>\n      <td>Rápido descenso</td>\n    </tr>\n  </tbody>\n</table>\n\n<h2>4. Comprobación Computacional en Python</h2>\n<p>Validación simbólica del resultado mediante la librería SymPy:</p>\n<pre class=\"language-python\"><code class=\"language-python\">import sympy as sp\n\n# Definición de la variable simbólica y la función\nx = sp.Symbol('x')\nh = x**2 * sp.cos(x)\n\n# Cálculo simbólico de la primera derivada\nderivada = sp.diff(h, x)\nprint(f\"Derivada exacta: {derivada}\")\n\n# Evaluación numérica en x = pi\nvalor_evaluado = derivada.subs(x, sp.pi)\nprint(f\"Evaluación en pi: {valor_evaluado.evalf():.4f}\")</code></pre>\n\n<h2>5. Respuesta Final</h2>\n<p>Al evaluar analíticamente en el punto \\( x = \\pi \\), recordando que \\( \\cos(\\pi) = -1 \\) y \\( \\sin(\\pi) = 0 \\):</p>\n\\[ h'(\\pi) = 2(\\pi)(-1) - (\\pi)^2(0) = -2\\pi \\approx -6.28318 \\]\n<p><strong>Conclusión:</strong> La tasa de cambio instantánea en \\( x = \\pi \\) es exactamente \\( -2\\pi \\) (aproximadamente \\( -6.2832 \\)), lo que indica que la función decrece con una pendiente negativa en dicho instante.</p>"
+    },
+    {
+      "name": "Undo template restoration",
+      "status": "PASS",
+      "expected": "<p>Archivo válido</p>",
+      "actual": "<p>Archivo válido</p>"
+    },
+    {
+      "name": "Brand click shows hub",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Hub keyboard selection opens Markdown",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Delimiter auto-close",
+      "status": "PASS",
+      "expected": "()",
+      "actual": "()"
+    },
+    {
+      "name": "Failed clipboard operation does not show success label",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Print hides editing panel",
+      "status": "PASS",
+      "expected": "none",
+      "actual": "none"
+    },
+    {
+      "name": "Print retains preview",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mobile preview view hides editor",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Mobile editor view hides preview",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Fallback parser renders headings",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Fallback parser supports documented alerts",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Sanitizer blocks event handlers without CSP",
+      "status": "PASS",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "name": "Imported styles cannot hide the application",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "Imported classes cannot impersonate app overlays",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "Imported IDs cannot shadow application controls",
+      "status": "PASS",
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "name": "Repeated footnotes generate unique IDs",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Footnote links and backreferences resolve",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Four-backtick fences preserve literal formulas and highlights",
+      "status": "PASS",
+      "expected": "```\n\\(x_1\\)\n==literal==",
+      "actual": "```\n\\(x_1\\)\n==literal=="
+    },
+    {
+      "name": "Math pipes do not split Markdown table columns",
+      "status": "PASS",
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "name": "Math in table cells keeps source delimiters",
+      "status": "PASS",
+      "expected": "\\( |x_1| \\)",
+      "actual": "\\( |x_1| \\)"
+    },
+    {
+      "name": "HTML code containing fences uses a longer fence",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Complex tables preserve colspan as HTML",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Portable diagrams retain editable source on conversion back",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Portable diagrams embed their own SVG",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mixed HTML and Markdown tables both become responsive",
+      "status": "PASS",
+      "expected": 2,
+      "actual": 2
+    },
+    {
+      "name": "Unsafe link protocols removed without CSP",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "Draft survives reload",
+      "status": "PASS",
+      "expected": "Borrador persistente",
+      "actual": "Borrador persistente"
+    },
+    {
+      "name": "Tab indents every selected line",
+      "status": "PASS",
+      "expected": "  A\n  B",
+      "actual": "  A\n  B"
+    },
+    {
+      "name": "Shift+Tab unindents selected lines",
+      "status": "PASS",
+      "expected": "A\nB",
+      "actual": "A\nB"
+    },
+    {
+      "name": "Long documents keep a bounded line-number DOM",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Virtual line numbers reach the last document line",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Opening a mode starts the editor at the first line",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "Opening a mode starts the editor at the left edge",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "Rendered diagram retains node labels",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Rendered diagram uses SVG text instead of foreign HTML",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "Print hides diagram action buttons",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Mermaid sequence renders",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid sequence preserves labels",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid classes renders",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid classes preserves labels",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid states renders",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid states preserves labels",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid entities renders",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid entities preserves labels",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid gantt renders",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid gantt preserves labels",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid pie renders",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid pie preserves labels",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid mindmap renders",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid mindmap preserves labels",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid timeline renders",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid timeline preserves labels",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid git renders",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Mermaid git preserves labels",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Diagram directives cannot weaken security mode",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Diagram directives cannot enable foreign HTML labels",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Diagram directives cannot inject custom CSS",
+      "status": "PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "Secured diagram directives preserve document labels",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Invalid mathematics shows an error status in Markdown",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Invalid diagram shows an error status",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Linter ignores Markdown and LaTeX examples in pre blocks",
+      "status": "PASS",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "name": "Linter ignores commented markup",
+      "status": "PASS",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "name": "Linter detects unclosed display dollars",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "Blocked draft storage does not stop editing",
+      "status": "PASS",
+      "expected": "Documento en memoria",
+      "actual": "Documento en memoria"
+    },
+    {
+      "name": "Blocked draft storage shows a recovery message",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "No external CDN resources needed for core features",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "No uncaught browser errors",
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0
+    }
+  ],
+  "observations": {
+    "heading": "Título",
+    "tableHead": true,
+    "checklist": true,
+    "alert": true,
+    "math": true,
+    "literalHighlight": "==literal==",
+    "inlineHighlight": "==literal==",
+    "footCode": "[^a]: literal",
+    "footParagraph": false,
+    "footStrong": true,
+    "image": "Foto ![Ejemplo](foto.png)",
+    "nestedList": "-   Padre\n    -   Hijo",
+    "ordered": "4.  Cuarto",
+    "literalMarkdown": "\\*literal\\*",
+    "exportButtons": 0,
+    "exportSvg": true,
+    "exportLoading": false,
+    "orphanTable": {
+      "line": 1,
+      "type": "HTML",
+      "message": "Cierre </table> sin apertura correspondiente o fuera de orden"
+    },
+    "orphanMath": {
+      "line": 1,
+      "type": "LaTeX",
+      "message": "Cierre \\] sin apertura"
+    },
+    "unclosedTable": {
+      "line": 1,
+      "type": "HTML",
+      "message": "Etiqueta <table> sin cerrar"
+    },
+    "longValidTable": null
+  },
+  "pageErrors": [],
+  "pageErrorOccurrences": 0,
+  "limits": [
+    "Built site with Vercel security headers; external requests blocked.",
+    "FileReader race uses controlled completion timing.",
+    "No real Moodle instance or OS clipboard tested."
+  ]
+}
