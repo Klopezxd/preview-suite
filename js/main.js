@@ -1,9 +1,0 @@
-import "./vendor.js";
-import "./config.js";
-import "./content-safety.js";
-import "./history.js";
-import "./dialogs.js";
-import "./diagrams.js";
-import "./linter.js";
-import "./markdown.js";
-import "./app.js";
