@@ -188,10 +188,10 @@
   <!-- Barra superior (Topbar) -->
   <header class="topbar">
     <div class="brand" style="gap: 10px;">
-      <div class="brand-icon" id="brand-icon" role="button" tabindex="0" title="Previsualizador Suite">
+      <div class="brand-icon" id="brand-icon" role="button" tabindex="0" title="Previsualizador Suite" aria-label="Ir a la pantalla de bienvenida (Hub)">
         <svg class="icon" id="brand-icon-svg"><use href="#icon-school"></use></svg>
       </div>
-      <div class="brand-title" id="brand-title">Previsualizador Moodle</div>
+      <div class="brand-title" id="brand-title" role="button" tabindex="0" title="Volver al inicio" aria-label="Volver a la pantalla de bienvenida (Hub)">Previsualizador Moodle</div>
 
       <!-- Botón único e intuitivo para alternar modo -->
       <button class="btn btn-outline switch-to-markdown" id="btn-switch-mode" title="Cambiar a Modo Markdown">
@@ -298,7 +298,7 @@
     </section>
 
     <!-- Divisor de ancho redimensionable -->
-    <div class="resizer" id="resizer" title="Arrastra para ajustar el ancho de los paneles"></div>
+    <div class="resizer" id="resizer" role="separator" aria-orientation="vertical" aria-label="Ajustar ancho de los paneles" tabindex="0" title="Arrastra o usa las flechas izquierda/derecha para ajustar el ancho"></div>
 
     <!-- Panel lienzo de vista previa -->
     <section class="panel" id="right-panel">

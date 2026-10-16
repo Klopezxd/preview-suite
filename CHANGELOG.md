@@ -18,9 +18,12 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
   - Permite descargar el documento en edición de forma instantánea mediante el atajo universal de guardado, previniendo la apertura del molesto diálogo nativo del navegador ("Guardar página web como...").
 - **Multiplataforma: Soporte Completo para Tecla Command (`Cmd` / `metaKey`) en macOS:**
   - Los atajos `Cmd + Shift + C` (copiado rápido), `Cmd + Enter` (renderizado forzado) y `Cmd + S` (guardar archivo) ahora funcionan de forma fluida y homogénea en sistemas macOS.
-- **Accesibilidad y Consistencia UI:**
+- **Accesibilidad Universal y Consistencia UI (WCAG 2.1):**
+  - Redimensionamiento de paneles por teclado: foco accesible en `#resizer` con teclas <kbd>Flecha Izquierda</kbd> / <kbd>Arriba</kbd> (reducir), <kbd>Flecha Derecha</kbd> / <kbd>Abajo</kbd> (expandir) y <kbd>Home</kbd> (restablecer a 50/50).
+  - Activación por teclado (<kbd>Enter</kbd> / <kbd>Espacio</kbd>) en el logotipo, título de la barra y badges del easter egg.
   - Sincronización dinámica automática de insignias de versión y pie de ventana modal desde `CONFIG.VERSION`.
   - Inclusión de `summary:focus-visible` para navegación accesible por teclado en bloques colapsables `<details><summary>`.
+  - Configuración defensiva de ruta CDN para Prism Autoloader contra condiciones de carrera de red.
 
 ### Blindaje del Repositorio
 - **Reglas Reforzadas en `.gitignore`:**

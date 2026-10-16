@@ -593,6 +593,9 @@
 
       // 2. Resaltado léxico de código (Prism.js)
       if (window.Prism) {
+        if (window.Prism.plugins && window.Prism.plugins.autoloader && !window.Prism.plugins.autoloader.languages_path) {
+          window.Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/';
+        }
         try {
           Prism.highlightAllUnder(DOM.previewInner);
         } catch (prismErr) {
@@ -1097,12 +1100,20 @@
       document.addEventListener('visibilitychange', onVisibilityChange);
     };
 
-    // Vincular al badge de versión del Workspace y al badge de Antigravity
+    // Vincular al badge de versión del Workspace y al badge de Antigravity (Accesible por teclado)
+    const handleBadgeKey = (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        triggerRickroll();
+      }
+    };
     if (DOM.versionBadge) {
       DOM.versionBadge.addEventListener('click', triggerRickroll);
+      DOM.versionBadge.addEventListener('keydown', handleBadgeKey);
     }
     if (DOM.antigravityBadge) {
       DOM.antigravityBadge.addEventListener('click', triggerRickroll);
+      DOM.antigravityBadge.addEventListener('keydown', handleBadgeKey);
     }
 
     // Eventos de cierre del modal de retorno
@@ -1155,9 +1166,21 @@
     if (DOM.cardModeMoodle) DOM.cardModeMoodle.addEventListener('keydown', (e) => handleCardKey(e, 'moodle'));
     if (DOM.cardModeMarkdown) DOM.cardModeMarkdown.addEventListener('keydown', (e) => handleCardKey(e, 'markdown'));
 
-    // Clic en el logo o título para volver a la pantalla de bienvenida (Hub)
-    if (DOM.brandIcon) DOM.brandIcon.addEventListener('click', showHub);
-    if (DOM.brandTitle) DOM.brandTitle.addEventListener('click', showHub);
+    // Clic o tecla Enter/Espacio en logo o título para volver a la pantalla de bienvenida (Hub)
+    const handleBrandKey = (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        showHub();
+      }
+    };
+    if (DOM.brandIcon) {
+      DOM.brandIcon.addEventListener('click', showHub);
+      DOM.brandIcon.addEventListener('keydown', handleBrandKey);
+    }
+    if (DOM.brandTitle) {
+      DOM.brandTitle.addEventListener('click', showHub);
+      DOM.brandTitle.addEventListener('keydown', handleBrandKey);
+    }
 
     // Botón único conmutador de modo
     if (DOM.btnSwitchMode) DOM.btnSwitchMode.addEventListener('click', handleSmartModeSwitch);
@@ -1606,6 +1629,38 @@
     }, { passive: false });
 
     document.addEventListener('touchend', stopResize);
+
+    // Control accesible de redimensionamiento por teclado (Patrón Separator WCAG 2.1)
+    DOM.resizer.addEventListener('keydown', (e) => {
+      if (!DOM.leftPanel || !DOM.rightPanel) return;
+      const step = 0.04;
+      const containerRect = DOM.panels.getBoundingClientRect();
+      const isVert = isVerticalStack();
+      const currentSize = isVert ? DOM.leftPanel.offsetHeight : DOM.leftPanel.offsetWidth;
+      const totalSize = isVert ? (containerRect.height - 7) : (containerRect.width - 7);
+      let percentage = currentSize / totalSize;
+
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        percentage = Math.max(0.15, percentage - step);
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        percentage = Math.min(0.85, percentage + step);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        percentage = 0.50;
+      } else {
+        return;
+      }
+
+      DOM.leftPanel.style.flex = 'none';
+      if (!isVert) {
+        DOM.leftPanel.style.width = `${percentage * totalSize}px`;
+      } else {
+        DOM.leftPanel.style.height = `${percentage * totalSize}px`;
+      }
+      DOM.rightPanel.style.flex = '1';
+    });
 
     // Si el usuario cambia de orientación o expande la pantalla a escritorio (> 768px), restablecer vista dividida
     let resizeTimer = null;
