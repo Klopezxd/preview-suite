@@ -1285,6 +1285,23 @@ textarea:focus-visible {
   gap: 2px;
 }
 
+/* Embebido limpio de diagramas exportados a Moodle */
+.moodle-mermaid-diagram {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1.5rem auto;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.moodle-mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
 /* ==========================================================================
    BLOQUES DE CÓDIGO CON BOTÓN DE COPIADO Y BADGE DE LENGUAJE
    ========================================================================== */

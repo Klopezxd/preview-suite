@@ -2,7 +2,7 @@
  * Inspector heurístico de sintaxis crítica para entregas Moodle.
  * Blindado contra entradas nulas, excepciones DOM y textos masivos.
  * @module linter
- * @version 3.2.1
+ * @version 3.2.2
  */
 (() => {
   'use strict';
@@ -10,8 +10,8 @@
   /**
    * Inspecciona errores críticos de sintaxis que alteran la entrega en Moodle:
    * 1. Residuos de bloques Markdown de IA (``` o ```html)
-   * 2. Estructura HTML crítica desbalanceada (table, pre)
-   * 3. Delimitadores matemáticos LaTeX sin cierre: \[ ... \] o \( ... \)
+   * 2. Estructura HTML crítica desbalanceada (table, pre, cierres huérfanos)
+   * 3. Delimitadores matemáticos LaTeX sin pareja: \[ ... \] o \( ... \)
    * 4. Fallos de parseo de KaTeX / MathJax
    *
    * @param {string} code - Código fuente del editor.
@@ -29,6 +29,7 @@
       const openPres = [];
       const openDisplayMath = [];
       const openInlineMath = [];
+      let orphanCloser = null;
       let aiResidual = null;
 
       for (let i = 0; i < maxScanLines; i++) {
@@ -49,14 +50,22 @@
         const tableCloses = (line.match(/<\/table>/gi) || []).length;
         for (let t = 0; t < tableOpens; t++) openTables.push(i + 1);
         for (let t = 0; t < tableCloses; t++) {
-          if (openTables.length > 0) openTables.pop();
+          if (openTables.length > 0) {
+            openTables.pop();
+          } else if (!orphanCloser) {
+            orphanCloser = { line: i + 1, type: 'HTML', message: 'Etiqueta </table> de cierre huérfana (sin <table> de apertura)' };
+          }
         }
 
         const preOpens = (line.match(/<pre\b[^>]*>/gi) || []).length;
         const preCloses = (line.match(/<\/pre>/gi) || []).length;
         for (let p = 0; p < preOpens; p++) openPres.push(i + 1);
         for (let p = 0; p < preCloses; p++) {
-          if (openPres.length > 0) openPres.pop();
+          if (openPres.length > 0) {
+            openPres.pop();
+          } else if (!orphanCloser) {
+            orphanCloser = { line: i + 1, type: 'HTML', message: 'Etiqueta </pre> de cierre huérfana (sin <pre> de apertura)' };
+          }
         }
 
         // 3. Delimitadores matemáticos sin pareja: \[ ... \] o \( ... \)
@@ -64,18 +73,27 @@
         const dispCloses = (line.match(/\\\]/g) || []).length;
         for (let d = 0; d < dispOpens; d++) openDisplayMath.push(i + 1);
         for (let d = 0; d < dispCloses; d++) {
-          if (openDisplayMath.length > 0) openDisplayMath.pop();
+          if (openDisplayMath.length > 0) {
+            openDisplayMath.pop();
+          } else if (!orphanCloser) {
+            orphanCloser = { line: i + 1, type: 'LaTeX', message: 'Delimitador de cierre \\] huérfano (sin fórmula \\[ de apertura)' };
+          }
         }
 
         const inOpens = (line.match(/\\\(/g) || []).length;
         const inCloses = (line.match(/\\\)/g) || []).length;
         for (let m = 0; m < inOpens; m++) openInlineMath.push(i + 1);
         for (let m = 0; m < inCloses; m++) {
-          if (openInlineMath.length > 0) openInlineMath.pop();
+          if (openInlineMath.length > 0) {
+            openInlineMath.pop();
+          } else if (!orphanCloser) {
+            orphanCloser = { line: i + 1, type: 'LaTeX', message: 'Delimitador de cierre \\) huérfano (sin fórmula \\( de apertura)' };
+          }
         }
       }
 
       if (aiResidual) return aiResidual;
+      if (orphanCloser) return orphanCloser;
 
       if (openTables.length > 0) {
         return {

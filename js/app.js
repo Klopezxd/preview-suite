@@ -3,7 +3,7 @@
  * Arquitectura blindada contra excepciones, fallos de red, restricciones de almacenamiento
  * y desbordamientos de memoria.
  * @module app
- * @version 3.2.1
+ * @version 3.2.2
  */
 (() => {
   'use strict';
@@ -46,6 +46,7 @@
     isInitialized: false,
     lastLineCount: null,
     lastErrorLine: null,
+    lastFocusedElement: null,
 
     // Buffers de memoria independientes por modo
     buffers: {
@@ -196,11 +197,19 @@
   }
 
   function openModeSwitchModal() {
-    if (DOM.modeSwitchModal) DOM.modeSwitchModal.classList.add('open');
+    state.lastFocusedElement = document.activeElement;
+    if (DOM.modeSwitchModal) {
+      DOM.modeSwitchModal.classList.add('open');
+      if (DOM.btnOptTransform) DOM.btnOptTransform.focus();
+    }
   }
 
   function closeModeSwitchModal() {
     if (DOM.modeSwitchModal) DOM.modeSwitchModal.classList.remove('open');
+    if (state.lastFocusedElement && typeof state.lastFocusedElement.focus === 'function') {
+      state.lastFocusedElement.focus();
+      state.lastFocusedElement = null;
+    }
   }
 
   /**
@@ -218,8 +227,11 @@
     // 1. Si no hay cambios que proteger, cambiar directamente sin interrupciones
     if (!currentCode || currentCode === defaultTemplate) {
       const cleanTpl = targetMode === 'moodle' ? DEFAULT_MOODLE_TEMPLATE : DEFAULT_MARKDOWN_TEMPLATE;
-      state.buffers[targetMode] = cleanTpl;
-      state.history[targetMode] = { stack: [cleanTpl], index: 0, recordTimer: null, isUndoing: false };
+      // Preservar trabajo previo en el buffer destino si ya tenía modificaciones no vacías
+      if (!state.buffers[targetMode] || state.buffers[targetMode] === cleanTpl) {
+        state.buffers[targetMode] = cleanTpl;
+        state.history[targetMode] = { stack: [cleanTpl], index: 0, recordTimer: null, isUndoing: false };
+      }
       selectMode(targetMode);
       showToast(`Modo cambiado a ${targetName}`);
       return;
@@ -259,7 +271,7 @@
       showToast('Contenido transformado a Markdown');
     } else {
       const compiled = (window.MarkdownEngine && typeof window.MarkdownEngine.compileToMoodleHtml === 'function')
-        ? window.MarkdownEngine.compileToMoodleHtml(currentCode)
+        ? window.MarkdownEngine.compileToMoodleHtml(currentCode, DOM.previewInner)
         : currentCode;
       state.buffers.moodle = compiled;
       state.history.moodle = { stack: [compiled], index: 0, recordTimer: null, isUndoing: false };
@@ -359,6 +371,18 @@
     const h = getActiveHistory();
     if (!h) return;
 
+    // Si hay cambios pendientes en debounce o el editor tiene contenido más nuevo que el tope de la pila
+    if (h.recordTimer || (DOM.editor && DOM.editor.value !== h.stack[h.index])) {
+      clearTimeout(h.recordTimer);
+      h.recordTimer = null;
+      if (DOM.editor && DOM.editor.value !== h.stack[h.index]) {
+        h.stack = h.stack.slice(0, h.index + 1);
+        h.stack.push(DOM.editor.value);
+        if (h.stack.length > 50) h.stack.shift();
+        else h.index++;
+      }
+    }
+
     if (h.index > 0) {
       h.isUndoing = true;
       h.index--;
@@ -376,6 +400,11 @@
   function redoChange() {
     const h = getActiveHistory();
     if (!h) return;
+
+    if (h.recordTimer) {
+      clearTimeout(h.recordTimer);
+      h.recordTimer = null;
+    }
 
     if (h.index < h.stack.length - 1) {
       h.isUndoing = true;
@@ -547,14 +576,20 @@
       if (DOM.emptyState) DOM.emptyState.style.display = 'none';
       DOM.previewInner.style.display = 'block';
 
-      // 1. Inyección de contenido según el modo activo
-      if (state.currentMode === 'moodle') {
-        DOM.previewInner.innerHTML = DOM.editor.value;
-      } else {
-        DOM.previewInner.innerHTML = window.MarkdownEngine
-          ? window.MarkdownEngine.parseMarkdown(DOM.editor.value)
-          : DOM.editor.value;
-      }
+      // 1. Inyección de contenido según el modo activo con sanitización preventiva (DOMPurify)
+      const rawHtml = state.currentMode === 'moodle'
+        ? DOM.editor.value
+        : (window.MarkdownEngine ? window.MarkdownEngine.parseMarkdown(DOM.editor.value) : DOM.editor.value);
+
+      const safeHtml = (typeof window.DOMPurify !== 'undefined' && typeof window.DOMPurify.sanitize === 'function')
+        ? window.DOMPurify.sanitize(rawHtml, {
+            USE_PROFILES: { html: true, svg: true, mathMl: true },
+            ADD_ATTR: ['target', 'data-mermaid-code', 'data-alert-type', 'checked', 'disabled', 'start'],
+            ADD_TAGS: ['use', 'annotation']
+          })
+        : rawHtml;
+
+      DOM.previewInner.innerHTML = safeHtml;
 
       // 2. Resaltado léxico de código (Prism.js)
       if (window.Prism) {
@@ -978,16 +1013,28 @@
 
   // --- 8. Modales y Easter Egg ---
   function openShortcutsModal() {
-    if (DOM.shortcutsModal) DOM.shortcutsModal.classList.add('open');
+    state.lastFocusedElement = document.activeElement;
+    if (DOM.shortcutsModal) {
+      DOM.shortcutsModal.classList.add('open');
+      if (DOM.btnCloseModal) DOM.btnCloseModal.focus();
+    }
   }
 
   function closeShortcutsModal() {
     if (DOM.shortcutsModal) DOM.shortcutsModal.classList.remove('open');
+    if (state.lastFocusedElement && typeof state.lastFocusedElement.focus === 'function') {
+      state.lastFocusedElement.focus();
+      state.lastFocusedElement = null;
+    }
   }
 
   function closeRickrollModal() {
     if (DOM.rickrollModal) {
       DOM.rickrollModal.classList.remove('open');
+    }
+    if (state.lastFocusedElement && typeof state.lastFocusedElement.focus === 'function') {
+      state.lastFocusedElement.focus();
+      state.lastFocusedElement = null;
     }
   }
 
@@ -1021,7 +1068,9 @@
 
         // Desplegar la ventana flotante de bienvenida sorpresa
         if (DOM.rickrollModal) {
+          state.lastFocusedElement = document.activeElement;
           DOM.rickrollModal.classList.add('open');
+          if (DOM.btnRickrollOk) DOM.btnRickrollOk.focus();
         }
         showToast('🎵 ¡Has sido Rickrolleado! 🕺');
       };
@@ -1297,13 +1346,63 @@
     });
 
     DOM.editor.addEventListener('keydown', (e) => {
-      // Tabulador (2 espacios)
+      // Tabulador (Indentar / Desindentar selección o línea)
       if (e.key === 'Tab') {
         e.preventDefault();
         const start = DOM.editor.selectionStart;
         const end = DOM.editor.selectionEnd;
-        DOM.editor.value = DOM.editor.value.slice(0, start) + '  ' + DOM.editor.value.slice(end);
-        DOM.editor.selectionStart = DOM.editor.selectionEnd = start + 2;
+        const value = DOM.editor.value;
+        const isMultiLine = value.slice(start, end).includes('\n');
+
+        if (e.shiftKey || isMultiLine) {
+          // Bloque multilínea o comando de desindentación (Shift + Tab)
+          const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+          let lineEnd = value.indexOf('\n', end);
+          if (lineEnd === -1) lineEnd = value.length;
+
+          const block = value.slice(lineStart, lineEnd);
+          const lines = block.split('\n');
+
+          let deltaStart = 0;
+          let deltaEnd = 0;
+
+          if (e.shiftKey) {
+            // Desindentar (remover hasta 2 espacios iniciales por línea)
+            const modifiedLines = lines.map((l, idx) => {
+              let removed = 0;
+              if (l.startsWith('  ')) {
+                removed = 2;
+                l = l.slice(2);
+              } else if (l.startsWith(' ')) {
+                removed = 1;
+                l = l.slice(1);
+              }
+              if (idx === 0) deltaStart = -removed;
+              deltaEnd -= removed;
+              return l;
+            });
+            const newBlock = modifiedLines.join('\n');
+            DOM.editor.value = value.slice(0, lineStart) + newBlock + value.slice(lineEnd);
+            DOM.editor.selectionStart = Math.max(lineStart, start + deltaStart);
+            DOM.editor.selectionEnd = Math.max(lineStart, end + deltaEnd);
+          } else {
+            // Indentar cada línea seleccionada con 2 espacios
+            const modifiedLines = lines.map((l, idx) => {
+              if (idx === 0) deltaStart = 2;
+              deltaEnd += 2;
+              return '  ' + l;
+            });
+            const newBlock = modifiedLines.join('\n');
+            DOM.editor.value = value.slice(0, lineStart) + newBlock + value.slice(lineEnd);
+            DOM.editor.selectionStart = start + deltaStart;
+            DOM.editor.selectionEnd = end + deltaEnd;
+          }
+        } else {
+          // Inserción estándar de 2 espacios en cursor individual
+          DOM.editor.value = value.slice(0, start) + '  ' + value.slice(end);
+          DOM.editor.selectionStart = DOM.editor.selectionEnd = start + 2;
+        }
+
         state.buffers[state.currentMode] = DOM.editor.value;
         pushHistoryState(DOM.editor.value);
         schedulePreviewUpdate();

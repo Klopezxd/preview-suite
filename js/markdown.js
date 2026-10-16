@@ -4,7 +4,7 @@
  * Soporte integral para Diagramas Mermaid, Alertas GFM (Callouts), Tablas responsivas,
  * Listas de verificación (Task Lists), Bloques de código con copiado rápido y Notas al pie.
  * @module markdown
- * @version 3.2.1
+ * @version 3.2.2
  */
 (() => {
   'use strict';
@@ -233,10 +233,13 @@
   function fallbackNativeParse(text) {
     if (!text) return '';
     try {
-      const escaped = text
+      let escaped = text
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
+
+      // Restaurar etiquetas seguras generadas internamente por la suite
+      escaped = escaped.replace(/&lt;mark&gt;([\s\S]*?)&lt;\/mark&gt;/g, '<mark>$1</mark>');
 
       return escaped
         .replace(/^### (.*$)/gim, '<h3>$1</h3>')
@@ -258,6 +261,30 @@
   }
 
   /**
+   * Enmascara bloques de código (```...```) y código inline (`...`) antes del procesamiento
+   * para evitar que notas al pie, delimitadores matemáticos o resaltado alteren su contenido.
+   * @param {string} text
+   * @returns {{ maskedText: string, restoreCode: (content: string) => string }}
+   */
+  function maskCodeBlocks(text) {
+    if (typeof text !== 'string') return { maskedText: '', restoreCode: (c) => c };
+    const codeBlocks = [];
+    const codeRegex = /(```[\s\S]*?```|`[^`\n]+`)/g;
+    const maskedText = text.replace(codeRegex, (match) => {
+      const idx = codeBlocks.length;
+      codeBlocks.push(match);
+      return `@@CODE_BLOCK_EXPR_${idx}@@`;
+    });
+    const restoreCode = (content) => {
+      if (typeof content !== 'string') return '';
+      return content.replace(/@@CODE_BLOCK_EXPR_(\d+)@@/g, (_, index) => {
+        return codeBlocks[Number(index)] || '';
+      });
+    };
+    return { maskedText, restoreCode };
+  }
+
+  /**
    * Protege las expresiones matemáticas LaTeX contra la interpolación errónea de Markdown,
    * blindando primero los bloques de código (incluidos bloques Mermaid) para no alterar su contenido interno.
    * 
@@ -269,31 +296,21 @@
       return { safeText: '', restoreMath: (h) => h };
     }
 
-    const codePlaceholders = [];
+    const { maskedText, restoreCode } = maskCodeBlocks(markdownText);
     const mathPlaceholders = [];
 
-    // 1. Proteger bloques de código (```...```) y código en línea (`...`)
-    const codeRegex = /(```[\s\S]*?```|`[^`\n]+`)/g;
-    let safeText = markdownText.replace(codeRegex, (match) => {
-      const id = codePlaceholders.length;
-      codePlaceholders.push(match);
-      return `@@CODE_EXPR_${id}@@`;
-    });
-
-    // 2. Proteger fórmulas matemáticas LaTeX en el texto en prosa (bloques y fórmulas inline)
+    // 1. Proteger fórmulas matemáticas LaTeX en el texto en prosa (bloques y fórmulas inline)
     const mathRegex = /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|\$(?!\s)[^$\n]+(?<!\s)\$)/g;
-    safeText = safeText.replace(mathRegex, (match) => {
+    let safeText = maskedText.replace(mathRegex, (match) => {
       const id = mathPlaceholders.length;
       mathPlaceholders.push(match);
       return `@@MATH_EXPR_${id}@@`;
     });
 
-    // 3. Restaurar los bloques de código originales para que marked genere las etiquetas <pre><code> o Mermaid correctas
-    safeText = safeText.replace(/@@CODE_EXPR_(\d+)@@/g, (_, index) => {
-      return codePlaceholders[Number(index)] || '';
-    });
+    // 2. Restaurar los bloques de código originales para que marked genere las etiquetas <pre><code> o Mermaid correctas
+    safeText = restoreCode(safeText);
 
-    // 4. Restaurador de fórmulas matemáticas para aplicar sobre el HTML final
+    // 3. Restaurador de fórmulas matemáticas para aplicar sobre el HTML final
     const restoreMath = (html) => {
       if (typeof html !== 'string') return '';
       return html.replace(/@@MATH_EXPR_(\d+)@@/g, (_, index) => {
@@ -315,32 +332,46 @@
     if (!markdownText || typeof markdownText !== 'string') return '';
 
     try {
-      // 1. Extraer notas al pie antes de procesar delimitadores
-      const { text: textWithoutFootnotes, footnotesHtml } = extractAndProcessFootnotes(markdownText);
+      // 1. Enmascarar bloques de código para que ninguna regla posterior mutile su contenido
+      const { maskedText: codeMaskedText, restoreCode } = maskCodeBlocks(markdownText);
 
-      // 2. Proteger expresiones matemáticas LaTeX
-      const { safeText, restoreMath } = protectMathDelimiters(textWithoutFootnotes);
+      // 2. Extraer notas al pie en prosa (sin tocar código)
+      const { text: textWithoutFootnotes, footnotesHtml } = extractAndProcessFootnotes(codeMaskedText);
 
-      // 3. Procesar resaltado de texto (==resaltado==)
-      const textWithHighlights = processHighlights(safeText);
+      // 3. Proteger expresiones matemáticas LaTeX en prosa
+      const mathPlaceholders = [];
+      const mathRegex = /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|\$(?!\s)[^$\n]+(?<!\s)\$)/g;
+      const textWithoutMath = textWithoutFootnotes.replace(mathRegex, (match) => {
+        const id = mathPlaceholders.length;
+        mathPlaceholders.push(match);
+        return `@@MATH_EXPR_${id}@@`;
+      });
+
+      // 4. Procesar resaltado de texto (==resaltado==) en prosa
+      const textWithHighlights = processHighlights(textWithoutMath);
+
+      // 5. Restaurar bloques de código antes de enviar al motor Marked.js
+      const textForMarked = restoreCode(textWithHighlights);
 
       let rawHtml = '';
       if (typeof marked !== 'undefined') {
-        rawHtml = (typeof marked.parse === 'function') ? marked.parse(textWithHighlights) : marked(textWithHighlights);
+        rawHtml = (typeof marked.parse === 'function') ? marked.parse(textForMarked) : marked(textForMarked);
       } else {
-        rawHtml = fallbackNativeParse(textWithHighlights);
+        rawHtml = fallbackNativeParse(textForMarked);
       }
 
-      // 4. Restaurar fórmulas matemáticas
-      let finalHtml = restoreMath(rawHtml);
+      // 6. Restaurar fórmulas matemáticas en el HTML resultante
+      let finalHtml = rawHtml.replace(/@@MATH_EXPR_(\d+)@@/g, (_, index) => {
+        return mathPlaceholders[Number(index)] || '';
+      });
 
-      // 5. Asegurar clases en tablas existentes que hayan llegado sin wrapper responsivo
+      // 7. Asegurar clases en tablas existentes que hayan llegado sin wrapper responsivo
       if (!finalHtml.includes('table-responsive') && finalHtml.includes('<table')) {
         finalHtml = finalHtml.replace(/<table([^>]*)>/gi, '<div class="table-responsive"><table class="table table-bordered table-striped"$1>');
         finalHtml = finalHtml.replace(/<\/table>/gi, '</table></div>');
       }
 
-      // 6. Incorporar notas al pie al final del documento si existen
+      // 8. Incorporar notas al pie al final del documento si existen
       if (footnotesHtml) {
         finalHtml += '\n' + footnotesHtml;
       }
@@ -356,15 +387,57 @@
 
   /**
    * Genera código HTML limpio optimizado para copiar directamente en el editor de Moodle.
+   * Embebe diagramas vectoriales Mermaid en SVG limpios cuando están disponibles en la vista previa.
    * 
    * @param {string} markdownText 
+   * @param {HTMLElement|null} [previewContainer=null]
    * @returns {string} Código HTML continuo semántico sin cajas artificiales.
    */
-  function compileToMoodleHtml(markdownText) {
+  function compileToMoodleHtml(markdownText, previewContainer = null) {
     if (!markdownText || !markdownText.trim()) return '';
     try {
-      const compiled = parseMarkdown(markdownText);
-      const appVersion = (window.APP_CONFIG && window.APP_CONFIG.CONFIG && window.APP_CONFIG.CONFIG.VERSION) || '3.2.1';
+      let compiled = parseMarkdown(markdownText);
+      const appVersion = (window.APP_CONFIG && window.APP_CONFIG.CONFIG && window.APP_CONFIG.CONFIG.VERSION) || '3.2.2';
+
+      // Si existe un contenedor de previsualización con diagramas Mermaid vectoriales renderizados,
+      // embeber los SVGs vectoriales limpios en lugar de los botones o estados de carga de la suite.
+      const sourceContainer = previewContainer || (typeof document !== 'undefined' ? document.getElementById('preview-inner') : null);
+      if (sourceContainer && compiled.includes('mermaid-block') && typeof document !== 'undefined') {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = compiled;
+
+        const renderedBlocks = sourceContainer.querySelectorAll('.mermaid-block');
+        const tempBlocks = tempDiv.querySelectorAll('.mermaid-block');
+
+        tempBlocks.forEach((tempBlock, idx) => {
+          const correspondingRendered = renderedBlocks[idx];
+          const svgEl = correspondingRendered ? correspondingRendered.querySelector('.mermaid-output svg') : null;
+
+          if (svgEl) {
+            const svgClone = svgEl.cloneNode(true);
+            svgClone.removeAttribute('id');
+            const diagramWrapper = document.createElement('div');
+            diagramWrapper.className = 'moodle-mermaid-diagram';
+            diagramWrapper.setAttribute('style', 'text-align: center; margin: 1.5rem auto; max-width: 100%; overflow-x: auto;');
+            diagramWrapper.appendChild(svgClone);
+            tempBlock.replaceWith(diagramWrapper);
+          } else {
+            const rawCode = tempBlock.dataset.mermaidCode
+              ? decodeURIComponent(tempBlock.dataset.mermaidCode)
+              : (tempBlock.querySelector('.mermaid-raw') ? tempBlock.querySelector('.mermaid-raw').textContent : '');
+            const fallbackPre = document.createElement('pre');
+            fallbackPre.className = 'mermaid';
+            fallbackPre.textContent = rawCode.trim();
+            tempBlock.replaceWith(fallbackPre);
+          }
+        });
+
+        // Limpiar controles interactivos de la vista previa no pertenecientes a Moodle
+        tempDiv.querySelectorAll('.btn-copy-code-block, .mermaid-toolbar').forEach(el => el.remove());
+
+        compiled = tempDiv.innerHTML;
+      }
+
       return `<!-- Generado con Suite Previsualizador Académico v${appVersion} (Modo Markdown -> Moodle) -->\n${compiled.trim()}`;
     } catch (err) {
       console.error('[MarkdownEngine] Error al exportar para Moodle:', err);
@@ -436,6 +509,16 @@
           return tableEl ? nodeToMd(tableEl) : childContent();
         }
 
+        // Manejo de fórmulas renderizadas por KaTeX (extracción de LaTeX original limpio)
+        if (node.classList && (node.classList.contains('katex') || node.classList.contains('katex-display'))) {
+          const annotation = node.querySelector('annotation[encoding="application/x-tex"]');
+          if (annotation && annotation.textContent) {
+            const tex = annotation.textContent.trim();
+            const isDisplay = node.classList.contains('katex-display') || (node.parentElement && node.parentElement.classList.contains('katex-display'));
+            return isDisplay ? `\n\\[ ${tex} \\]\n\n` : `\\( ${tex} \\)`;
+          }
+        }
+
         switch (tag) {
           case 'h1': return `\n# ${childContent().trim()}\n\n`;
           case 'h2': return `\n## ${childContent().trim()}\n\n`;
@@ -483,6 +566,13 @@
           case 'hr':
             return '\n---\n\n';
 
+          case 'img': {
+            const src = node.getAttribute('src') || '';
+            const alt = node.getAttribute('alt') || '';
+            const title = node.getAttribute('title');
+            return title ? `![${alt}](${src} "${title}")` : `![${alt}](${src})`;
+          }
+
           case 'pre': {
             const codeEl = node.querySelector('code');
             const codeText = codeEl ? codeEl.textContent : node.textContent;
@@ -518,25 +608,41 @@
               .filter(el => el.tagName.toLowerCase() === 'li')
               .map(li => {
                 const checkbox = li.querySelector('input[type="checkbox"]');
-                if (checkbox) {
-                  const checked = checkbox.checked ? 'x' : ' ';
-                  const labelSpan = li.querySelector('.task-list-text') || li;
-                  const itemContent = Array.from(labelSpan.childNodes)
-                    .filter(c => c !== checkbox)
-                    .map(nodeToMd).join('').trim();
-                  return `- [${checked}] ${itemContent}`;
-                }
-                return `- ${Array.from(li.childNodes).map(nodeToMd).join('').trim()}`;
+                const checked = checkbox ? (checkbox.checked ? 'x' : ' ') : null;
+                const childParts = [];
+                Array.from(li.childNodes).forEach(child => {
+                  if (child === checkbox) return;
+                  if (child.nodeType === Node.ELEMENT_NODE && (child.tagName.toLowerCase() === 'ul' || child.tagName.toLowerCase() === 'ol')) {
+                    const nestedMd = nodeToMd(child).trim();
+                    if (nestedMd) childParts.push('\n' + nestedMd.split('\n').map(l => '  ' + l).join('\n'));
+                  } else {
+                    childParts.push(nodeToMd(child));
+                  }
+                });
+                const prefix = checked !== null ? `- [${checked}]` : '-';
+                return `${prefix} ${childParts.join('').trim()}`;
               })
               .join('\n');
             return `\n${items}\n\n`;
           }
 
           case 'ol': {
-            let idx = 1;
+            let idx = parseInt(node.getAttribute('start') || '1', 10);
+            if (isNaN(idx)) idx = 1;
             const items = Array.from(node.children)
               .filter(el => el.tagName.toLowerCase() === 'li')
-              .map(li => `${idx++}. ${Array.from(li.childNodes).map(nodeToMd).join('').trim()}`)
+              .map(li => {
+                const childParts = [];
+                Array.from(li.childNodes).forEach(child => {
+                  if (child.nodeType === Node.ELEMENT_NODE && (child.tagName.toLowerCase() === 'ul' || child.tagName.toLowerCase() === 'ol')) {
+                    const nestedMd = nodeToMd(child).trim();
+                    if (nestedMd) childParts.push('\n' + nestedMd.split('\n').map(l => '  ' + l).join('\n'));
+                  } else {
+                    childParts.push(nodeToMd(child));
+                  }
+                });
+                return `${idx++}. ${childParts.join('').trim()}`;
+              })
               .join('\n');
             return `\n${items}\n\n`;
           }

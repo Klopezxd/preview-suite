@@ -3,6 +3,32 @@
 Todos los cambios notables de este proyecto se documentan en este archivo.  
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a [Semantic Versioning (SemVer 2.0.0)](https://semver.org/lang/es/).
 
+## [3.2.2] - 2026-10-15
+
+### Seguridad
+- **Sanitización Segura con DOMPurify (Anti-XSS):**
+  - Se integró DOMPurify 3.1.6 vía CDN con perfiles habilitados para HTML, SVG y MathML.
+  - Neutraliza vectores de inyección de scripts y código malicioso sin alterar clases CSS, atributos `data-*` ni identificadores de usuario, preservando la compatibilidad de estilos con Moodle y temas personalizados.
+
+### Añadido y Mejorado
+- **Editor: Indentación y Desindentación por Bloques (`Tab` / `Shift + Tab`):**
+  - Soporte completo para indentación multi-línea: al presionar `Tab` con múltiples líneas seleccionadas, todas se indentan por 2 espacios.
+  - Soporte para desindentación multi-línea: al presionar `Shift + Tab`, se remueven hasta 2 espacios iniciales por cada línea seleccionada, recalculando y preservando la selección.
+- **Historial: Resolución de Carrera en Deshacer/Rehacer (`Ctrl+Z` / `Ctrl+Y`):**
+  - Se eliminó la pérdida de estados intermedios al teclear rápido: al solicitar `undoChange` o `redoChange`, se consolidan de inmediato los cambios pendientes en el debounce antes de navegar la pila histórica.
+- **Markdown: Aislamiento Estricto de Bloques de Código:**
+  - Los bloques de código cercados (```...```) y de código en línea (`...`) se enmascaran antes del procesamiento de notas al pie, delimitadores matemáticos LaTeX y resaltado (`==texto==`), previniendo que códigos con `==` o `[^1]` se alteren durante la compilación.
+- **Exportación Moodle: Embebido Limpio de Diagramas Mermaid en SVG:**
+  - Al compilar o transformar Markdown hacia Moodle, los diagramas Mermaid se embeben como gráficos vectoriales SVG independientes dentro de contenedores centrados (`.moodle-mermaid-diagram`), eliminando botones interactivos (`Copiar`, `SVG`) y estados de carga de la suite.
+- **Conversor Bidireccional `htmlToMarkdown` Mejorado:**
+  - Soporte para imágenes (`<img src="..." alt="...">`).
+  - Soporte para listas ordenadas con atributo `start` y listas anidadas con indentación adecuada.
+  - Extracción de fórmulas matemáticas limpias desde KaTeX a partir de etiquetas `<annotation encoding="application/x-tex">`, evitando fragmentación de MathML y texto corrupto.
+- **Linter Heurístico Moodle:**
+  - Detección precisa de etiquetas de cierre huérfanas (`</table>`, `</pre>`, `\]`, `\)`).
+- **Accesibilidad y Foco en Ventanas Modales:**
+  - Foco inicial automático y restauración del foco en el elemento disparador al cerrar ventanas modales.
+
 ## [3.2.1] - 2026-10-13
 
 ### Corregido
