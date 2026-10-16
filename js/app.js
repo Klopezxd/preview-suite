@@ -1432,16 +1432,22 @@
         redoChange();
       }
 
-      // Copia rápida (Ctrl + Shift + C)
-      if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
+      // Copia rápida (Ctrl/Cmd + Shift + C)
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
         e.preventDefault();
         copyCodeToClipboard();
       }
 
-      // Render manual forzado (Ctrl + Enter)
-      if (e.ctrlKey && e.key === 'Enter') {
+      // Render manual forzado (Ctrl/Cmd + Enter)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();
         renderPreview();
+      }
+
+      // Guardar / Descargar archivo directamente (Ctrl/Cmd + S)
+      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S') && !e.shiftKey) {
+        e.preventDefault();
+        downloadCurrentFile();
       }
 
       // 1. Eliminación síncrona de pares vacíos con Backspace (Comportamiento IDE)
@@ -1761,9 +1767,11 @@
     if (DOM.previewCard) DOM.previewCard.style.zoom = `${state.previewZoom}%`;
     if (DOM.labelFontSize) DOM.labelFontSize.textContent = `${state.fontSize}px`;
     if (DOM.labelPreviewZoom) DOM.labelPreviewZoom.textContent = `${state.previewZoom}%`;
-    if (DOM.versionBadge && CONFIG.VERSION) {
-      DOM.versionBadge.textContent = `v${CONFIG.VERSION}`;
-      DOM.versionBadge.title = `v${CONFIG.VERSION}`;
+    if (CONFIG.VERSION) {
+      document.querySelectorAll('.version-badge, .modal-footer-version').forEach(el => {
+        el.textContent = `v${CONFIG.VERSION}`;
+        el.title = `v${CONFIG.VERSION}`;
+      });
     }
     updateLineNumbers();
     updateContentStatistics();

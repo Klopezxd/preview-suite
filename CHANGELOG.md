@@ -14,10 +14,13 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
   - Se eliminó el desfase asíncrono (`setTimeout`) en el auto-cierre, logrando una sincronización inmediata del buffer en memoria, el historial de deshacer y el árbol de renderizado.
 - **Editor: Detección Contextual de Contracciones:**
   - Las comillas simples o dobles precedidas por caracteres alfanuméricos (p. ej. *don't*, *l'arbre*, *user's*) se escriben de manera literal sin disparar auto-cierre indebido.
-- **Archivos y Drag & Drop: Conmutación Automática de Modo:**
-  - Al arrastrar o abrir archivos con extensión `.md` o `.markdown` estando en Modo Moodle, la aplicación conmuta de forma automática e inteligente a Modo Markdown.
-  - Al arrastrar o abrir archivos con extensión `.html` o `.htm` estando en Modo Markdown, la suite conmuta automáticamente a Modo Moodle.
-  - El selector de archivos del sistema ahora acepta universalmente todos los formatos compatibles sin requerir cambiar filtros manuales.
+- **Editor: Atajo Nativo para Guardar (`Ctrl / Cmd + S`):**
+  - Permite descargar el documento en edición de forma instantánea mediante el atajo universal de guardado, previniendo la apertura del molesto diálogo nativo del navegador ("Guardar página web como...").
+- **Multiplataforma: Soporte Completo para Tecla Command (`Cmd` / `metaKey`) en macOS:**
+  - Los atajos `Cmd + Shift + C` (copiado rápido), `Cmd + Enter` (renderizado forzado) y `Cmd + S` (guardar archivo) ahora funcionan de forma fluida y homogénea en sistemas macOS.
+- **Accesibilidad y Consistencia UI:**
+  - Sincronización dinámica automática de insignias de versión y pie de ventana modal desde `CONFIG.VERSION`.
+  - Inclusión de `summary:focus-visible` para navegación accesible por teclado en bloques colapsables `<details><summary>`.
 
 ### Blindaje del Repositorio
 - **Reglas Reforzadas en `.gitignore`:**

@@ -207,7 +207,7 @@
             const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
             const isExternal = /^https?:\/\//i.test(href);
             const targetAttr = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
-            return `<a href="${href}"${titleAttr}${targetAttr}>${text}</a>`;
+            return `<a href="${escapeHtml(href)}"${titleAttr}${targetAttr}>${text}</a>`;
           }
         };
 
@@ -397,7 +397,7 @@
     if (!markdownText || !markdownText.trim()) return '';
     try {
       let compiled = parseMarkdown(markdownText);
-      const appVersion = (window.APP_CONFIG && window.APP_CONFIG.CONFIG && window.APP_CONFIG.CONFIG.VERSION) || '3.2.2';
+      const appVersion = (window.APP_CONFIG && window.APP_CONFIG.CONFIG && window.APP_CONFIG.CONFIG.VERSION) || '3.2.3';
 
       // Si existe un contenedor de previsualización con diagramas Mermaid vectoriales renderizados,
       // embeber los SVGs vectoriales limpios en lugar de los botones o estados de carga de la suite.
