@@ -1,13 +1,13 @@
 /**
  * Configuración global del sistema y plantillas académicas iniciales.
  * @module config
- * @version 3.2.2
+ * @version 3.2.3
  */
 (() => {
   'use strict';
 
   const CONFIG = {
-    VERSION: '3.2.2',
+    VERSION: '3.2.3',
     FONT_SIZE_MIN: 10,
     FONT_SIZE_MAX: 26,
     DEFAULT_FONT_SIZE: 14,
@@ -31,6 +31,9 @@
     "'": "'",
     '`': '`'
   };
+
+  /** Delimitadores de cierre para salto inteligente (overtype). */
+  const CLOSING_DELIMITERS = new Set(['>', ')', ']', '}', '"', "'", '`']);
 
   /**
    * Plantilla académica base para Moodle (HTML semántico continuo con KaTeX).
@@ -198,6 +201,7 @@ print(f"Raíz calculada: {raiz:.6f} en {iteraciones} iteraciones")
   window.APP_CONFIG = {
     CONFIG,
     AUTO_CLOSE_MAP,
+    CLOSING_DELIMITERS,
     DEFAULT_MOODLE_TEMPLATE,
     DEFAULT_MARKDOWN_TEMPLATE
   };

@@ -3,6 +3,26 @@
 Todos los cambios notables de este proyecto se documentan en este archivo.  
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a [Semantic Versioning (SemVer 2.0.0)](https://semver.org/lang/es/).
 
+## [3.2.3] - 2026-10-15
+
+### Añadido y Mejorado
+- **Editor: Salto Inteligente (Overtype) en Delimitadores de Cierre:**
+  - Al escribir delimitadores de cierre (`>`, `)`, `]`, `}`, `"`, `'`, `` ` ``), si el cursor se encuentra posicionado inmediatamente antes del mismo delimitador, el editor salta sobre él en lugar de duplicarlo (previniendo errores comunes como `<p>>` o `(x))`).
+- **Editor: Eliminación Síncrona de Pares de Delimitadores en Backspace:**
+  - Al presionar <kbd>Backspace</kbd> cuando el cursor está ubicado entre delimitadores coincidentes (`()`, `[]`, `{}`, `<>`, `""`, `''`, `` `` ``), se eliminan ambos caracteres de forma síncrona y atómica, eliminando delimitadores huérfanos que rompen fórmulas KaTeX o etiquetas HTML.
+- **Editor: Inserción Síncrona Atómica de Delimitadores:**
+  - Se eliminó el desfase asíncrono (`setTimeout`) en el auto-cierre, logrando una sincronización inmediata del buffer en memoria, el historial de deshacer y el árbol de renderizado.
+- **Editor: Detección Contextual de Contracciones:**
+  - Las comillas simples o dobles precedidas por caracteres alfanuméricos (p. ej. *don't*, *l'arbre*, *user's*) se escriben de manera literal sin disparar auto-cierre indebido.
+- **Archivos y Drag & Drop: Conmutación Automática de Modo:**
+  - Al arrastrar o abrir archivos con extensión `.md` o `.markdown` estando en Modo Moodle, la aplicación conmuta de forma automática e inteligente a Modo Markdown.
+  - Al arrastrar o abrir archivos con extensión `.html` o `.htm` estando en Modo Markdown, la suite conmuta automáticamente a Modo Moodle.
+  - El selector de archivos del sistema ahora acepta universalmente todos los formatos compatibles sin requerir cambiar filtros manuales.
+
+### Blindaje del Repositorio
+- **Reglas Reforzadas en `.gitignore`:**
+  - Bloqueo permanente contra artefactos de compilación externa (`package.json`, `package-lock.json`, `node_modules/`, `dist/`, `build/`) e informes de auditoría o pruebas locales (`*audit*`, `*auditoria*`, `test-results/`), garantizando un repositorio 100% puro y profesional con cero herramientas de compilación intrusivas.
+
 ## [3.2.2] - 2026-10-15
 
 ### Seguridad

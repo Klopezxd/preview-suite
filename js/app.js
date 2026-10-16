@@ -3,12 +3,12 @@
  * Arquitectura blindada contra excepciones, fallos de red, restricciones de almacenamiento
  * y desbordamientos de memoria.
  * @module app
- * @version 3.2.2
+ * @version 3.2.3
  */
 (() => {
   'use strict';
 
-  const { CONFIG, AUTO_CLOSE_MAP, DEFAULT_MOODLE_TEMPLATE, DEFAULT_MARKDOWN_TEMPLATE } = window.APP_CONFIG;
+  const { CONFIG, AUTO_CLOSE_MAP, CLOSING_DELIMITERS, DEFAULT_MOODLE_TEMPLATE, DEFAULT_MARKDOWN_TEMPLATE } = window.APP_CONFIG;
 
   // --- 1. Capa Segura de Almacenamiento Local (SafeStorage) ---
   const SafeStorage = {
@@ -993,6 +993,17 @@
     const reader = new FileReader();
     reader.onload = (event) => {
       const content = event.target.result;
+
+      // Detección y conmutación inteligente de modo según la extensión del archivo
+      const isMdFile = extension === '.md' || extension === '.markdown';
+      const isHtmlFile = extension === '.html' || extension === '.htm';
+
+      if (isMdFile && state.currentMode !== 'markdown') {
+        selectMode('markdown');
+      } else if (isHtmlFile && state.currentMode !== 'moodle') {
+        selectMode('moodle');
+      }
+
       pushHistoryState(DOM.editor.value, true);
       DOM.editor.value = content;
       state.buffers[state.currentMode] = content;
@@ -1224,7 +1235,7 @@
     if (DOM.btnOpenFile && DOM.fileInput) {
       DOM.btnOpenFile.addEventListener('click', () => {
         DOM.fileInput.value = '';
-        DOM.fileInput.accept = state.currentMode === 'moodle' ? '.html,.htm,.txt' : '.md,.markdown,.txt';
+        DOM.fileInput.accept = '.html,.htm,.md,.markdown,.txt';
         DOM.fileInput.click();
       });
 
@@ -1433,7 +1444,37 @@
         renderPreview();
       }
 
-      // Auto-cierre y envoltura inteligente de delimitadores
+      // 1. Eliminación síncrona de pares vacíos con Backspace (Comportamiento IDE)
+      if (e.key === 'Backspace') {
+        const start = DOM.editor.selectionStart;
+        const end = DOM.editor.selectionEnd;
+        if (start === end && start > 0) {
+          const prevChar = DOM.editor.value[start - 1];
+          const nextChar = DOM.editor.value[start];
+          if (AUTO_CLOSE_MAP[prevChar] === nextChar) {
+            e.preventDefault();
+            DOM.editor.value = DOM.editor.value.slice(0, start - 1) + DOM.editor.value.slice(start + 1);
+            DOM.editor.selectionStart = DOM.editor.selectionEnd = start - 1;
+            state.buffers[state.currentMode] = DOM.editor.value;
+            pushHistoryState(DOM.editor.value);
+            schedulePreviewUpdate();
+            return;
+          }
+        }
+      }
+
+      // 2. Salto inteligente (overtype) de delimitadores de cierre existentes
+      if (CLOSING_DELIMITERS && CLOSING_DELIMITERS.has(e.key)) {
+        const start = DOM.editor.selectionStart;
+        const end = DOM.editor.selectionEnd;
+        if (start === end && DOM.editor.value[start] === e.key) {
+          e.preventDefault();
+          DOM.editor.selectionStart = DOM.editor.selectionEnd = start + 1;
+          return;
+        }
+      }
+
+      // 3. Auto-cierre y envoltura inteligente de delimitadores
       if (AUTO_CLOSE_MAP[e.key]) {
         const start = DOM.editor.selectionStart;
         const end = DOM.editor.selectionEnd;
@@ -1452,17 +1493,26 @@
           return;
         }
 
-        // Si no hay selección, insertar par si el siguiente carácter es espacio o fin
+        // Si es una comilla precedida por una letra o número (p. ej. don't, d'un), no auto-cerrar
+        if ((e.key === "'" || e.key === '"') && start > 0 && /[a-zA-Z0-9]/.test(DOM.editor.value[start - 1])) {
+          return;
+        }
+
+        // Inserción síncrona si el siguiente carácter es espacio, salto o puntuación de cierre
         const nextChar = DOM.editor.value[start];
-        if (nextChar === undefined || /\s|<|>|\)/.test(nextChar)) {
-          setTimeout(() => {
-            const currentPos = DOM.editor.selectionStart;
-            DOM.editor.value = DOM.editor.value.slice(0, currentPos) + AUTO_CLOSE_MAP[e.key] + DOM.editor.value.slice(currentPos);
-            DOM.editor.selectionStart = DOM.editor.selectionEnd = currentPos;
-            state.buffers[state.currentMode] = DOM.editor.value;
-            pushHistoryState(DOM.editor.value);
-            schedulePreviewUpdate();
-          }, 0);
+        const shouldAutoClose = nextChar === undefined || /[\s\n\r,.;:!?)\]}>]/.test(nextChar);
+
+        if (shouldAutoClose) {
+          e.preventDefault();
+          const closeChar = AUTO_CLOSE_MAP[e.key];
+          const before = DOM.editor.value.slice(0, start);
+          const after = DOM.editor.value.slice(start);
+          DOM.editor.value = before + e.key + closeChar + after;
+          DOM.editor.selectionStart = DOM.editor.selectionEnd = start + 1;
+          state.buffers[state.currentMode] = DOM.editor.value;
+          pushHistoryState(DOM.editor.value);
+          schedulePreviewUpdate();
+          return;
         }
       }
     });

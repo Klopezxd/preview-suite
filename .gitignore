@@ -23,3 +23,22 @@ PENDIENTES.md
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Herramientas de construcción y paquetes (Cero herramientas de compilación en repo)
+node_modules/
+dist/
+build/
+package.json
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Informes de auditoría, QA y pruebas internas
+*audit*
+*auditoria*
+*AUDITORIA*
+*.audit.*
+test-results/
+coverage/
+*.report.md
+

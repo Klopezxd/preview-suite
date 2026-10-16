@@ -4,7 +4,7 @@
  * Soporte integral para Diagramas Mermaid, Alertas GFM (Callouts), Tablas responsivas,
  * Listas de verificación (Task Lists), Bloques de código con copiado rápido y Notas al pie.
  * @module markdown
- * @version 3.2.2
+ * @version 3.2.3
  */
 (() => {
   'use strict';
