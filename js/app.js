@@ -661,6 +661,7 @@
   function schedulePreviewUpdate() {
     setRenderStatus('updating');
     updateLineNumbers(state.currentError ? state.currentError.line : null);
+    updateContentStatistics();
     clearTimeout(state.debounceTimer);
     state.debounceTimer = setTimeout(renderPreview, CONFIG.DEBOUNCE_DELAY_MS);
   }
