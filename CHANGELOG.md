@@ -3,6 +3,17 @@
 Todos los cambios notables de este proyecto se documentan en este archivo.  
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a [Semantic Versioning (SemVer 2.0.0)](https://semver.org/lang/es/).
 
+## [3.2.4] - 2026-10-18
+
+### Añadido y Mejorado
+- **Modo Pantalla Completa en Ventana (Zen Reading Focus):**
+  - Se implementó la maximización en ventana del panel de vista previa (`#right-panel.preview-fullscreen`) para lectura y revisión inmersiva de documentos Markdown y Moodle sin recurrir al modo de pantalla completa invasivo del sistema operativo (`F11`), preservando pestañas y barra del navegador.
+  - Nuevo control ergonómico `.btn-fullscreen-toggle` en la cabecera del panel con iconografía SVG interactiva (`#icon-maximize` y `#icon-minimize`) e indicación de estado visual con resplandor en Verde Aurora (`--aurora-green`).
+  - Atajo de teclado global <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> (o <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> en macOS) para alternar instantáneamente entre la vista dividida y el foco de lectura completo.
+  - Cierre y restauración ergonómica mediante la tecla <kbd>Esc</kbd> con resolución jerárquica prioritaria de modales y micro-popovers de zoom.
+  - Re-renderizado adaptativo automático de diagramas vectoriales Mermaid y fórmulas matemáticas KaTeX al conmutar dimensiones del lienzo.
+  - Retroalimentación mediante notificaciones no bloqueantes tipo toast.
+
 ## [3.2.3] - 2026-10-15
 
 ### Añadido y Mejorado

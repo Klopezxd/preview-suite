@@ -112,6 +112,9 @@
   <symbol id="icon-alert-important" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1.5 3 3.5 5 3.5 8a3.5 3.5 0 0 1-7 0c0-3 2-5 3.5-8z"/><circle cx="12" cy="18" r="1" fill="currentColor"/></symbol>
   <symbol id="icon-alert-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
   <symbol id="icon-alert-caution" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
+  <!-- Iconos de Pantalla Completa / Restaurar en Ventana -->
+  <symbol id="icon-maximize" viewBox="0 0 24 24"><path d="M16 4h4v4m0 -4l-6 6M8 20H4v-4m0 4l6 -6M16 20h4v-4m0 4l-6 -6M8 4H4v4m0 -4l6 6"/></symbol>
+  <symbol id="icon-minimize" viewBox="0 0 24 24"><path d="M5 9h4V5M3 3l6 6M5 15h4v4M3 21l6 -6M19 9h-4V5M21 3l-6 6M19 15h-4v4M21 21l-6 -6"/></symbol>
 </svg>
 
 <!-- ==========================================================================
@@ -325,6 +328,10 @@
               <button class="zoom-popover-reset" id="btn-preview-popover-reset" type="button">Restablecer (100%)</button>
             </div>
           </div>
+          <button class="zoom-pill btn-fullscreen-toggle" id="btn-toggle-fullscreen-preview" type="button" title="Pantalla completa en ventana (Ctrl + Shift + F / Esc)" aria-label="Pantalla completa en ventana" aria-pressed="false">
+            <svg class="icon" id="icon-fullscreen-state"><use href="#icon-maximize"></use></svg>
+            <span class="btn-fullscreen-label" id="label-fullscreen-preview">Maximizar</span>
+          </button>
           <span id="last-update" style="font-size:10px;color:var(--app-text-muted);font-family:var(--font-mono)">—</span>
         </div>
       </div>
@@ -359,7 +366,7 @@
       <span class="antigravity-badge" id="antigravity-badge" title="Made by Antigravity" role="button" tabindex="0">
         <svg class="icon"><use href="#icon-sparkles"></use></svg> Made by Antigravity
       </span>
-      <span class="version-badge" id="version-badge" title="v3.2.3" role="button" tabindex="0">v3.2.3</span>
+      <span class="version-badge" id="version-badge" title="v3.2.4" role="button" tabindex="0">v3.2.4</span>
     </div>
   </footer>
 
@@ -383,15 +390,16 @@
         <div class="shortcut-row"><span>Deshacer cambio</span><div><span class="kbd">Ctrl</span> + <span class="kbd">Z</span></div></div>
         <div class="shortcut-row"><span>Rehacer cambio</span><div><span class="kbd">Ctrl</span> + <span class="kbd">Y</span> / <span class="kbd">Ctrl</span> + <span class="kbd">Shift</span> + <span class="kbd">Z</span></div></div>
         <div class="shortcut-row"><span>Zoom (Editor o Vista Previa)</span><div><span class="kbd">Ctrl</span> + <span class="kbd">Rueda</span> / <span class="kbd">Ctrl</span> + <span class="kbd">0</span></div></div>
+        <div class="shortcut-row"><span>Pantalla completa en ventana / Foco de lectura</span><div><span class="kbd">Ctrl</span> + <span class="kbd">Shift</span> + <span class="kbd">F</span></div></div>
         <div class="shortcut-row"><span>Copiar contenido completo</span><div><span class="kbd">Ctrl</span> + <span class="kbd">Shift</span> + <span class="kbd">C</span></div></div>
         <div class="shortcut-row"><span>Forzar actualización del render</span><div><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></div></div>
         <div class="shortcut-row"><span>Guardar / Descargar archivo</span><div><span class="kbd">Ctrl</span> + <span class="kbd">S</span></div></div>
         <div class="shortcut-row"><span>Imprimir / Exportar a PDF</span><div><span class="kbd">Ctrl</span> + <span class="kbd">P</span></div></div>
-        <div class="shortcut-row"><span>Cerrar ventanas modales</span><span class="kbd">Esc</span></div>
+        <div class="shortcut-row"><span>Cerrar diálogos / Salir de pantalla completa</span><span class="kbd">Esc</span></div>
       </div>
       <div class="modal-footer">
         <span class="modal-footer-author"><svg class="icon"><use href="#icon-terminal-2"></use></svg> Autor: Klever López</span>
-        <span class="modal-footer-version">v3.2.3</span>
+        <span class="modal-footer-version">v3.2.4</span>
       </div>
     </div>
   </div>

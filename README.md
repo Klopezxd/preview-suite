@@ -1,6 +1,6 @@
 # Preview Suite (Moodle & Markdown)
 
-[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.2.3-0284c7?style=for-the-badge)](https://github.com/Klopezxd/preview-suite)
+[![Versión](https://img.shields.io/badge/Versi%C3%B3n-3.2.4-0284c7?style=for-the-badge)](https://github.com/Klopezxd/preview-suite)
 [![Licencia](https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge)](LICENSE)
 [![Despliegue Vercel](https://img.shields.io/badge/Vercel-Producci%C3%B3n-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://preview-suite.vercel.app)
 [![Despliegue GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Activo-22c55e?style=for-the-badge&logo=github)](https://klopezxd.github.io/preview-suite/)
@@ -9,7 +9,7 @@
 [![DOMPurify](https://img.shields.io/badge/DOMPurify-3.1.6-00D4FF?style=for-the-badge)](https://github.com/cure53/DOMPurify)
 [![Prism.js](https://img.shields.io/badge/Prism.js-1.29.0-blueviolet?style=for-the-badge)](https://prismjs.com/)
 [![Marked.js](https://img.shields.io/badge/Marked.js-12.0.2-ef4444?style=for-the-badge&logo=markdown&logoColor=white)](https://marked.js.org/)
-[![Arquitectura](https://img.shields.io/badge/Arquitectura-Modular%20SPA%20v3.2.3-f97316?style=for-the-badge)](https://developer.mozilla.org/es/docs/Web/JavaScript)
+[![Arquitectura](https://img.shields.io/badge/Arquitectura-Modular%20SPA%20v3.2.4-f97316?style=for-the-badge)](https://developer.mozilla.org/es/docs/Web/JavaScript)
 
 > **Entorno interactivo y reactivo para redacción, visualización y validación en tiempo real de documentos técnicos y académicos con soporte para KaTeX, Mermaid.js, Prism.js y Markdown (GFM).**
 
@@ -72,23 +72,27 @@ Una suite unificada diseñada tanto para desarrollo de contenidos de aulas virtu
    - Atajos de ratón (`Ctrl + Rueda`), teclado (`Ctrl + 0`) y clic directo en la lupa para restablecer en PC.
    - Soporte táctil nativo **Pinch-to-zoom (2 dedos)** y micro-popovers flotantes exclusivos para pantallas táctiles (móviles y tablets).
    - Blindaje nativo con `<meta name="darkreader-lock">` y `color-scheme: dark;` para desactivar extensiones invasivas de oscurecimiento forzado.
-3. **Calibración Visual Óptima (80%-83%):**
+3. **Modo Pantalla Completa en Ventana (Foco Zen de Lectura):**
+   - Maximización inmersiva del panel de vista previa dentro de la ventana sin activar la pantalla completa invasiva del navegador (`F11`), conservando la barra del explorador y las pestañas.
+   - Botón ergonómico en cabecera con iconografía SVG reactiva (`Maximizar` / `Restaurar`), atajo universal <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> y salida limpia con <kbd>Esc</kbd>.
+   - Adaptación fluida de diagramas vectoriales Mermaid y fórmulas KaTeX al conmutar dimensiones del lienzo.
+4. **Calibración Visual Óptima (80%-83%):**
    - Reducción proporcional del grosor de la barra superior, cabeceras e inferior para maximizar el área de trabajo y legibilidad del código.
    - Botoneras unificadas sin divisiones internas, botón "Limpiar" reactivo con iluminación en Rojo Nórdico (`#FF4757`) y conmutador de modo dinámico bicolor (Violeta Boreal `#A855F7` para Markdown y Ámbar Solar `#FF9234` para Moodle).
-4. **Capa Segura de Almacenamiento (`SafeStorage`):**
+5. **Capa Segura de Almacenamiento (`SafeStorage`):**
    - Acceso blindado a `localStorage` con captura de excepciones para garantizar funcionamiento en navegación privada, modo incógnito estricto (Safari/Firefox) o entornos corporativos restringidos.
-5. **Control de Validación y Conmutación Inteligente de Archivos:**
+6. **Control de Validación y Conmutación Inteligente de Archivos:**
    - Límite de seguridad de 5 MB por archivo para prevenir congelamientos del navegador.
    - Filtro de extensiones permitidas (`.html`, `.htm`, `.md`, `.markdown`, `.txt`) con rechazo amigable de binarios.
    - Conmutación automática de modo contextual al abrir o arrastrar archivos: si se suelta un archivo `.md` o `.markdown`, la suite conmuta automáticamente a Modo Markdown; si se suelta un archivo `.html` o `.htm`, conmuta a Modo Moodle.
-6. **Auto-cierre, Salto (Overtype) y Pares Inteligentes (Estilo IDE Profesional):**
+7. **Auto-cierre, Salto (Overtype) y Pares Inteligentes (Estilo IDE Profesional):**
    - **Envoltura:** Si se selecciona texto y se presiona `(`, `[`, `{`, `"`, `'`, `` ` `` o `<`, el editor envuelve la selección automáticamente sin borrar el texto.
    - **Salto (Overtype):** Al escribir un delimitador de cierre (`)`, `]`, `}`, `>`, `"`, `'`, `` ` ``) estando el cursor justo antes de dicho carácter, el cursor avanza sobre él sin duplicarlo.
    - **Eliminación Síncrona de Pares:** Al pulsar <kbd>Backspace</kbd> entre delimitadores vacíos (`()`, `[]`, `{}`, `<>`, `""`, `''`, `` `` ``), se eliminan ambos caracteres limpiamente.
    - **Protección de Contracciones:** Comillas simples o dobles precedidas por caracteres alfanuméricos (p. ej. *don't*, *l'arbre*) no activan auto-cierre indebido.
-7. **Aislamiento de Condiciones de Carrera:**
+8. **Aislamiento de Condiciones de Carrera:**
    - Limpieza atómica de temporizadores de *debounce* y grabación de historial al conmutar entre modos, impidiendo sobreescrituras accidentales de buffers.
-8. **Accesibilidad Universal (WCAG 2.1):**
+9. **Accesibilidad Universal (WCAG 2.1):**
    - Tarjetas interactivas del Hub navegables y activables mediante teclado (<kbd>Tab</kbd> + <kbd>Enter</kbd> / <kbd>Espacio</kbd>).
    - Anillos de enfoque `:focus-visible` calibrados en CSS.
 
@@ -153,10 +157,12 @@ flowchart TD
 | <kbd>Ctrl</kbd> + <kbd>Z</kbd> | **Deshacer** | Revierte el último cambio mediante pila de historial del modo activo |
 | <kbd>Ctrl</kbd> + <kbd>Y</kbd> / <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> | **Rehacer** | Restaura el cambio revertido |
 | <kbd>Ctrl</kbd> + <kbd>Rueda</kbd> / <kbd>Ctrl</kbd> + <kbd>0</kbd> | **Zoom de Panel** | Ajuste y restablecimiento ergonómico de zoom en editor o vista previa |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> | **Pantalla Completa** | Maximiza el panel de vista previa dentro de la ventana (foco de lectura) |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> | **Copiar Contenido** | Copia el contenido del editor al portapapeles |
 | <kbd>Ctrl</kbd> + <kbd>Enter</kbd> | **Actualizar Render** | Fuerza una compilación síncrona manual de KaTeX y Prism |
+| <kbd>Ctrl</kbd> + <kbd>S</kbd> | **Guardar Documento** | Descarga instantánea del archivo editado |
 | <kbd>Ctrl</kbd> + <kbd>P</kbd> | **Exportar / Imprimir** | Diálogo de impresión calibrado para formato A4 |
-| <kbd>Esc</kbd> | **Cerrar Diálogos** | Cierra cualquier modal o menú flotante abierto |
+| <kbd>Esc</kbd> | **Cerrar Diálogos / Salir** | Cierra cualquier modal o menú flotante, o sale de pantalla completa |
 
 ---
 

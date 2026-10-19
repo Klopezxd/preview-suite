@@ -499,6 +499,84 @@ summary:focus-visible {
   border-left: 1px solid var(--app-border);
 }
 
+/* Modo Pantalla Completa en Ventana (Foco de Lectura Zen) */
+#right-panel.preview-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 1000 !important;
+  border-left: none !important;
+  margin: 0 !important;
+  background: var(--preview-stage-bg) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  animation: previewFullscreenFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#right-panel.preview-fullscreen .panel-header {
+  padding: 8px 24px;
+  background: var(--app-bg-darkest);
+  border-bottom: 1px solid var(--app-border);
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+#right-panel.preview-fullscreen .preview-stage {
+  padding: 40px 24px;
+}
+
+#right-panel.preview-fullscreen .preview-card {
+  max-width: 1020px;
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.45);
+}
+
+body.preview-fullscreen-active {
+  overflow: hidden !important;
+}
+
+@keyframes previewFullscreenFadeIn {
+  from {
+    opacity: 0.9;
+    transform: scale(0.996);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Botón de alternancia de pantalla completa en ventana */
+.btn-fullscreen-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-fullscreen-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.btn-fullscreen-toggle.is-active {
+  background: rgba(0, 255, 135, 0.16) !important;
+  border-color: var(--aurora-green) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 10px rgba(0, 255, 135, 0.35) !important;
+}
+
+.btn-fullscreen-toggle.is-active .icon {
+  color: var(--aurora-green) !important;
+}
+
+@media (max-width: 900px) {
+  .btn-fullscreen-label {
+    display: none;
+  }
+}
+
 .resizer {
   width: 7px;
   background: var(--app-bg-darkest);

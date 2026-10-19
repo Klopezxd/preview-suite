@@ -4,7 +4,7 @@
  * Soporte integral para Diagramas Mermaid, Alertas GFM (Callouts), Tablas responsivas,
  * Listas de verificación (Task Lists), Bloques de código con copiado rápido y Notas al pie.
  * @module markdown
- * @version 3.2.3
+ * @version 3.2.4
  */
 (() => {
   'use strict';
@@ -397,7 +397,7 @@
     if (!markdownText || !markdownText.trim()) return '';
     try {
       let compiled = parseMarkdown(markdownText);
-      const appVersion = (window.APP_CONFIG && window.APP_CONFIG.CONFIG && window.APP_CONFIG.CONFIG.VERSION) || '3.2.3';
+      const appVersion = (window.APP_CONFIG && window.APP_CONFIG.CONFIG && window.APP_CONFIG.CONFIG.VERSION) || '3.2.4';
 
       // Si existe un contenedor de previsualización con diagramas Mermaid vectoriales renderizados,
       // embeber los SVGs vectoriales limpios en lugar de los botones o estados de carga de la suite.

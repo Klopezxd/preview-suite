@@ -3,7 +3,7 @@
  * Arquitectura blindada contra excepciones, fallos de red, restricciones de almacenamiento
  * y desbordamientos de memoria.
  * @module app
- * @version 3.2.3
+ * @version 3.2.4
  */
 (() => {
   'use strict';
@@ -36,6 +36,7 @@
     isHubVisible: true,
     fontSize: CONFIG.DEFAULT_FONT_SIZE,
     previewZoom: CONFIG.DEFAULT_PREVIEW_ZOOM || 100,
+    isPreviewFullscreen: false,
     zoomPulseTimer: null,
     previewZoomPulseTimer: null,
     isDarkMode: false,
@@ -155,6 +156,9 @@
       valPreviewPopover: document.getElementById('val-preview-popover'),
       btnPreviewPopoverInc: document.getElementById('btn-preview-popover-inc'),
       btnPreviewPopoverReset: document.getElementById('btn-preview-popover-reset'),
+      btnToggleFullscreen: document.getElementById('btn-toggle-fullscreen-preview'),
+      iconFullscreenState: document.getElementById('icon-fullscreen-state'),
+      labelFullscreenPreview: document.getElementById('label-fullscreen-preview'),
       previewCard: document.getElementById('preview-card')
     };
   }
@@ -162,6 +166,9 @@
   // --- 4. Gestión del Hub y Conmutación Inteligente de Modos ---
 
   function showHub() {
+    if (state.isPreviewFullscreen) {
+      togglePreviewFullscreen(false);
+    }
     state.isHubVisible = true;
     if (DOM.hubScreen) DOM.hubScreen.classList.remove('hidden');
     if (window.location.hash) {
@@ -1129,13 +1136,23 @@
       });
     }
 
-    // Atajo global: Cerrar cualquier modal o popover activo con Escape
+    // Atajo global: Cerrar cualquier modal o popover activo con Escape, o salir de pantalla completa
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        closeRickrollModal();
-        closeShortcutsModal();
-        closeModeSwitchModal();
-        closeAllZoomPopovers();
+        const hasOpenModal = (DOM.shortcutsModal && DOM.shortcutsModal.classList.contains('open')) ||
+                             (DOM.rickrollModal && DOM.rickrollModal.classList.contains('open')) ||
+                             (DOM.modeSwitchModal && DOM.modeSwitchModal.classList.contains('open')) ||
+                             (DOM.editorZoomPopover && DOM.editorZoomPopover.classList.contains('open')) ||
+                             (DOM.previewZoomPopover && DOM.previewZoomPopover.classList.contains('open'));
+
+        if (hasOpenModal) {
+          closeRickrollModal();
+          closeShortcutsModal();
+          closeModeSwitchModal();
+          closeAllZoomPopovers();
+        } else if (state.isPreviewFullscreen) {
+          togglePreviewFullscreen(false);
+        }
       }
     });
   }
@@ -1207,6 +1224,7 @@
     if (DOM.btnPrint) DOM.btnPrint.addEventListener('click', () => window.print());
     if (DOM.btnShowShortcuts) DOM.btnShowShortcuts.addEventListener('click', openShortcutsModal);
     if (DOM.btnCloseModal) DOM.btnCloseModal.addEventListener('click', closeShortcutsModal);
+    if (DOM.btnToggleFullscreen) DOM.btnToggleFullscreen.addEventListener('click', () => togglePreviewFullscreen());
 
     if (DOM.btnFontReset) {
       DOM.btnFontReset.addEventListener('click', (e) => {
@@ -1795,6 +1813,57 @@
         }
       }
     });
+
+    // 4. Atajo global para alternar pantalla completa de la vista previa: Ctrl/Cmd + Shift + F
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'F' || e.key === 'f')) {
+        e.preventDefault();
+        togglePreviewFullscreen();
+      }
+    });
+  }
+
+  // --- 10.1 Modo Pantalla Completa en Ventana (Zen Reading Focus) ---
+  function togglePreviewFullscreen(forceState = null) {
+    const nextState = forceState !== null ? Boolean(forceState) : !state.isPreviewFullscreen;
+    if (state.isPreviewFullscreen === nextState) return;
+    state.isPreviewFullscreen = nextState;
+
+    if (DOM.rightPanel) {
+      DOM.rightPanel.classList.toggle('preview-fullscreen', state.isPreviewFullscreen);
+    }
+    document.body.classList.toggle('preview-fullscreen-active', state.isPreviewFullscreen);
+
+    if (DOM.btnToggleFullscreen) {
+      DOM.btnToggleFullscreen.classList.toggle('is-active', state.isPreviewFullscreen);
+      DOM.btnToggleFullscreen.setAttribute('aria-pressed', state.isPreviewFullscreen ? 'true' : 'false');
+      DOM.btnToggleFullscreen.title = state.isPreviewFullscreen
+        ? 'Restablecer vista dividida (Ctrl + Shift + F / Esc)'
+        : 'Pantalla completa en ventana (Ctrl + Shift + F / Esc)';
+      DOM.btnToggleFullscreen.setAttribute('aria-label', state.isPreviewFullscreen
+        ? 'Salir de pantalla completa'
+        : 'Pantalla completa en ventana');
+    }
+
+    if (DOM.iconFullscreenState) {
+      const iconHref = state.isPreviewFullscreen ? '#icon-minimize' : '#icon-maximize';
+      DOM.iconFullscreenState.innerHTML = `<use href="${iconHref}"></use>`;
+    }
+
+    if (DOM.labelFullscreenPreview) {
+      DOM.labelFullscreenPreview.textContent = state.isPreviewFullscreen ? 'Restaurar' : 'Maximizar';
+    }
+
+    // Notificar redimensionamiento y refrescar diagramas Mermaid si existen
+    window.dispatchEvent(new Event('resize'));
+    if (typeof renderMermaidDiagrams === 'function') {
+      renderMermaidDiagrams();
+    }
+
+    showToast(state.isPreviewFullscreen
+      ? 'Pantalla completa activada (Esc para salir)'
+      : 'Vista dividida restablecida'
+    );
   }
 
   // --- 11. Inicialización y Ciclo de Vida ---
