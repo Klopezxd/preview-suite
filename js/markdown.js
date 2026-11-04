@@ -4,7 +4,7 @@
  * Soporte integral para Diagramas Mermaid, Alertas GFM (Callouts), Tablas responsivas,
  * Listas de verificación (Task Lists), Bloques de código con copiado rápido y Notas al pie.
  * @module markdown
- * @version 3.2.4
+ * @version 3.2.5
  */
 (() => {
   'use strict';
@@ -303,7 +303,10 @@
     const mathRegex = /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|\$(?!\s)[^$\n]+(?<!\s)\$)/g;
     let safeText = maskedText.replace(mathRegex, (match) => {
       const id = mathPlaceholders.length;
-      mathPlaceholders.push(match);
+      let restoredMath = restoreCode(match);
+      // Normalizar acentos graves dentro de fórmulas LaTeX a \texttt{...} para soporte nativo en KaTeX
+      restoredMath = restoredMath.replace(/`([^`\n]+)`/g, '\\texttt{$1}');
+      mathPlaceholders.push(restoredMath);
       return `@@MATH_EXPR_${id}@@`;
     });
 
@@ -313,9 +316,10 @@
     // 3. Restaurador de fórmulas matemáticas para aplicar sobre el HTML final
     const restoreMath = (html) => {
       if (typeof html !== 'string') return '';
-      return html.replace(/@@MATH_EXPR_(\d+)@@/g, (_, index) => {
+      let restored = html.replace(/@@MATH_EXPR_(\d+)@@/g, (_, index) => {
         return mathPlaceholders[Number(index)] || '';
       });
+      return restoreCode(restored);
     };
 
     return { safeText, restoreMath };
@@ -343,7 +347,11 @@
       const mathRegex = /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|\$(?!\s)[^$\n]+(?<!\s)\$)/g;
       const textWithoutMath = textWithoutFootnotes.replace(mathRegex, (match) => {
         const id = mathPlaceholders.length;
-        mathPlaceholders.push(match);
+        // Restaurar fragmentos de código que hayan quedado dentro de la fórmula matemática
+        let restoredMath = restoreCode(match);
+        // Normalizar acentos graves dentro de fórmulas LaTeX a \texttt{...} para soporte nativo en KaTeX
+        restoredMath = restoredMath.replace(/`([^`\n]+)`/g, '\\texttt{$1}');
+        mathPlaceholders.push(restoredMath);
         return `@@MATH_EXPR_${id}@@`;
       });
 
@@ -365,7 +373,10 @@
         return mathPlaceholders[Number(index)] || '';
       });
 
-      // 7. Asegurar clases en tablas existentes que hayan llegado sin wrapper responsivo
+      // 7. Salvaguarda final: asegurar restauración de cualquier fragmento de código residual
+      finalHtml = restoreCode(finalHtml);
+
+      // 8. Asegurar clases en tablas existentes que hayan llegado sin wrapper responsivo
       if (!finalHtml.includes('table-responsive') && finalHtml.includes('<table')) {
         finalHtml = finalHtml.replace(/<table([^>]*)>/gi, '<div class="table-responsive"><table class="table table-bordered table-striped"$1>');
         finalHtml = finalHtml.replace(/<\/table>/gi, '</table></div>');
@@ -397,7 +408,7 @@
     if (!markdownText || !markdownText.trim()) return '';
     try {
       let compiled = parseMarkdown(markdownText);
-      const appVersion = (window.APP_CONFIG && window.APP_CONFIG.CONFIG && window.APP_CONFIG.CONFIG.VERSION) || '3.2.4';
+      const appVersion = (window.APP_CONFIG && window.APP_CONFIG.CONFIG && window.APP_CONFIG.CONFIG.VERSION) || '3.2.5';
 
       // Si existe un contenedor de previsualización con diagramas Mermaid vectoriales renderizados,
       // embeber los SVGs vectoriales limpios en lugar de los botones o estados de carga de la suite.

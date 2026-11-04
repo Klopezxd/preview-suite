@@ -3,7 +3,7 @@
  * Arquitectura blindada contra excepciones, fallos de red, restricciones de almacenamiento
  * y desbordamientos de memoria.
  * @module app
- * @version 3.2.4
+ * @version 3.2.5
  */
 (() => {
   'use strict';

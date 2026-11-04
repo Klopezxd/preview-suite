@@ -3,6 +3,15 @@
 Todos los cambios notables de este proyecto se documentan en este archivo.  
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto se adhiere a [Semantic Versioning (SemVer 2.0.0)](https://semver.org/lang/es/).
 
+## [3.2.5] - 2026-11-04
+
+### Corregido
+- **Markdown: Prevención de Fuga de Tokens y Normalización de Backticks en LaTeX:**
+  - Se corrigió un error en el enmascarador de bloques de código (`maskCodeBlocks`) donde fragmentos de código inline (`...`) dentro de delimitadores matemáticos (`$...$`, `$$...$$`, `\[...\]`) quedaban atrapados en `mathPlaceholders` como tokens internos (`@@CODE_BLOCK_EXPR_X@@`) y se fugaban al HTML sin restaurar, provocando que KaTeX los interpretara erróneamente como fórmulas con subíndices.
+  - Se implementó la restauración inmediata y atómica de cualquier código embebido dentro de fórmulas matemáticas antes del renderizado de Marked.js.
+  - Normalización automática de acentos graves dentro de entornos matemáticos: los backticks dentro de fórmulas LaTeX se transforman de manera preventiva a `\texttt{...}`, garantizando renderizado nativo monoespaciado en KaTeX sin comillas tipográficas residuales ni advertencias.
+  - Se agregó una salvaguarda final de des-enmascaramiento sobre el HTML resultante para garantizar inmunidad total contra fugas de tokens en la vista previa y en la exportación de Moodle.
+
 ## [3.2.4] - 2026-10-18
 
 ### Añadido y Mejorado
